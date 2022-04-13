@@ -1,0 +1,23 @@
+Package: ChromatinSatePackage
+Title: ChromHMM chromatin state analysis
+Version: 0.0
+Authors@R: 
+    person(given = "Manon",
+           family = "Coulee",
+           role = c("aut", "cre"),
+           email = "manoncoulee@hotmail.com")
+Description: function to analysis chromatin state obtains from ChromHMM
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.2
+Depends: 
+    R (>= 3.6.0)
+Imports: 
+    ggplot2,
+    BiocManager,
+    GenomicFeatures,
+    biocViews
+Suggests: 
+    testthat
