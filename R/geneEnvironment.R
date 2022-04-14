@@ -8,44 +8,56 @@
 #'
 #' @return the table with infromation concerning gene associate enhancer
 #' @export
-state_overlapping = function(gene,state_order) {
-  # print(gene[,"chr"])
-  chr = gene["chr"]
-  table_chromHMM_chr = table_chromHMM[table_chromHMM$chr == chr,]
+state_overlapping = function(table,table_chromHMM, state_order, interval = 3000) {
 
-	## Return the distance overlapped by the chromatin state
-  list_overlap = unlist(apply(table_chromHMM_chr,1, function(state) {
-		TSS_moins = as.numeric(gene["TSS_moins_3kb"])
-		TSS_plus = as.numeric(gene["TSS_plus_3kb"])
-	 	start= as.numeric(state["start"])
-		end = as.numeric(state["end"])
-
-  	if((start < TSS_moins) & (end < TSS_moins)) {
-    } else if((start > TSS_plus) & (end > TSS_plus)) {
-    } else {
-			if((start > TSS_moins) & (end < TSS_plus)){
-				length_overlapping = abs(start - end)
-			} else if((start < TSS_moins) & (end < TSS_plus)){
-				length_overlapping = abs(TSS_moins - end)
-			} else {
-				length_overlapping = abs(start - TSS_plus)
-			}
-      return(list("state" = state["state_name"], "overlap" = length_overlapping))
-    }
+	## Return TSS position (start if + strand or end if - strand)
+	table$TSS = as.numeric(apply(table,1,function(line) {
+	  if(line["strand"] == "+") {
+	    return(line["start"])
+	  } else {
+	    return(line["end"])
+	  }
 	}))
 
-	## Create a table with length associate each chromatin state in the environment
-	table_list_overlap = data.frame(list_overlap)
-	table_overlap = data.frame(table_list_overlap[seq(1,nrow(table_list_overlap),2),1])
-	table_overlap$length = table_list_overlap[seq(2,nrow(table_list_overlap),2),1]
-	colnames(table_overlap) = c("state","length")
+	table$TSS_moins_3kb = table$TSS - interval
+	table$TSS_plus_3kb = table$TSS + interval
 
-	## Create count table
-	table_overlap_reduce = data.frame(state_order)
-	table_overlap_reduce$length = 0
-	x = lapply(table_overlap_reduce$state_order, function(state) {
-		return(sum(as.numeric(table_overlap[table_overlap$state == state,"length"])))
+	table[,state_order] = 0
+
+	list_chromHMM_table = lapply(unique(table_chromHMM$chr),function(chr) {
+		tt = table_chromHMM[table_chromHMM$chr == chr,]
+		return(tt)
 	})
+	names(list_chromHMM_table) = unique(table_chromHMM$chr)
 
-  return(unlist(x))
+	table[,state_order] = do.call(rbind,lapply(rownames(table), function(gene) {
+		gene_value = table[gene,]
+		chr = gene_value$chr
+
+		table_chromHMM_chr = list_chromHMM_table[[chr]]
+
+		## Remove chromatin state before interval
+		tt = table_chromHMM_chr[!((table_chromHMM_chr$start < gene_value$TSS_moins_3kb)
+		 	& (table_chromHMM_chr$end < gene_value$TSS_moins_3kb)),]
+		## Remove chromatin state after interval
+		tt = tt[!((tt$start > gene_value$TSS_plus_3kb)
+			& (tt$end > gene_value$TSS_plus_3kb)),]
+
+		tt$coverage = unlist(lapply(rownames(tt),function(state) {
+			tt_state = tt[state,]
+			if((tt_state$start > gene_value$TSS_moins_3kb) & (tt_state$end < gene_value$TSS_plus_3k)){
+				length_overlapping = abs(tt_state$start - tt_state$end)
+			} else if((tt_state$start < gene_value$TSS_moins) & (tt_state$end < gene_value$TSS_plus)){
+				length_overlapping = abs(gene_value$TSS_moins - tt_state$end)
+			} else {
+				length_overlapping = abs(tt_state$start - gene_value$TSS_plus)
+			}
+			return(length_overlapping)
+		}))
+
+		return(t(data.frame(unlist(lapply(state_order, function(x){
+			sum(tt[tt$state_name == x,"coverage"])/(interval*2)
+		})))))
+	}))
+	return(table)
 }
