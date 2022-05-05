@@ -1,12 +1,20 @@
-#' Function to return summary table from ChromHMM data
+#' Function to return summary table from ChromHMM data and create associated plot
 #'
 #' @param genomic_region a table contains genomic region associate each chromatin state (output from ChromHH)
-#' @param state_name a vector of chromatin state name (name from ChromHMM)
+#' @param state_name a vector of chromatin state name
+#' @param state_number a vector of chromatin state number (name from ChromHMM)
+#' @param color a vector of color to colored plot
+#' @param plot a boolean to create plot
+#' @param merge a boolean to merge data if it's a list of table
+#' @param filename a string to name the plot create
+#' @param ylab a string
+#' @param xlab a string
 #'
-#' @return the table contains distribution different chromatin state
+#' @return the table contains distribution of different chromatin state
 #' @export
-plotChromatinState = function(genomic_region, state_name,plot = T, merge = F, color = F,
-					color_value = "",
+plotChromatinState = function(genomic_region, state_name, state_number, color,
+					plot = T,
+					merge = F,
 					filename = "chromatin_state_distribution",
 					ylab = "chromatin state (%)",
 					xlab = "") {
@@ -16,22 +24,24 @@ plotChromatinState = function(genomic_region, state_name,plot = T, merge = F, co
 	} else if(class(genomic_region) == "list") {
 		table = lapply(genomic_region,distribution_chromatin_state,state_name)
 	} else {
-		print("'genomic_region' must be a data frame or a list of data frame")
+		stop("'genomic_region' must be a data frame or a list of data frame")
 	}
 
 	if(merge == T & class(table) == "list") {
 		table = do.call("rbind",lapply(table,"[",,))
-		table = table[table$state != "Het",]
-		table = table[table$state != "ZNF/Rpts",]
+		# table = table[table$state != "Het",]
+		# table = table[table$state != "ZNF/Rpts",]
 	}
 
 	if(plot == T) {
 		if(class(table) == "list") {
-			lapply(table,plot_distribution_chromatin_state,filename = filename,color = color,
-				color_value = color_value, merge = merge,ylab = ylab,xlab = xlab)
+			lapply(table,plot_distribution_chromatin_state,filename = filename, state_name = state_name,
+				color = color, state_number = state_number,
+				merge = merge,ylab = ylab,xlab = xlab)
 		} else {
-			plot_distribution_chromatin_state(table,filename = filename,color = color,
-				color_value = color_value, merge = merge,ylab = ylab,xlab = xlab)
+			plot_distribution_chromatin_state(table,filename = filename, state_name = state_name,
+				color = color, state_number = state_number,
+				merge = merge,ylab = ylab,xlab = xlab)
 		}
 	}
 	return(table)
@@ -50,42 +60,45 @@ distribution_chromatin_state = function(genomic_region,state_name) {
 		resume$coverage = unlist(lapply(rownames(resume), function(state) {
 				(sum(genomic_region[genomic_region$state == state,"size"])/genome_length)*100
 		}))
-
 		resume$sample_name = unique(genomic_region$name)
 
 		return(resume)
 	} else {
-		print("'genomic_region' must be a data frame or a list of data frame")
+		stop("'genomic_region' must be a data frame or a list of data frame")
 	}
 }
 
-plot_distribution_chromatin_state = function(table, filename, color, color_value, merge,ylab,xlab) {
+plot_distribution_chromatin_state = function(table, filename, color, state_name, state_number,
+	merge,ylab,xlab) {
 
-	if(color == F) {
-		nb_state = length(unique(table$state))
-		if(nb_state == 15) {
-			color_value = c("#B71C1C","#f06292","#9c27b0","#ffc107","#ffc107","#ffeb3b","#ffeb3b",
-				"#29b6f6","#00CC00","#00CC00","#00FF33","#616a6b","#e0e0e0","#e0e0e0","#e0e0e0")
-		} else if(nb_state == 18) {
-			color_value = c("#B71C1C","#E65100","#E65100","#E65100","#43A047","#1B5E20","#99FF66",
-				"#99FF66","#F5B041","#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949",
-				"#7B7D7D","#D0D3D4")
-		} else {
-			print("Your number of chromatin state is not default number of chromatin state.")
-			print("Please chose manually your color")
-		}
-	}
+	# if(color == F) {
+	# 	nb_state = length(unique(table$state))
+	# 	if(nb_state == 15) {
+	# 		color_value = c("#B71C1C","#f06292","#9c27b0","#ffc107","#ffc107","#ffeb3b","#ffeb3b",
+	# 			"#29b6f6","#00CC00","#00CC00","#00FF33","#616a6b","#e0e0e0","#e0e0e0","#e0e0e0")
+	# 	} else if(nb_state == 18) {
+	# 		color_value = c("#B71C1C","#E65100","#E65100","#E65100","#43A047","#1B5E20","#99FF66",
+	# 			"#99FF66","#F5B041","#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949",
+	# 			"#7B7D7D","#D0D3D4")
+	# 	} else {
+	# 		print("Your number of chromatin state is not default number of chromatin state.")
+	# 		print("Please chose manually your color")
+	# 	}
+	# }
 
-	if(merge == T) {
-		color_value = rep(color_value,length(unique(table$sample_name)))
-	}
+	# if(merge == T) {
+	# 	color_value = rep(color_value,length(unique(table$sample_name)))
+	# }
+
+	col = stateColor(state_name = state_name, state_number = state_number, color = color)
 
 	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("SC","RS")))) +
-		geom_bar(aes(fill = factor(state), alpha = factor(sample_name, levels = c("SC","RS"))), position = "dodge",
-			stat = "identity") +
+		geom_bar(aes(fill = factor(state)),
+			# alpha = factor(sample_name, levels = c("SC","RS"))),
+			position = "dodge",stat = "identity") +
 		facet_grid(.~factor(state), switch = "x") +
-		scale_alpha_manual(values = c(1,0.5)) +
-		scale_fill_manual(values = color_value) +
+		# scale_alpha_manual(values = c(1,0.5)) +
+		scale_fill_manual(values = col$state_name) +
 		xlab(xlab) + ylab(ylab) + ylim(0,75) +
 		labs(fill = "chomatin state", alpha = "cell type") +
 		theme_minimal() + theme(strip.background  = element_blank(),
@@ -99,7 +112,7 @@ plot_distribution_chromatin_state = function(table, filename, color, color_value
 				panel.grid.major.x=element_blank()) +
 		theme(legend.position="bottom", legend.text = element_text(size=30, angle = 0),
 	    legend.title = element_text(size=30, angle = 0)) +
-		guides(fill = F)
+		guides(fill = "none")
 
 	ggsave(filename = filename,plot = p, width = 20, height = 12, device = 'png', dpi = 300)
 }
