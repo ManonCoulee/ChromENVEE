@@ -8,7 +8,7 @@
 #'
 #' @return the table with infromation concerning gene associate enhancer
 #' @export
-state_overlapping = function(table,table_chromHMM, state_order, interval = 3000) {
+geneEnvironment = function(table,table_chromHMM, state_order, interval = 3000) {
 
 	## Return TSS position (start if + strand or end if - strand)
 	table$TSS = as.numeric(apply(table,1,function(line) {
