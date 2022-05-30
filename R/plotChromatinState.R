@@ -92,12 +92,12 @@ plot_distribution_chromatin_state = function(table, filename, color, state_name,
 
 	col = stateColor(state_name = state_name, state_number = state_number, color = color)
 
-	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("SC","RS")))) +
-		geom_bar(aes(fill = factor(state)),
-			# alpha = factor(sample_name, levels = c("SC","RS"))),
+	p = ggplot(table, aes(y = coverage, x = sample_name)) +
+		geom_bar(aes(fill = factor(state),
+			alpha = factor(sample_name)),
 			position = "dodge",stat = "identity") +
 		facet_grid(.~factor(state), switch = "x") +
-		# scale_alpha_manual(values = c(1,0.5)) +
+		scale_alpha_manual(values = seq(0.5,1, (0.5/(length(unique(table$sample_name))-1)))) +
 		scale_fill_manual(values = col$state_name) +
 		xlab(xlab) + ylab(ylab) + ylim(0,75) +
 		labs(fill = "chomatin state", alpha = "cell type") +
