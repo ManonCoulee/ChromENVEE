@@ -3,6 +3,7 @@
 #' @param enhancer_table GRanges table contains genomic position return by ChromHMM tool
 #' @param genome a bed genome annotation file
 #' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for
+#' @param nCore a numeric value corresponding to the number of core used
 #'
 #' @import GenomicFeatures
 #'
@@ -12,11 +13,20 @@ enhancerAnnotation = function(enhancer_table,genome, interval = 500000, nCore = 
 
   set.seed(10)
   if(class(enhancer_table) != "GRanges"){
-    print("'enhancer_table' is not a GRanges table")
+    stop("'enhancer_table' is not a GRanges table")
   }
   ## Add interval value at each side enhancer
   enhancer_table$start_500kb = start(enhancer_table) - interval
   enhancer_table$end_500kb = end(enhancer_table) + interval
+
+  ## Add TSS position in function strand
+  genome$TSS = as.numeric(apply(genome,1,function(line) {
+    if(line["strand"] == "+") {
+      return(line["start"])
+    } else {
+      return(line["end"])
+    }
+  }))
 
   ## Divide gene table in function of the chromosome
   list_genome_table = lapply(unique(genome$chr),function(chr) {
@@ -43,73 +53,6 @@ enhancerAnnotation = function(enhancer_table,genome, interval = 500000, nCore = 
   table_final = unlist(as(list_enhancer_table,"GRangesList"))
   return(table_final)
 }
-
-# comparison_position_gene_enhancer = function(genome,start,start_500kb,end,end_500kb){
-#
-#   TSS = as.numeric(genome["start"])
-#
-#   ## Position of enhancer
-#   start = as.numeric(start)
-#   end = as.numeric(end)
-#   start_500kb = as.numeric(start_500kb)
-#   end_500kb = as.numeric(end_500kb)
-#
-#   if (TSS < start && TSS > start_500kb ) { distance = abs(start - TSS) }
-#   else if (TSS > end && TSS < end_500kb) { distance = abs(end - TSS) }
-#   else { distance = NA }
-#   return(distance)
-# }
-#
-# find_gene_associate_enhancer = function(row,enhancer,genome) {
-#
-#   chr_value_enhancer = seqnames(enhancer[row,])@values
-#   chr_genome = genome[genome$chr == chr_value_enhancer,]
-#
-#   ## Return position from gene in function enhancer
-#   results = unlist(apply(chr_genome,1,comparison_position_gene_enhancer,start(enhancer[row,]),
-#     enhancer[row,]$start_500kb,end(enhancer[row,]),enhancer[row,]$end_500kb))
-#   chr_genome$distance = results
-#
-#   ## Return gene with minimal distance from enhancer start or end
-#   chr_genome = chr_genome[!is.na(chr_genome$distance),]
-#   distance_minimal = min(chr_genome$distance,na.rm = T)
-#   gene_associate_enhancer = chr_genome[chr_genome$distance == distance_minimal,"gene_ENS"]
-#   if(length(gene_associate_enhancer) == 0) {
-#     return(list("NA","NA"))
-#   } else if(length(gene_associate_enhancer) > 1){
-#     return(list(paste0(gene_associate_enhancer,collapse = ";"),distance_minimal))
-#   } else {
-#     return(list(gene_associate_enhancer,distance_minimal))
-#   }
-# }
-
-## Nouvelle methode
-# comparison_position_gene_enhancer = function(gene,genome_table,start,start_500kb,end,end_500kb){
-#
-#   table = genome_table[gene,]
-#   ## Return TSS position of gene
-#   if(table$strand == "+") {
-#     TSS = table$start
-#   } else {
-#     TSS = table$end
-#   }
-#
-#   ## Position of enhancer
-#   start = as.numeric(start)
-#   end = as.numeric(end)
-#   start_500kb = as.numeric(start_500kb)
-#   end_500kb = as.numeric(end_500kb)
-#
-#   if (TSS < start && TSS > start_500kb ) {
-#     distance = abs(start - TSS)
-#     name = table$gene_ENS
-#     return(paste0(c(distance,name), collapse = ";"))
-#   } else if (TSS > end && TSS < end_500kb) {
-#     distance = abs(end - TSS)
-#     name = table$gene_ENS
-#     return(paste0(c(distance,name), collapse = ";"))
-#   }
-# }
 
 comparison_position_gene_enhancer = function(enhancer,enhancer_table,list_genome_table){
 
