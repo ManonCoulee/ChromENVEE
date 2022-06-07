@@ -20,9 +20,9 @@ plotChromatinState = function(genomic_region, state_name, state_number, color,
 					xlab = "") {
 
 	if(class(genomic_region) == "data.frame") {
-		table = distribution_chromatin_state(genomic_region,state_name)
+		table = distribution_chromatin_state(genomic_region,state_name,state_number)
 	} else if(class(genomic_region) == "list") {
-		table = lapply(genomic_region,distribution_chromatin_state,state_name)
+		table = lapply(genomic_region,distribution_chromatin_state,state_name,state_number)
 	} else {
 		stop("'genomic_region' must be a data frame or a list of data frame")
 	}
@@ -47,18 +47,19 @@ plotChromatinState = function(genomic_region, state_name, state_number, color,
 	return(table)
 }
 
-distribution_chromatin_state = function(genomic_region,state_name) {
+distribution_chromatin_state = function(genomic_region,state_name, state_number) {
 
 	if(class(genomic_region) == "data.frame") {
-		resume = data.frame("state" = state_name)
+		resume = data.frame("state" = unique(state_name))
 		resume$state = factor(resume$state, levels = unique(state_name))
-		rownames(resume) = paste0("U",1:length(state_name))
+		rownames(resume) = unique(state_name)
 
 		genomic_region$size = abs(genomic_region$start - genomic_region$end)
+		genomic_region$state_name = factor(genomic_region$state, levels = state_number, labels = state_name)
 		genome_length = sum(genomic_region$size)
 
 		resume$coverage = unlist(lapply(rownames(resume), function(state) {
-				(sum(genomic_region[genomic_region$state == state,"size"])/genome_length)*100
+				(sum(genomic_region[genomic_region$state_name == state,"size"])/genome_length)*100
 		}))
 		resume$sample_name = unique(genomic_region$name)
 
@@ -71,35 +72,16 @@ distribution_chromatin_state = function(genomic_region,state_name) {
 plot_distribution_chromatin_state = function(table, filename, color, state_name, state_number,
 	merge,ylab,xlab) {
 
-	# if(color == F) {
-	# 	nb_state = length(unique(table$state))
-	# 	if(nb_state == 15) {
-	# 		color_value = c("#B71C1C","#f06292","#9c27b0","#ffc107","#ffc107","#ffeb3b","#ffeb3b",
-	# 			"#29b6f6","#00CC00","#00CC00","#00FF33","#616a6b","#e0e0e0","#e0e0e0","#e0e0e0")
-	# 	} else if(nb_state == 18) {
-	# 		color_value = c("#B71C1C","#E65100","#E65100","#E65100","#43A047","#1B5E20","#99FF66",
-	# 			"#99FF66","#F5B041","#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949",
-	# 			"#7B7D7D","#D0D3D4")
-	# 	} else {
-	# 		print("Your number of chromatin state is not default number of chromatin state.")
-	# 		print("Please chose manually your color")
-	# 	}
-	# }
-
-	# if(merge == T) {
-	# 	color_value = rep(color_value,length(unique(table$sample_name)))
-	# }
-
 	col = stateColor(state_name = state_name, state_number = state_number, color = color)
 
-	p = ggplot(table, aes(y = coverage, x = sample_name)) +
+	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("Kit_m","Kit_p","SC","RS")))) +
 		geom_bar(aes(fill = factor(state),
-			alpha = factor(sample_name)),
+			alpha = factor(sample_name, levels = c("Kit_m","Kit_p","SC","RS"))),
 			position = "dodge",stat = "identity") +
 		facet_grid(.~factor(state), switch = "x") +
 		scale_alpha_manual(values = seq(0.5,1, (0.5/(length(unique(table$sample_name))-1)))) +
 		scale_fill_manual(values = col$state_name) +
-		xlab(xlab) + ylab(ylab) + ylim(0,75) +
+		xlab(xlab) + ylab(ylab) +
 		labs(fill = "chomatin state", alpha = "cell type") +
 		theme_minimal() + theme(strip.background  = element_blank(),
 				text = element_text(size=35, angle = 90),
