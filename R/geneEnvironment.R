@@ -1,8 +1,9 @@
 #' Function with associate at each enhancer the nearly gene
 #'
-#' @param enhancer_table GRanges table contains genomic position return by ChromHMM tool
-#' @param genome a bed genome annotation file
-#' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for
+#' @param table a bed genome annotation file
+#' @param table_chromHMM a ChromHMM table
+#' @param state_order a list of state
+#' @param interval a numeric value corresponding to environment distance (default = 3000)
 #'
 #' @import ggplot2
 #'

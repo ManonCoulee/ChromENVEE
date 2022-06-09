@@ -8,10 +8,9 @@
 #'
 #' @return the table with infromation concerning gene associate enhancer
 #' @export
-plotGeneAssociation = function(table, all = F) {
+plotGeneAssociation = function(table, all = F, state_name, state_number, state_color) {
 
   if (all == T && class(table) == "list") {
-    print("here")
     list_table = lapply(names(table), function(name) {
       tt = table[[name]]
       df = data.frame(table(tt$gene_association))

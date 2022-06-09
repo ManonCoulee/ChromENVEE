@@ -7,7 +7,6 @@
 #' @export
 enhancerExpression = function(enhancer_table, gene_expression_table) {
 
-  print("data")
   enhancer_table$gene_expression = unlist(lapply(1:length(enhancer_table), function(enhancer){
     list_gene = enhancer_table[enhancer]$gene_list
     list_gene = unlist(strsplit(list_gene,";"))

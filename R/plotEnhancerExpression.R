@@ -1,37 +1,45 @@
-#' Function with associate at each enhancer the nearly gene
+#' Function to create a plot which represent the distribution of gene expression
 #'
-#' @param enhancer_table GRanges table contains genomic position return by ChromHMM tool
-#' @param genome a bed genome annotation file
-#' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for
+#' @param data_table a GRanges table or list of GRanges obtains by enhancerExpression function
+#' @param color a list of color value
+#' @param state_number a list of chromatin state number
+#' @param state_name a list of chromatin state name
+#' @param scale a value (log10, log2 or none) to rescale expression (default = "none")
+#' @param distance a value to zoom the expression focus (default = 0)
+#' @param xlab a string
+#' @param ylab a string
 #'
 #' @import ggplot2
 #'
-#' @return the table with infromation concerning gene associate enhancer
+#' @return the ggplot2 figure corresponding to the distribution of gene expression
 #' @export
 plotEnhancerExpression = function(data_table, xlab = "", ylab = "gene expression log10(cpm)",
-  scale = "none", model = 1) {
+  scale = "none", color, state_number, state_name, distance = 0) {
 
-  information_table = get_information(data_table)
-  information_table$value = as.numeric(information_table$value)
+  if(class(distance) != "numeric") {
+    stop("'distance' must be a numeric object")
+  }
+
+  information_table = getInformation(data_table)
+  information_table$expression = as.numeric(information_table$expression)
+  information_table$distance = as.numeric(information_table$distance)
+
+  if(distance != 0) {
+    information_table = information_table[information_table$distance <= distance,]
+  }
+
+  col = stateColor(state_name = state_name, state_number = state_number, color = color)
 
   if(scale == "log10") {
-    information_table$value = log10(information_table$value+0.01)
-  } else if(scale == "log") {
-    information_table$value = log(information_table$value)
+    information_table$expression = log10(information_table$expression+0.01)
+  } else if(scale == "log2") {
+    information_table$expression = log2(information_table$expression+0.01)
   }
 
-  if(model == 1) {
-    color_value = colorTable$states15
-  } else if(model == 2) {
-    color_value = colorTable$states18
-  } else if(model == 3) {
-    color_value = colorTable$states25
-  }
-
-  p = ggplot(information_table,aes(x = sample_name, y = value)) +
+  p = ggplot(information_table,aes(x = sample_name, y = expression)) +
     geom_violin(aes(fill = chromatin_state),color = "black") +
     geom_boxplot(width = 0.1) +
-    scale_fill_manual(values = color_value) +
+    scale_fill_manual(values = col$state_number) +
     xlab(xlab) + ylab(ylab) +
     theme_bw() + theme(strip.background  = element_blank(),
       text = element_text(size=35, angle = 0),
@@ -44,36 +52,4 @@ plotEnhancerExpression = function(data_table, xlab = "", ylab = "gene expression
       legend.position = "none")
 
   return(p)
-}
-
-get_information = function(data_table) {
-  if(class(data_table) == "list") {
-    df = lapply(data_table,function(x) {
-      value = unlist(strsplit(unlist(x$gene_expression),";"))
-      df = data.frame(value)
-      df$sample_name = unique(x$sample_name)
-      group = unique(x$chromatin_state)
-      df$chromatin_state =  unlist(lapply(group, function(state) {
-        count = sum(x[x$chromatin_state == state]$gene_association)
-        rep(state,count)
-      }))
-      return(df)
-    })
-    data_frame = do.call(rbind,df)
-    data_frame = data_frame[data_frame$value != "NA",]
-    return(data_frame)
-  } else if(class(data_table) == "GRanges") {
-    value = unlist(strsplit(unlist(data_table$gene_expression),";"))
-    data_frame = data.frame(value)
-    data_frame$sample_name = unique(data_table$sample_name)
-    group = unique(data_table$chromatin_state)
-    data_frame$chromatin_state =  unlist(lapply(group, function(state) {
-      count = sum(data_table[data_table$chromatin_state == state]$gene_association)
-      rep(state,count)
-    }))
-    data_frame = data_frame[data_frame$value != "NA",]
-    return(data_frame)
-  } else {
-    print("'data_table' must be a GRanges object or a list of GRanges object")
-  }
 }
