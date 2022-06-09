@@ -5,9 +5,7 @@
 #' @param state_order a list of state
 #' @param interval a numeric value corresponding to environment distance (default = 3000)
 #'
-#' @import ggplot2
-#'
-#' @return the table with infromation concerning gene associate enhancer
+#' @return the table with the distribution of each chromatin state in the environment
 #' @export
 geneEnvironment = function(table,table_chromHMM, state_order, interval = 3000) {
 
