@@ -9,9 +9,10 @@
 getInformation = function(data_table) {
   if(class(data_table) == "list") {
     df = lapply(data_table,function(x) {
+      gene_name = unlist(strsplit(unlist(x$gene_list),";"))
       expression = unlist(strsplit(unlist(x$gene_expression),";"))
       distance = unlist(strsplit(unlist(x$distance),";"))
-      df = data.frame(expression,distance)
+      df = data.frame(gene_name,expression,distance)
       df$sample_name = unique(x$sample_name)
       group = unique(x$chromatin_state)
       df$chromatin_state =  unlist(lapply(group, function(state) {
@@ -30,9 +31,10 @@ getInformation = function(data_table) {
     return(data_frame)
 
   } else if(class(data_table) == "GRanges") {
+    gene_name = unlist(strsplit(unlist(data_table$gene_list),";"))
     expression = unlist(strsplit(unlist(data_table$gene_expression),";"))
     distance = unlist(strsplit(unlist(data_table$distance),";"))
-    data_frame = data.frame(expression,distance)
+    data_frame = data.frame(gene_name,expression,distance)
     data_frame$sample_name = unique(data_table$sample_name)
     group = unique(data_table$chromatin_state)
     data_frame$chromatin_state =  unlist(lapply(group, function(state) {
