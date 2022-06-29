@@ -6,6 +6,7 @@
 #' @param nCore a numeric value corresponding to the number of core used
 #'
 #' @import GenomicFeatures
+#' @import parallel
 #'
 #' @return the table with infromation concerning gene associate enhancer
 #' @export
