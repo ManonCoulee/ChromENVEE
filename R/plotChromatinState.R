@@ -83,16 +83,19 @@ plot_distribution_chromatin_state = function(table, filename, color, state_name,
 		scale_fill_manual(values = col$state_name) +
 		xlab(xlab) + ylab(ylab) +
 		labs(fill = "chomatin state", alpha = "cell type") +
-		theme_minimal() + theme(strip.background  = element_blank(),
-				text = element_text(size=35, angle = 90),
-				panel.grid.major = element_line(colour = "grey80"),
-				panel.border = element_blank(),
-				axis.ticks = element_blank(),
-				axis.text.x = element_blank(),
-				axis.text.y = element_text(size=35, angle = 90, hjust = 1),
-				panel.grid.minor.x=element_blank(),
-				panel.grid.major.x=element_blank()) +
-		theme(legend.position="bottom", legend.text = element_text(size=30, angle = 0),
+		themePlot() +
+		# theme_minimal() + theme(strip.background  = element_blank(),
+		# 		text = element_text(size=35, angle = 90),
+		# 		panel.grid.major = element_line(colour = "grey80"),
+		# 		panel.border = element_blank(),
+		# 		axis.ticks = element_blank(),
+		# 		axis.text.x = element_blank(),
+		# 		axis.text.y = element_text(size=35, angle = 90, hjust = 1),
+		# 		panel.grid.minor.x=element_blank(),
+		# 		panel.grid.major.x=element_blank()) +
+		theme(axis.text.y = element_text(size=35, angle = 90, hjust = 1),
+			legend.position="bottom",
+			legend.text = element_text(size=30, angle = 0),
 	    legend.title = element_text(size=30, angle = 0)) +
 		guides(fill = "none")
 

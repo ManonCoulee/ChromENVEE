@@ -19,7 +19,6 @@ getInformation = function(data_table) {
         count = sum(x[x$chromatin_state == state]$gene_association)
         rep(state,count)
       }))
-      # df = df[df$distance < 100000,]
       df = df[df$expression != "NA",]
       df$expression = as.numeric(df$expression)
 
@@ -27,7 +26,6 @@ getInformation = function(data_table) {
     })
 
     data_frame = do.call(rbind,df)
-    # data_frame = data_frame[data_frame$expression != "NA",]
     return(data_frame)
 
   } else if(class(data_table) == "GRanges") {

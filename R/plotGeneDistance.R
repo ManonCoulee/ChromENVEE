@@ -25,15 +25,19 @@ plotGeneDistance = function(data_table, xlab = "", ylab = "distance enhancer-gen
   p = ggplot(information_table,aes(x = sample_name, fill = factor(distance_red,levels = limit_label))) +
     geom_bar(stat = "count", position = "fill") +
     coord_flip() + labs(fill = "") + xlab(xlab) + ylab(ylab) +
-    theme_bw() + theme(strip.background  = element_blank(),
-      text = element_text(size=35, angle = 0),
-      panel.grid.major = element_line(colour = "grey80"),
-      panel.border = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text.x= element_blank(),
-      panel.grid.minor.x=element_blank(),
-      panel.grid.major.x=element_blank(),
-      legend.position = "bottom") +
+    themePlot() +
+    theme(axis.text.y = element_text(),
+      legend.position = "bottom")
+
+    # theme_bw() + theme(strip.background  = element_blank(),
+    #   text = element_text(size=35, angle = 0),
+    #   panel.grid.major = element_line(colour = "grey80"),
+    #   panel.border = element_blank(),
+    #   axis.ticks = element_blank(),
+    #   axis.text.x= element_blank(),
+    #   panel.grid.minor.x=element_blank(),
+    #   panel.grid.major.x=element_blank(),
+    #   legend.position = "bottom") +
     scale_fill_manual(values = c("#f1948a","#c39bd3","#85c1e9","#76d7c4","#f7dc6f","#f0b27a"))
 
   return(p)

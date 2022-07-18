@@ -20,6 +20,10 @@ plotEnhancerExpression = function(data_table, xlab = "", ylab = "gene expression
     stop("'distance' must be a numeric object")
   }
 
+  if (!(scale %in% c("none","log10","log2"))) {
+    stop("'scale' must be 'none', 'log10','log2' value. Default is 'none'")
+  }
+
   information_table = getInformation(data_table)
   information_table$expression = as.numeric(information_table$expression)
   information_table$distance = as.numeric(information_table$distance)
@@ -41,15 +45,19 @@ plotEnhancerExpression = function(data_table, xlab = "", ylab = "gene expression
     geom_boxplot(width = 0.1) +
     scale_fill_manual(values = col$state_number) +
     xlab(xlab) + ylab(ylab) +
-    theme_bw() + theme(strip.background  = element_blank(),
-      text = element_text(size=35, angle = 0),
-      panel.grid.major = element_line(colour = "grey80"),
-      panel.border = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
-      panel.grid.minor.x=element_blank(),
-      panel.grid.major.x=element_blank(),
+    themePlot() +
+    theme(axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
+      axis.text.y = element_text(),
       legend.position = "none")
+    # theme_bw() + theme(strip.background  = element_blank(),
+    #   text = element_text(size=35, angle = 0),
+    #   panel.grid.major = element_line(colour = "grey80"),
+    #   panel.border = element_blank(),
+    #   axis.ticks = element_blank(),
+    #   axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
+    #   panel.grid.minor.x=element_blank(),
+    #   panel.grid.major.x=element_blank(),
+    #   legend.position = "none")
 
   return(p)
 }

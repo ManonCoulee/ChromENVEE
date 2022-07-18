@@ -25,15 +25,20 @@ plotGeneAssociation = function(table, all = F, state_name, state_number, state_c
     p = ggplot(df,aes(x = as.numeric(gene_association), y = count, color = name)) +
       geom_smooth(method = "lm",formula = y~poly(x,11),se = F) +
       xlab("number of gene associate") + ylab("frequence") + labs(color = "") +
-      theme_bw() + theme(strip.background  = element_blank(),
-        text = element_text(size=35, angle = 0),
-        panel.grid.major = element_line(colour = "grey80"),
-        panel.border = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid.minor.x=element_blank(),
-        panel.grid.major.x=element_blank(),
-        legend.text = element_text(size = 15),
+      themePlot() +
+      theme(axis.text.x = element_text(),
+        axis.text.y = element_text(),
         legend.position = "bottom")
+
+      # theme_bw() + theme(strip.background  = element_blank(),
+      #   text = element_text(size=35, angle = 0),
+      #   panel.grid.major = element_line(colour = "grey80"),
+      #   panel.border = element_blank(),
+      #   axis.ticks = element_blank(),
+      #   panel.grid.minor.x=element_blank(),
+      #   panel.grid.major.x=element_blank(),
+      #   legend.text = element_text(size = 15),
+      #   legend.position = "bottom")
   } else {
 
     df = data.frame(table(table$gene_association))
@@ -43,14 +48,19 @@ plotGeneAssociation = function(table, all = F, state_name, state_number, state_c
       geom_point() +
       geom_smooth(method = "lm",formula = y~poly(x,10),se = F,color = "red") +
       xlab("number of gene associate") + ylab("frequence") +
-      theme_bw() + theme(strip.background  = element_blank(),
-        text = element_text(size=35, angle = 0),
-        panel.grid.major = element_line(colour = "grey80"),
-        panel.border = element_blank(),
-        axis.ticks = element_blank(),
-        panel.grid.minor.x=element_blank(),
-        panel.grid.major.x=element_blank(),
+      themePlot() +
+      theme(axis.text.x = element_text(),
+        axis.text.y = element_text(),
         legend.position = "bottom")
+
+      # theme_bw() + theme(strip.background  = element_blank(),
+      #   text = element_text(size=35, angle = 0),
+      #   panel.grid.major = element_line(colour = "grey80"),
+      #   panel.border = element_blank(),
+      #   axis.ticks = element_blank(),
+      #   panel.grid.minor.x=element_blank(),
+      #   panel.grid.major.x=element_blank(),
+      #   legend.position = "bottom")
   }
   return(p)
 }

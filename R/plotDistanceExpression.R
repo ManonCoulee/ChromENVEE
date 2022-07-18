@@ -47,29 +47,38 @@ plotDistanceExpression = function(data_table, xlab = "", ylab = "log(CPM)",color
       scale_color_manual(values = col$state_number) +
       scale_linetype_manual(values = rep(c("solid","dashed"),length(unique(mean$sample_name))/2)) +
       xlab(xlab) + ylab(ylab) +
-      theme_bw() + theme(strip.background  = element_blank(),
-        text = element_text(size=35, angle = 0),
-        panel.grid.major = element_line(colour = "grey80"),
-        panel.border = element_blank(),
-        axis.ticks = element_blank(),
-        axis.text.x = element_text(size = 30, angle = 0, hjust = 1),
-        panel.grid.minor.x=element_blank(),
-        panel.grid.major.x=element_blank(),
+      themePlot() +
+      theme(axis.text.x = element_text(size = 30, angle = 0, hjust = 1),
+        axis.text.y = element_text(),
         legend.position = "none")
+
+      # theme_bw() + theme(strip.background  = element_blank(),
+      #   text = element_text(size=35, angle = 0),
+      #   panel.grid.major = element_line(colour = "grey80"),
+      #   panel.border = element_blank(),
+      #   axis.ticks = element_blank(),
+      #   axis.text.x = element_text(size = 30, angle = 0, hjust = 1),
+      #   panel.grid.minor.x=element_blank(),
+      #   panel.grid.major.x=element_blank(),
+      #   legend.position = "none")
   } else {
     p = ggplot(information_table,aes(x = factor(limit, levels = limit_label), y = log(expression+0.01))) +
       geom_boxplot(aes(fill = chromatin_state),width = 0.1) +
       scale_fill_manual(values = col$state_number) +
       xlab(xlab) + ylab(ylab) +
-      theme_bw() + theme(strip.background  = element_blank(),
-        text = element_text(size=35, angle = 0),
-        panel.grid.major = element_line(colour = "grey80"),
-        panel.border = element_blank(),
-        axis.ticks = element_blank(),
-        axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
-        panel.grid.minor.x=element_blank(),
-        panel.grid.major.x=element_blank(),
+      themePlot() +
+      theme(axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
+        axis.text.y = element_text(),
         legend.position = "none")
+      # theme_bw() + theme(strip.background  = element_blank(),
+      #   text = element_text(size=35, angle = 0),
+      #   panel.grid.major = element_line(colour = "grey80"),
+      #   panel.border = element_blank(),
+      #   axis.ticks = element_blank(),
+      #   axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
+      #   panel.grid.minor.x=element_blank(),
+      #   panel.grid.major.x=element_blank(),
+      #   legend.position = "none")
   }
 
   return(p)
