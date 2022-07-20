@@ -2,20 +2,20 @@
 % Please edit documentation in R/plotGeneDistance.R
 \name{plotGeneDistance}
 \alias{plotGeneDistance}
-\title{Function with associate at each enhancer the nearly gene}
+\title{Function to create a plot which represent the distribution of distance gene-enhancer}
 \usage{
 plotGeneDistance(data_table, xlab = "", ylab = "distance enhancer-gene (bp)")
 }
 \arguments{
-\item{enhancer_table}{GRanges table contains genomic position return by ChromHMM tool}
+\item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
 
-\item{genome}{a bed genome annotation file}
+\item{xlab}{a string}
 
-\item{interval}{a numeric value corresponding to the distance from enhancer where gene is looking for}
+\item{ylab}{a string}
 }
 \value{
-the table with infromation concerning gene associate enhancer
+the ggplot2 figure corresponding to the distribution of distance gene-enhancer
 }
 \description{
-Function with associate at each enhancer the nearly gene
+Function to create a plot which represent the distribution of distance gene-enhancer
 }

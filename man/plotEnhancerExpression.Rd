@@ -2,26 +2,39 @@
 % Please edit documentation in R/plotEnhancerExpression.R
 \name{plotEnhancerExpression}
 \alias{plotEnhancerExpression}
-\title{Function with associate at each enhancer the nearly gene}
+\title{Function to create a plot which represent the distribution of gene expression}
 \usage{
 plotEnhancerExpression(
   data_table,
   xlab = "",
-  ylab = "gene expression (cpm)",
+  ylab = "gene expression log10(cpm)",
   scale = "none",
-  model = 1
+  color,
+  state_number,
+  state_name,
+  distance = 0
 )
 }
 \arguments{
-\item{enhancer_table}{GRanges table contains genomic position return by ChromHMM tool}
+\item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
 
-\item{genome}{a bed genome annotation file}
+\item{xlab}{a string}
 
-\item{interval}{a numeric value corresponding to the distance from enhancer where gene is looking for}
+\item{ylab}{a string}
+
+\item{scale}{a value (log10, log2 or none) to rescale expression (default = "none")}
+
+\item{color}{a list of color value}
+
+\item{state_number}{a list of chromatin state number}
+
+\item{state_name}{a list of chromatin state name}
+
+\item{distance}{a value to zoom the expression focus (default = 0)}
 }
 \value{
-the table with infromation concerning gene associate enhancer
+the ggplot2 figure corresponding to the distribution of gene expression
 }
 \description{
-Function with associate at each enhancer the nearly gene
+Function to create a plot which represent the distribution of gene expression
 }

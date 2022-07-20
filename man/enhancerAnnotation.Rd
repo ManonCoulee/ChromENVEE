@@ -4,7 +4,7 @@
 \alias{enhancerAnnotation}
 \title{Function with associate at each enhancer the nearly gene}
 \usage{
-enhancerAnnotation(enhancer_table, genome, interval = 5e+05)
+enhancerAnnotation(enhancer_table, genome, interval = 5e+05, nCore = 1)
 }
 \arguments{
 \item{enhancer_table}{GRanges table contains genomic position return by ChromHMM tool}
@@ -12,6 +12,8 @@ enhancerAnnotation(enhancer_table, genome, interval = 5e+05)
 \item{genome}{a bed genome annotation file}
 
 \item{interval}{a numeric value corresponding to the distance from enhancer where gene is looking for}
+
+\item{nCore}{a numeric value corresponding to the number of core used}
 }
 \value{
 the table with infromation concerning gene associate enhancer

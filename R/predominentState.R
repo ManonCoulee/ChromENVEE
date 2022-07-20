@@ -7,7 +7,7 @@
 #' @param metric a chracter value
 #' @param dist a numeric value
 #'
-#' @import umpar
+#' @import umapr
 #'
 #' @return the table with 2-dimensional value and predominent chromatin state
 #' @export

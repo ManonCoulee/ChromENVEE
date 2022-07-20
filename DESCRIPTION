@@ -1,19 +1,27 @@
 Package: ChromENVEE
 Title: Chromatin Environment and Enhancer Expression
-Version: 0.2
+Version: 1.1.5
 Authors@R:
     person(given = "Manon",
            family = "Coulee",
            role = c("aut", "cre"),
            email = "manoncoulee@hotmail.com")
-Description: This package implements functions to associate genes with enhancers, define the
-chromatin environment of the gene from genomic data (e.g. ChromHMM output). Several visualization
-functions are available to summarize the distribution of chromatin states, the amount, distance and
-expression of genes to enhancers and the dispersion of chromatin states in gene sets.
+Description: This package implements functions to associate genes with enhancers, define the chromatin environment of the gene from genomic data (e.g. ChromHMM output). Several visualization functions are available to summarize the distribution of chromatin states, the amount, distance and expression of genes to enhancers and the dispersion of chromatin states in gene sets.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Depends:
-    R (>= 3.6.0)
+    R (>= 3.5.0)
+Suggests: 
+    rmarkdown,
+    knitr,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
+Imports: 
+    ggplot2,
+    GenomicFeatures,
+    umapr
+biocViews:GenomicFeatures
