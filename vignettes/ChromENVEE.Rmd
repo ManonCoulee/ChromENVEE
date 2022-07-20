@@ -1,8 +1,8 @@
 ---
-title: "vignette"
+title: "ChromENVEE"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{vignette}
+  %\VignetteIndexEntry{ChromENVEE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
