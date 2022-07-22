@@ -1,16 +1,6 @@
-#' Function to return summary table from ChromHMM data and create associated plot
+#' Function to return the theme usable for each plot
 #'
-#' @param genomic_region a table contains genomic region associate each chromatin state (output from ChromHH)
-#' @param state_name a vector of chromatin state name
-#' @param state_number a vector of chromatin state number (name from ChromHMM)
-#' @param color a vector of color to colored plot
-#' @param plot a boolean to create plot
-#' @param merge a boolean to merge data if it's a list of table
-#' @param filename a string to name the plot create
-#' @param ylab a string
-#' @param xlab a string
-#'
-#' @return the table contains distribution of different chromatin state
+#' @return the theme usable with ggplot
 #' @export
 themePlot = function() {
   theme = theme_minimal() + theme(strip.background  = element_blank(),
@@ -22,6 +12,5 @@ themePlot = function() {
       axis.text.y = element_blank(),
       panel.grid.minor.x=element_blank(),
       panel.grid.major.x=element_blank())
-
   return(theme)
 }

@@ -2,20 +2,24 @@
 % Please edit documentation in R/plotGeneAssociation.R
 \name{plotGeneAssociation}
 \alias{plotGeneAssociation}
-\title{Function with associate at each enhancer the nearly gene}
+\title{Function which plot the number of gene associated to enhancer}
 \usage{
 plotGeneAssociation(table, all = F, state_name, state_number, state_color)
 }
 \arguments{
-\item{enhancer_table}{GRanges table contains genomic position return by ChromHMM tool}
+\item{table}{GRanges table contains results obtains by enhancerAnnotation()}
 
-\item{genome}{a bed genome annotation file}
+\item{all}{a boolean, if TRUE, list of dataframe is merge}
 
-\item{interval}{a numeric value corresponding to the distance from enhancer where gene is looking for}
+\item{state_name}{a vector of chromatin state name}
+
+\item{state_number}{state_number a vector of chromatin state number}
+
+\item{state_color}{a vector of color to associated to each chromatin state}
 }
 \value{
-the table with infromation concerning gene associate enhancer
+a plot of the number of gene associated to enhancer
 }
 \description{
-Function with associate at each enhancer the nearly gene
+Function which plot the number of gene associated to enhancer
 }

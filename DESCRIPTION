@@ -22,6 +22,7 @@ Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports: 
     ggplot2,
-    GenomicFeatures,
-    umapr
-biocViews:GenomicFeatures
+    GenomicRanges,
+    umapr,
+    parallel
+biocViews:GenomicRanges

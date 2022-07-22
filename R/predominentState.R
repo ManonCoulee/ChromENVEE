@@ -1,11 +1,11 @@
-#' Function with associate at each enhancer the nearly gene
+#' Function with estimate the predominant state associated at each gene
 #'
 #' @param table a table corresponding to the result of geneEnvironment function
 #' @param state a list of chromatin state
 #' @param header a list of column in table to analysed with UMAP
-#' @param neighbor a numeric value
-#' @param metric a chracter value
-#' @param dist a numeric value
+#' @param neighbors a numeric value (see umapr package)
+#' @param metric a chracter value (see umapr package)
+#' @param dist a numeric value (see umapr package)
 #'
 #' @import umapr
 #'

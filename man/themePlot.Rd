@@ -2,32 +2,13 @@
 % Please edit documentation in R/themePlot.R
 \name{themePlot}
 \alias{themePlot}
-\title{Function to return summary table from ChromHMM data and create associated plot}
+\title{Function to return the theme usable for each plot}
 \usage{
 themePlot()
 }
-\arguments{
-\item{genomic_region}{a table contains genomic region associate each chromatin state (output from ChromHH)}
-
-\item{state_name}{a vector of chromatin state name}
-
-\item{state_number}{a vector of chromatin state number (name from ChromHMM)}
-
-\item{color}{a vector of color to colored plot}
-
-\item{plot}{a boolean to create plot}
-
-\item{merge}{a boolean to merge data if it's a list of table}
-
-\item{filename}{a string to name the plot create}
-
-\item{ylab}{a string}
-
-\item{xlab}{a string}
-}
 \value{
-the table contains distribution of different chromatin state
+the theme usable with ggplot
 }
 \description{
-Function to return summary table from ChromHMM data and create associated plot
+Function to return the theme usable for each plot
 }

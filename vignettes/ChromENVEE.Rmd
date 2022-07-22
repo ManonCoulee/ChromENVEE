@@ -1,6 +1,7 @@
 ---
 title: "ChromENVEE"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{ChromENVEE}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +15,135 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Abstract
+
+# Citation
+
+# Introduction
+
+Loading the package
 ```{r setup}
 library(ChromENVEE)
 ```
+
+# Initialization of data
+
+```{r}
+state_name = c("TSS","TSSFlnk","TSSFlnkD","Tx","TxWk","EnhG","EnhG","EnhA","EnhWk",
+  "ZNF/Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPCWk","Quies","Quies","Quies")
+state_number = c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12","U13","U14",
+  "U15","U16","U17","U18")
+color_value = c("#B71C1C","#E65100","#E65100","#43A047","#1B5E20","#99FF66","#99FF66",
+  "#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949","#7B7D7D","#D0D3D4",
+  "#D0D3D4","#D0D3D4")
+```
+
+Download the reference genome
+```{r}
+data(genome_gene_file)
+head(genome_gene_file)
+
+```
+Download the chromatin state file (output of ChromHMM)
+```{r}
+data(data_chromatin_state)
+head(data_chromatin_state)
+```
+# Distribution of chromatin state
+```{r}
+summary_chromatin_state = plotChromatinState(data_chromatin_state,state_name, state_number,
+  merge = T, plot = F, color = color_value, filename = "")
+```
+```{r}
+head(summary_chromatin_state)
+```
+![](figures/chromatin_state_distribution.png){width=100%}
+
+# Enhancer annotation
+
+Load of enhancer data
+```{r}
+data(list_table_enhancer)
+list_table_enhancer[[1]]
+```
+## Annotated enhancer binding to enhancer position
+```{r}
+table_enhancer_gene = enhancerAnnotation(list_table_enhancer[[1]],genome = genome_gene_file,interval = 500000, nCore = 1)
+table_enhancer_gene
+```
+
+Add sample name
+```{r}
+table_enhancer_gene$sample_name = "RS"
+table_enhancer_gene
+```
+### Number of gene associate at the enhancer
+```{r, fig.width = 7, fig.height = 8, fig.fullwidth = TRUE}
+plotGeneAssociation(table_enhancer_gene, all = F)
+```
+
+## Associated gene expression to enhancer
+```{r}
+gene_expression = read.table("~/Documents/Mouse/RNAseq/DE_analysis_3_factors_Kit_SC_SCII_RS_spike/RS_CTL_gene_expression.tsv",sep = "\t",h = T)
+head(gene_expression)
+table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene,gene_expression_table = gene_expression)
+table_enhancer_gene_expression
+```
+
+## Profile of enhancer annotation
+### Distance gene-enhancer in function their expression
+```{r, fig.width = 7, fig.height = 8, fig.fullwidth = TRUE}
+plotDistanceExpression(table_enhancer_gene_expression,color = color_value,
+    state_name = state_name, state_number = state_number)
+```
+
+### Distance gene-enhancer
+```{r, fig.width = 7, fig.height = 8, fig.fullwidth = TRUE}
+plotGeneDistance(table_enhancer_gene_expression)
+```
+
+### Enhancer expression
+```{r, fig.width = 7, fig.height = 8, fig.fullwidth = TRUE}
+plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
+  color = color_value, state_name = state_name, state_number = state_number)
+```
+
+# Enhancer annotation comparison
+
+# Gene environment
+```{r}
+state_order_reduce = c("TSS","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhW","ZNF.Rpts",
+  "Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
+```
+```{r}
+data(table_gene_bed)
+head(table_gene_bed)
+
+```
+## Coverage of chromatin state in environment binding to TSS regions
+```{r}
+table_overlapping = geneEnvironment(table_gene_bed,data_chromatin_state, unique(state_order_reduce))
+rownames(table_overlapping) = table_overlapping$gene_ENS
+```
+```{r echo = FALSE}
+head(table_overlapping)
+```
+
+## Predominant state in environment binding to TSS regions
+```{r}
+result_umap = predominentState(table_overlapping, state = unique(state_order_reduce),
+  header = unique(state_order_reduce) ,neighbors = 32, metric = "euclidean", dist = 0.5)
+head(result_umap)
+```
+
+## Session Information
+
+Here is the output of `sessionInfo()` on the system on which this document was compiled:
+
+```{r echo = FALSE}
+sessionInfo()
+```
+
+## References
+
+

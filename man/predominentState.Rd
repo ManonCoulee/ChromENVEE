@@ -2,7 +2,7 @@
 % Please edit documentation in R/predominentState.R
 \name{predominentState}
 \alias{predominentState}
-\title{Function with associate at each enhancer the nearly gene}
+\title{Function with estimate the predominant state associated at each gene}
 \usage{
 predominentState(
   table,
@@ -20,15 +20,15 @@ predominentState(
 
 \item{header}{a list of column in table to analysed with UMAP}
 
-\item{metric}{a chracter value}
+\item{neighbors}{a numeric value (see umapr package)}
 
-\item{dist}{a numeric value}
+\item{metric}{a chracter value (see umapr package)}
 
-\item{neighbor}{a numeric value}
+\item{dist}{a numeric value (see umapr package)}
 }
 \value{
 the table with 2-dimensional value and predominent chromatin state
 }
 \description{
-Function with associate at each enhancer the nearly gene
+Function with estimate the predominant state associated at each gene
 }

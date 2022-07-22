@@ -1,12 +1,14 @@
-#' Function with associate at each enhancer the nearly gene
+#' Function which plot the number of gene associated to enhancer
 #'
-#' @param enhancer_table GRanges table contains genomic position return by ChromHMM tool
-#' @param genome a bed genome annotation file
-#' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for
+#' @param table GRanges table contains results obtains by enhancerAnnotation()
+#' @param all a boolean, if TRUE, list of dataframe is merge
+#' @param state_name a vector of chromatin state name
+#' @param state_number state_number a vector of chromatin state number
+#' @param state_color a vector of color to associated to each chromatin state
 #'
 #' @import ggplot2
 #'
-#' @return the table with infromation concerning gene associate enhancer
+#' @return a plot of the number of gene associated to enhancer
 #' @export
 plotGeneAssociation = function(table, all = F, state_name, state_number, state_color) {
 

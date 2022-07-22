@@ -5,7 +5,7 @@
 #' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for
 #' @param nCore a numeric value corresponding to the number of core used
 #'
-#' @import GenomicFeatures
+#' @import GenomicRanges
 #' @import parallel
 #'
 #' @return the table with infromation concerning gene associate enhancer
