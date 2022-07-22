@@ -29,8 +29,6 @@ plotChromatinState = function(genomic_region, state_name, state_number, color,
 
 	if(merge == T & class(table) == "list") {
 		table = do.call("rbind",lapply(table,"[",,))
-		# table = table[table$state != "Het",]
-		# table = table[table$state != "ZNF/Rpts",]
 	}
 
 	if(plot == T) {
