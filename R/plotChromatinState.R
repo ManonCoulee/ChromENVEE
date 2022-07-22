@@ -84,7 +84,8 @@ plot_distribution_chromatin_state = function(table, filename, color, state_name,
 		xlab(xlab) + ylab(ylab) +
 		labs(fill = "chomatin state", alpha = "cell type") +
 		themePlot() +
-		theme(axis.text.y = element_text(size=35, angle = 0, hjust = 1),
+		theme(strip.text.x = element_text(size=35, angle = 90, hjust = 1),
+			axis.text.y = element_text(size=35, angle = 90, hjust = 1),
 			legend.position="bottom",
 			legend.text = element_text(size=30, angle = 0),
 	    legend.title = element_text(size=30, angle = 0)) +
