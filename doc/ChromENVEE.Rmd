@@ -86,8 +86,6 @@ plotGeneAssociation(table_enhancer_gene, all = F)
 ```{r}
 gene_expression = read.table("~/Documents/Mouse/RNAseq/DE_analysis_3_factors_Kit_SC_SCII_RS_spike/RS_CTL_gene_expression.tsv",sep = "\t",h = T)
 head(gene_expression)
-```
-```{r}
 table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene,gene_expression_table = gene_expression)
 table_enhancer_gene_expression
 ```
