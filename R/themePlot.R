@@ -4,7 +4,7 @@
 #' @export
 themePlot = function() {
   theme = theme_minimal() + theme(strip.background  = element_blank(),
-      text = element_text(size=35, angle = 0),
+      text = element_text(size=20, angle = 0),
       panel.grid.major = element_line(colour = "grey80"),
       panel.border = element_blank(),
       axis.ticks = element_blank(),

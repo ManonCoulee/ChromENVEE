@@ -13,8 +13,13 @@
 #'
 #' @return the ggplot2 figure corresponding to the distribution of gene expression
 #' @export
-plotEnhancerExpression = function(data_table, xlab = "", ylab = "gene expression log10(cpm)",
-  scale = "none", color, state_number, state_name, distance = 0) {
+plotEnhancerExpression = function(data_table,
+  xlab = "",
+  ylab = "gene expression log10(CPM)",
+  scale = "none",
+  color,
+  state_number,
+  state_name, distance = 0) {
 
   if(class(distance) != "numeric") {
     stop("'distance' must be a numeric object")
@@ -46,18 +51,9 @@ plotEnhancerExpression = function(data_table, xlab = "", ylab = "gene expression
     scale_fill_manual(values = col$state_number) +
     xlab(xlab) + ylab(ylab) +
     themePlot() +
-    theme(axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
+    theme(axis.text.x = element_text(),
       axis.text.y = element_text(),
       legend.position = "none")
-    # theme_bw() + theme(strip.background  = element_blank(),
-    #   text = element_text(size=35, angle = 0),
-    #   panel.grid.major = element_line(colour = "grey80"),
-    #   panel.border = element_blank(),
-    #   axis.ticks = element_blank(),
-    #   axis.text.x = element_text(size = 20, angle = 90, hjust = 1),
-    #   panel.grid.minor.x=element_blank(),
-    #   panel.grid.major.x=element_blank(),
-    #   legend.position = "none")
 
   return(p)
 }

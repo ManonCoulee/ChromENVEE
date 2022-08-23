@@ -10,7 +10,8 @@ plotDistanceExpression(
   ylab = "log(CPM)",
   color,
   state_number,
-  state_name
+  state_name,
+  limit = 5e+05
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ plotDistanceExpression(
 \item{state_number}{a list of chromatin state number}
 
 \item{state_name}{a list of chromatin state name}
+
+\item{limit}{a value of limit for distance analysis}
 }
 \value{
 the ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer

@@ -1,9 +1,14 @@
 ---
-title: "ChromENVEE"
-output: 
-  rmarkdown::html_vignette
+title: "ChromENVEE: Chromatin ENVironment and Enhancer Expression"
+author: "Coulée Manon"
+date: "`r Sys.Date()`"
+output:
+  rmarkdown::html_document:
+    theme: paper
+    toc: true
+
 vignette: >
-  %\VignetteIndexEntry{ChromENVEE}
+  %\VignetteIndexEntry{ChromENVEE: Chromatin ENVironment and Enhancer Expression}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,72 +26,87 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-# Initialization of data
-
-Loading the package
 ```{r setup}
+# Loading package
 library(ChromENVEE)
 ```
 
-Generate vector to associate each chromatin state number `state_numer` to a name `state_name` and a color `color_value` (usable for plot generation)
+# Initialization of data
+
+Generated vector to associated each chromatin state number `state_numer` to a name `state_name` and a color `color_value` (usable for plot generation)
 ```{r}
-state_number = c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12","U13","U14",
-  "U15","U16","U17","U18")
-state_name = c("TSS","TSSFlnk","TSSFlnkD","Tx","TxWk","EnhG","EnhG","EnhA","EnhWk",
-  "ZNF/Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPCWk","Quies","Quies","Quies")
-color_value = c("#B71C1C","#E65100","#E65100","#43A047","#1B5E20","#99FF66","#99FF66", "#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949","#7B7D7D","#D0D3D4",
-  "#D0D3D4","#D0D3D4")
+state_number = c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12","U13","U14","U15","U16","U17","U18")
+state_name = c("TSSA","TSSFlnk","TSSFlnkD","Tx","TxWk","EnhG","EnhG","EnhA","EnhWk","ZNF/Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPCWk","Quies","Quies","Quies")
+color_value = c("#B71C1C","#E65100","#E65100","#43A047","#1B5E20","#99FF66","#99FF66","#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949","#7B7D7D","#D0D3D4","#D0D3D4","#D0D3D4")
 ```
 
-Download the reference genome, in this study we use mouse genome (mm10)
-```{r}
-data(genome_gene_file)
-head(genome_gene_file)
+Download the reference genome as a `.bed` file, in this study we use mouse genome (mm10).
 
-```
-Download the chromatin state file (output of ChromHMM)
 ```{r}
-data(data_chromatin_state)
-head(data_chromatin_state)
+data(genome_file)
 ```
-# Distribution of chromatin state in
+```{r echo = FALSE}
+head(genome_file)
+```
+
+Download the chromatin state file (output of ChromHMM). It's a `.bed` file which contains informations like genomic position, information about chromatin state.
+
 ```{r}
-summary_chromatin_state = plotChromatinState(data_chromatin_state,state_name, state_number,
-  merge = T, plot = T, color = color_value, filename = "figures/chromatin_state_distribution.png")
+data(chromatin_state)
+```
+```{r echo = FALSE}
+head(chromatin_state)
+```
+# Distribution of chromatin state in the genome
+
+We are interested to know the distribution of chromatin state in the genome. `plotChromatinState` calculates the percentage of each chromatin state in function the length of the genome used. We obtains a data frame with the percentage of coverage for each chromatin state and it's possible to plot the result in `.png` file.
+
+```{r}
+summary_chromatin_state = plotChromatinState(chromatin_state, state_name = state_name, state_number = state_number, merge = TRUE, plot = FALSE, color = color_value, filename = "")
 ```
 ```{r}
 head(summary_chromatin_state)
 ```
 ![](figures/chromatin_state_distribution.png){width=100%}
 
-# Enhancer annotation
+# Annotation of enhancer
 
-From chromatin state table, we focused on enhancer chromatin state (in this study, we have 4 tpe of enhancer : bivalent enhancer (EnhBiv), genic enhacer (EnhG), active enhancer (EnhA) and weak enhancer (EnhW))
+We are interested to associated at each enhancer, genes regulated by the enhancer. We focused on enhancer chromatin state (in this study, we have 4 tpe of enhancer : bivalent enhancer (EnhBiv), genic enhancer (EnhG), active enhancer (EnhA) and weak enhancer (EnhWk)). The file used must to be a `GRanges` file
+
 ```{r}
 data(list_table_enhancer)
+```
+```{r echo = FALSE}
 list_table_enhancer[[1]]
 ```
 ## Annotated enhancer binding to enhancer position
+To estimated which gene is regulated by enhancer, we estimated that genes associated enhancer, all TSS genes in interval around enhancer. `enhancerAnnotation()` take few minutes to process in function the length of your enhancer table. It's possible to multithread the job with the `nCore` parameter. For each enhancer position, we obtains two informations, the distnace between gene and enhancer (in bp) and the gene
 ```{r}
-table_enhancer_gene = enhancerAnnotation(list_table_enhancer[[1]],genome = genome_gene_file,interval = 500000, nCore = 1)
+table_enhancer_gene = enhancerAnnotation(list_table_enhancer[[1]],genome = genome_file,interval = 500000, nCore = 1)
+```
+```{r echo = FALSE}
 table_enhancer_gene
+table_enhancer_gene$sample_name = "RS"
 ```
 
-Add sample name
-```{r}
-table_enhancer_gene$sample_name = "RS"
-table_enhancer_gene
-```
 ### Number of gene associate at the enhancer
+We want to know the disribution of number of genes associated at each enhancer to adapted future filters
 ```{r, fig.width = 7,fig.asp = 0.6}
 plotGeneAssociation(table_enhancer_gene, all = F)
 ```
 
 ## Associated gene expression to enhancer
+We associated the expression level at each gene associated to enhancer
 ```{r}
-gene_expression = read.table("~/Documents/Mouse/RNAseq/DE_analysis_3_factors_Kit_SC_SCII_RS_spike/RS_CTL_gene_expression.tsv",sep = "\t",h = T)
-head(gene_expression)
-table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene,gene_expression_table = gene_expression)
+data(geneExpression)
+```
+```{r echo = FALSE}
+head(geneExpression)
+```
+```{r}
+table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene, gene_expression_table = geneExpression)
+```
+```{r echo = FALSE}
 table_enhancer_gene_expression
 ```
 
@@ -110,31 +130,57 @@ plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
 
 # Enhancer annotation comparison
 
+### Number of gene associate at the enhancer
+```{r}
+# plotGeneAssociation(list_table_enhancer_gene_sample,all = T)
+```
+![](figures/number_gene_associate_enhancer.png)
+
+### Distance gene-enhancer in function their expression
+```{r}
+# plotDistanceExpression(list_table_enhancer_gene_expression, color = color_value, state_name = state_name, state_number = state_number)
+```
+![](figures/distance_expression_enhancer_distribution.png)
+
+### Distance gene-enhancer
+```{r}
+# plotGeneDistance(list_table_enhancer_gene_expression)
+```
+![](figures/distance_gene_enhancer_distribution.png)
+
+### Enhancer expression
+```{r}
+# plotEnhancerExpression(list_table_enhancer_gene_expression, scale = "log10", color = color_value, state_name = state_name, state_number = state_number)
+```
+![](figures/enhancer_expression_distribution.png)
+
+
 # Gene environment
 ```{r}
-state_order_reduce = c("TSS","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhW","ZNF.Rpts",
-  "Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
+state_order_reduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk","ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
 ```
 ```{r}
-data(table_gene_bed)
-head(table_gene_bed)
-
+data(geneExpression)
+data(chromatin_state)
 ```
 ## Coverage of chromatin state in environment binding to TSS regions
 ```{r}
-#table_overlapping = geneEnvironment(table_gene_bed,data_chromatin_state, unique(state_order_reduce))
-#rownames(table_overlapping) = table_overlapping$gene_ENS
+table_overlapping = geneEnvironment(geneExpression,chromatin_state, unique(state_order_reduce))
+rownames(table_overlapping) = table_overlapping$gene_ENS
 ```
 ```{r echo = FALSE}
-#head(table_overlapping)
+head(table_overlapping)
 ```
 
 ## Predominant state in environment binding to TSS regions
 ```{r}
-#result_umap = predominentState(table_overlapping, state = unique(state_order_reduce),
-#  header = unique(state_order_reduce) ,neighbors = 32, metric = "euclidean", dist = 0.5)
-#head(result_umap)
+result_umap = predominentState(table_overlapping, state = unique(state_order_reduce),
+ header = unique(state_order_reduce) ,neighbors = 32, metric = "euclidean", dist = 0.5)
 ```
+```{r echo = FALSE}
+head(result_umap)
+```
+![](figures/umap_chromatin_state.png){width=100%}
 
 ## Session Information
 
@@ -145,5 +191,7 @@ sessionInfo()
 ```
 
 ## References
-
-
+ChromHMM \n
+Papier scientifique associé \n
+umapr \n
+genomicRanges \n

@@ -39,7 +39,7 @@ plotGeneAssociation = function(table, all = F, state_name, state_number, state_c
     p = ggplot(df,aes(x = as.numeric(gene_association), y = count)) +
       geom_point() +
       geom_smooth(method = "lm",formula = y~poly(x,10),se = F,color = "red") +
-      xlab("number of gene associate") + ylab("frequence") +
+      xlab("number of gene associated") + ylab("frequence") +
       themePlot() +
       theme(axis.text.x = element_text(),
         axis.text.y = element_text(),

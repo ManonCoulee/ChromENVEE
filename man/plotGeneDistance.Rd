@@ -4,10 +4,17 @@
 \alias{plotGeneDistance}
 \title{Function to create a plot which represent the distribution of distance gene-enhancer}
 \usage{
-plotGeneDistance(data_table, xlab = "", ylab = "distance enhancer-gene (bp)")
+plotGeneDistance(
+  data_table,
+  limit = 5e+05,
+  xlab = "",
+  ylab = "distance enhancer-gene (bp)"
+)
 }
 \arguments{
 \item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+
+\item{limit}{a value of limit for distance analysis}
 
 \item{xlab}{a string}
 

@@ -13,7 +13,8 @@
 #' @export
 predominentState = function(table, state, header, neighbors = 32, metric = "euclidean", dist = 0.5) {
 
-  result = umap(table[,header], n_neighbors = neighbors, metric = metric, min_dist = dist)
+  message("It will be take few minutes to process")
+  result = invisible(umap(table[,header], n_neighbors = neighbors, metric = metric, min_dist = dist))
 
   result$state = sapply(rownames(result), function(gene) {
   	pos = which(table[gene,state] == max(table[gene,state]))

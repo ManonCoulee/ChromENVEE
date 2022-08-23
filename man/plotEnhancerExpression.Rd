@@ -7,7 +7,7 @@
 plotEnhancerExpression(
   data_table,
   xlab = "",
-  ylab = "gene expression log10(cpm)",
+  ylab = "gene expression log10(CPM)",
   scale = "none",
   color,
   state_number,

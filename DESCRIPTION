@@ -24,5 +24,6 @@ Imports:
     ggplot2,
     GenomicRanges,
     umapr,
-    parallel
-biocViews:GenomicRanges
+    parallel,
+    stringr
+biocViews: GenomicRanges
