@@ -13,7 +13,7 @@ plotGeneDistance = function(data_table, limit = 500000,
   xlab = "",
   ylab = "distance enhancer-gene (bp)") {
 
-  lim = lengthVector(limit)
+  lim = getLengthVector(limit)
 
   information_table = getInformation(data_table)
   information_table$distance = as.numeric(information_table$distance)

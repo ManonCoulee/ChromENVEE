@@ -4,18 +4,12 @@
 \alias{plotGeneAssociation}
 \title{Function which plot the number of gene associated to enhancer}
 \usage{
-plotGeneAssociation(table, all = F, state_name, state_number, state_color)
+plotGeneAssociation(table, all = F)
 }
 \arguments{
 \item{table}{GRanges table contains results obtains by enhancerAnnotation()}
 
 \item{all}{a boolean, if TRUE, list of dataframe is merge}
-
-\item{state_name}{a vector of chromatin state name}
-
-\item{state_number}{state_number a vector of chromatin state number}
-
-\item{state_color}{a vector of color to associated to each chromatin state}
 }
 \value{
 a plot of the number of gene associated to enhancer

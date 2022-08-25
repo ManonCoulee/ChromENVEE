@@ -10,8 +10,8 @@ test_that("Test the conformity of initial data", {
 
   data_frame = data.frame(c(1:10),c(1:10))
 
-  ## Test for stateColor
-  expect_error(stateColor(state_name,state_number,color_value),
+  ## Test for getStateColor
+  expect_error(getStateColor(state_name,state_number,color_value),
     regexp = "Not same length between each parameters !")
 
   ## Test for getInformation

@@ -19,9 +19,9 @@ plotDistanceExpression = function(data_table,
   state_number,
   state_name, limit = 500000) {
 
-  col = stateColor(state_name = state_name, state_number = state_number, color = color)
+  col = getStateColor(state_name = state_name, state_number = state_number, color = color)
 
-  lim = lengthVector(limit)
+  lim = getLengthVector(limit)
 
   information_table = getInformation(data_table)
   information_table$distance = as.numeric(information_table$distance)

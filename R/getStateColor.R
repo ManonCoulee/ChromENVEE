@@ -6,7 +6,7 @@
 #'
 #' @return list of vector with each chromatin state associate to color
 #' @export
-stateColor = function(state_name, state_number, color) {
+getStateColor = function(state_name, state_number, color) {
 
   ## Test si les 3 variable ont la même taille
   if(length(state_name) != length(state_number)) {

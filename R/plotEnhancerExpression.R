@@ -37,7 +37,7 @@ plotEnhancerExpression = function(data_table,
     information_table = information_table[information_table$distance <= distance,]
   }
 
-  col = stateColor(state_name = state_name, state_number = state_number, color = color)
+  col = getStateColor(state_name = state_name, state_number = state_number, color = color)
 
   if(scale == "log10") {
     information_table$expression = log10(information_table$expression+0.01)

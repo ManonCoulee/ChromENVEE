@@ -5,7 +5,7 @@
 #' @import stringr
 #'
 #' @return a vector of limit
-lengthVector = function(lim) {
+getLengthVector = function(lim) {
 
   lim = lim/2
   limit = seq(0,lim,length.out = 6)

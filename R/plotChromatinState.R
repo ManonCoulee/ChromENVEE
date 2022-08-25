@@ -70,7 +70,7 @@ distribution_chromatin_state = function(genomic_region,state_name, state_number)
 plot_distribution_chromatin_state = function(table, filename, color, state_name, state_number,
 	merge,ylab,xlab) {
 
-	col = stateColor(state_name = state_name, state_number = state_number, color = color)
+	col = getStateColor(state_name = state_name, state_number = state_number, color = color)
 
 	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("Kit_m","Kit_p","SC","RS")))) +
 		geom_bar(aes(fill = factor(state),
