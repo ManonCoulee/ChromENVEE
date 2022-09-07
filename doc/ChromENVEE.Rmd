@@ -80,7 +80,7 @@ data(list_table_enhancer)
 list_table_enhancer[[1]]
 ```
 ## Annotated enhancer binding to enhancer position
-To estimated which gene is regulated by enhancer, we estimated that genes associated enhancer, all TSS genes in interval around enhancer. `enhancerAnnotation()` take few minutes to process in function the length of your enhancer table. It's possible to multithread the job with the `nCore` parameter. For each enhancer position, we obtains two informations, the distnace between gene and enhancer (in bp) and the gene
+To estimated which gene is regulated by enhancer, we estimated that genes associated enhancer, all TSS genes in interval around enhancer. `enhancerAnnotation()` take few minutes to process in function the length of your enhancer table. It's possible to multithread the job with the `nCore` parameter. For each enhancer position, we obtains two informations, the distance between gene and enhancer (in bp) and the gene
 ```{r}
 table_enhancer_gene = enhancerAnnotation(list_table_enhancer[[1]],genome = genome_file,interval = 500000, nCore = 1)
 ```
@@ -96,7 +96,7 @@ plotGeneAssociation(table_enhancer_gene, all = F)
 ```
 
 ## Associated gene expression to enhancer
-We associated the expression level at each gene associated to enhancer
+We associated the level of gene expression at each gene associated to enhancer
 ```{r}
 data(geneExpression)
 ```
@@ -111,28 +111,38 @@ table_enhancer_gene_expression
 ```
 
 ## Profile of enhancer annotation
-### Distance gene-enhancer in function their expression
+### Distance gene-enhancer according to their expression
+We generated plot to estimated the level of gene expression according to the distance between gene and enhancer
 ```{r, fig.width = 7,fig.asp = 0.6}
-plotDistanceExpression(table_enhancer_gene_expression,color = color_value,
-    state_name = state_name, state_number = state_number)
+plotDistanceExpression(table_enhancer_gene_expression, color = color_value, state_name = state_name, state_number = state_number)
 ```
 
 ### Distance gene-enhancer
+We generated plot to estimated the distribution of gene according to the distance between gene and enhancer
 ```{r, fig.width = 7,fig.asp = 0.3}
 plotGeneDistance(table_enhancer_gene_expression)
 ```
 
 ### Enhancer expression
+We generated plot with the distribution of gene expression associated at enhancer region
 ```{r, fig.width = 7,fig.asp = 0.6}
-plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
-  color = color_value, state_name = state_name, state_number = state_number)
+plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10", color = color_value, state_name = state_name, state_number = state_number)
 ```
 
 # Enhancer annotation comparison
+It's possible to comparated different categories of enhancer. For that it's necessary to use a list of GRanges file each contains data like `list_table_enhancer` file.
+
+The first step is associated gene to each enhancer using `enhancerAnnotation()` on the list of enhancer. After the gene association, we associated the gene expression using `enhancerExpression()`.
+
+```{r}
+# list_table_enhancer_gene = lapply(list_table_enhancer,enhancerAnnotation, genome = genome_file, interval = 500000, nCore = 1)
+
+# list_table_enhancer_gene_expression = lapply(list_table_enhancer_gene, enhancerExpression, gene_expression_table = geneExpression)
+```
 
 ### Number of gene associate at the enhancer
 ```{r}
-# plotGeneAssociation(list_table_enhancer_gene_sample,all = T)
+# plotGeneAssociation(list_table_enhancer_gene_sample, all = T)
 ```
 ![](figures/number_gene_associate_enhancer.png)
 
@@ -156,6 +166,7 @@ plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
 
 
 # Gene environment
+We are interested to studying the chromatin environment of gene
 ```{r}
 state_order_reduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk","ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
 ```
@@ -164,8 +175,9 @@ data(geneExpression)
 data(chromatin_state)
 ```
 ## Coverage of chromatin state in environment binding to TSS regions
+To studying the environment of genes, we estimated as environment the interval (`interval` argument) around the TSS. `geneEnvironment()` may take few minutes in function the number of genes analyzed. For each gene, we obtains informations about the coverage of each chromatin state in the environment.
 ```{r}
-table_overlapping = geneEnvironment(geneExpression,chromatin_state, unique(state_order_reduce))
+table_overlapping = geneEnvironment(geneExpression, chromatin_state, state_order = unique(state_order_reduce), interval = 3000)
 rownames(table_overlapping) = table_overlapping$gene_ENS
 ```
 ```{r echo = FALSE}
@@ -173,6 +185,7 @@ head(table_overlapping)
 ```
 
 ## Predominant state in environment binding to TSS regions
+We estimated as predominent chromatin state in the environment, the chromatin state with the higher coverage in the environment. For each gene, we use `umapr` package to estimated the cluster dimension.
 ```{r}
 result_umap = predominentState(table_overlapping, state = unique(state_order_reduce),
  header = unique(state_order_reduce) ,neighbors = 32, metric = "euclidean", dist = 0.5)
@@ -180,6 +193,7 @@ result_umap = predominentState(table_overlapping, state = unique(state_order_red
 ```{r echo = FALSE}
 head(result_umap)
 ```
+It's an exemple of UMAP representation to visualized the predominent chromatin state in each gene.
 ![](figures/umap_chromatin_state.png){width=100%}
 
 ## Session Information
@@ -191,7 +205,10 @@ sessionInfo()
 ```
 
 ## References
-ChromHMM \n
-Papier scientifique associé \n
-umapr \n
-genomicRanges \n
+ChromHMM
+
+Papier scientifique associé
+
+umapr
+
+genomicRanges

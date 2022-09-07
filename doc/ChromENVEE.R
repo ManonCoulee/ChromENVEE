@@ -60,18 +60,21 @@ table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene, gene_ex
 table_enhancer_gene_expression
 
 ## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
-plotDistanceExpression(table_enhancer_gene_expression,color = color_value,
-    state_name = state_name, state_number = state_number)
+plotDistanceExpression(table_enhancer_gene_expression, color = color_value, state_name = state_name, state_number = state_number)
 
 ## ---- fig.width = 7,fig.asp = 0.3---------------------------------------------
 plotGeneDistance(table_enhancer_gene_expression)
 
 ## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
-plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
-  color = color_value, state_name = state_name, state_number = state_number)
+plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10", color = color_value, state_name = state_name, state_number = state_number)
 
 ## -----------------------------------------------------------------------------
-# plotGeneAssociation(list_table_enhancer_gene_sample,all = T)
+# list_table_enhancer_gene = lapply(list_table_enhancer,enhancerAnnotation, genome = genome_file, interval = 500000, nCore = 1)
+
+# list_table_enhancer_gene_expression = lapply(list_table_enhancer_gene, enhancerExpression, gene_expression_table = geneExpression)
+
+## -----------------------------------------------------------------------------
+# plotGeneAssociation(list_table_enhancer_gene_sample, all = T)
 
 ## -----------------------------------------------------------------------------
 # plotDistanceExpression(list_table_enhancer_gene_expression, color = color_value, state_name = state_name, state_number = state_number)
@@ -90,7 +93,7 @@ data(geneExpression)
 data(chromatin_state)
 
 ## -----------------------------------------------------------------------------
-table_overlapping = geneEnvironment(geneExpression,chromatin_state, unique(state_order_reduce))
+table_overlapping = geneEnvironment(geneExpression, chromatin_state, state_order = unique(state_order_reduce), interval = 3000)
 rownames(table_overlapping) = table_overlapping$gene_ENS
 
 ## ----echo = FALSE-------------------------------------------------------------

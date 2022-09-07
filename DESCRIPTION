@@ -1,6 +1,6 @@
 Package: ChromENVEE
 Title: Chromatin Environment and Enhancer Expression
-Version: 1.1.6
+Version: 1.1.7
 Authors@R:
     person(given = "Manon",
            family = "Coulee",
@@ -14,16 +14,16 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.1
 Depends:
     R (>= 3.5.0)
-Suggests: 
+Suggests:
     rmarkdown,
     knitr,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
-Imports: 
+Imports:
     ggplot2,
     GenomicRanges,
-    umapr,
     parallel,
-    stringr
+    stringr,
+    umap
 biocViews: GenomicRanges
