@@ -5,8 +5,11 @@ This package implements functions to associated genes with enhancers, defined th
 
 ### Installation
 
-To install ChromENVEE package from GitHub
+To install ChromENVEE package from GitHub using [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) package :
 
 ```
-devtools::install_github("ropenscilabs/umapr")
+devtools::install_github("ManonCoulee/ChromENVEE")
+```
+```
+library(ChromENVEE)
 ```
