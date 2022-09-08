@@ -1,9 +1,9 @@
-#' Function with associate at each enhancer the gene expression level
+#' Function which associated at each enhancer the gene expression level
 #'
-#' @param enhancer_table GRanges table contains genomic position return by ChromHMM tool
-#' @param gene_expression_table a table contains gene expression and gene Ensembl gene (RNAseq)
+#' @param enhancer_table GRanges table contains genomic position (ex. return by ChromHMM tool)
+#' @param gene_expression_table a table contains gene expression and gene Ensembl name (RNAseq data)
 #'
-#' @return GRanges table with for each genomic position gene associate and the expression of gene
+#' @return GRanges table with for each genomic position all gene associated and the expression of these genes
 #' @export
 enhancerExpression = function(enhancer_table, gene_expression_table) {
 
