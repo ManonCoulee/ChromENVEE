@@ -14,7 +14,7 @@ enhancerAnnotation = function(enhancerTable,genome, interval = 500000, nCore = 1
 
   set.seed(10)
   if(class(enhancerTable) != "GRanges"){
-    stop("'enhancer_table' is not a GRanges table")
+    stop("'enhancerTable' is not a GRanges table")
   }
   ## Add interval value at each side enhancer
   enhancerTable$start_500kb = start(enhancerTable) - interval
