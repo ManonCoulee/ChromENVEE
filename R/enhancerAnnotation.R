@@ -1,14 +1,14 @@
-#' Function with associate at each enhancer the nearly gene
+#' Function which associated at each enhancer all gene in the interval arount the enhancer
 #'
-#' @param enhancer_table GRanges table contains genomic position return by ChromHMM tool
+#' @param enhancer_table GRanges table contains genomic position for each enhancer (ex. return by ChromHMM tool
 #' @param genome a bed genome annotation file
-#' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for
-#' @param nCore a numeric value corresponding to the number of core used
+#' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for (default interval = 500000 (500kb))
+#' @param nCore a numeric value corresponding to the number of core used (default nCore = 1)
 #'
 #' @import GenomicRanges
 #' @import parallel
 #'
-#' @return the table with infromation concerning gene associate enhancer
+#' @return a table with infromation about gene associated with enhancer
 #' @export
 enhancerAnnotation = function(enhancer_table,genome, interval = 500000, nCore = 1) {
 
