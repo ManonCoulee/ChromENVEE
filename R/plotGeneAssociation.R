@@ -1,11 +1,11 @@
 #' Function which plot the number of gene associated to enhancer
 #'
-#' @param table GRanges table contains results obtains by enhancerAnnotation()
-#' @param all a boolean, if TRUE, list of dataframe is merge
+#' @param a GRanges table or list of GRanges obtains by enhancerAnnotation function
+#' @param all a boolean, if TRUE, list of dataframe is merge (default = F)
 #'
 #' @import ggplot2
 #'
-#' @return a plot of the number of gene associated to enhancer
+#' @return ggplot2 figure of the number of gene associated to enhancer
 #' @export
 plotGeneAssociation = function(table, all = F) {
 

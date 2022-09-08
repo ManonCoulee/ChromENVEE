@@ -9,7 +9,7 @@
 #'
 #' @import umap
 #'
-#' @return the table with 2-dimensional value and predominent chromatin state
+#' @return table with 2-dimensional value and predominent chromatin state
 #' @export
 predominentState = function(table, state, header, neighbors = 32, metric = "euclidean", dist = 0.5) {
 

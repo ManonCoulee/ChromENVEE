@@ -1,16 +1,16 @@
-#' Function with associate at each enhancer the nearly gene
+#' Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)
 #'
-#' @param table a bed genome annotation file
-#' @param table_chromHMM a ChromHMM table
-#' @param state_order a list of state
-#' @param interval a numeric value corresponding to environment distance (default = 3000)
+#' @param geneExpressionTable a table contains gene expression and gene Ensembl name (ex. geneExpression data)
+#' @param tableChromatinState a bed table containing information about the chromatin state (ex. chromatin_state data)
+#' @param stateOrder a list of chromatin state
+#' @param interval a numeric value corresponding to environment distance (default = 3000 (3kb))
 #'
-#' @return the table with the distribution of each chromatin state in the environment
+#' @return table with the distribution of each chromatin state in the environment
 #' @export
-geneEnvironment = function(table,table_chromHMM, state_order, interval = 3000) {
+geneEnvironment = function(geneExpressionTable,tableChromatinState, stateOrder, interval = 3000) {
 
 	## Return TSS position (start if + strand or end if - strand)
-	table$TSS = as.numeric(apply(table,1,function(line) {
+	geneExpressionTable$TSS = as.numeric(apply(geneExpressionTable,1,function(line) {
 	  if(line["strand"] == "+") {
 	    return(line["start"])
 	  } else {
@@ -18,26 +18,26 @@ geneEnvironment = function(table,table_chromHMM, state_order, interval = 3000) {
 	  }
 	}))
 
-	table$TSS_moins_3kb = table$TSS - interval
-	table$TSS_plus_3kb = table$TSS + interval
+	geneExpressionTable$TSS_moins_3kb = geneExpressionTable$TSS - interval
+	geneExpressionTable$TSS_plus_3kb = geneExpressionTable$TSS + interval
 
-	table[,state_order] = 0
+	geneExpressionTable[,stateOrder] = 0
 
-	list_chromHMM_table = lapply(unique(table_chromHMM$chr),function(chr) {
-		tt = table_chromHMM[table_chromHMM$chr == chr,]
+	list_tableChromatinState = lapply(unique(tableChromatinState$chr),function(chr) {
+		tt = tableChromatinState[tableChromatinState$chr == chr,]
 		return(tt)
 	})
-	names(list_chromHMM_table) = unique(table_chromHMM$chr)
+	names(list_tableChromatinState) = unique(tableChromatinState$chr)
 
-	table[,state_order] = do.call(rbind,lapply(rownames(table), function(gene) {
-		gene_value = table[gene,]
+	geneExpressionTable[,stateOrder] = do.call(rbind,lapply(rownames(geneExpressionTable), function(gene) {
+		gene_value = geneExpressionTable[gene,]
 		chr = gene_value$chr
 
-		table_chromHMM_chr = list_chromHMM_table[[chr]]
+		tableChromatinState_chr = list_tableChromatinState[[chr]]
 
 		## Remove chromatin state before interval
-		tt = table_chromHMM_chr[!((table_chromHMM_chr$start < gene_value$TSS_moins_3kb)
-		 	& (table_chromHMM_chr$end < gene_value$TSS_moins_3kb)),]
+		tt = tableChromatinState_chr[!((tableChromatinState_chr$start < gene_value$TSS_moins_3kb)
+		 	& (tableChromatinState_chr$end < gene_value$TSS_moins_3kb)),]
 		## Remove chromatin state after interval
 		tt = tt[!((tt$start > gene_value$TSS_plus_3kb)
 			& (tt$end > gene_value$TSS_plus_3kb)),]
@@ -54,9 +54,9 @@ geneEnvironment = function(table,table_chromHMM, state_order, interval = 3000) {
 			return(length_overlapping)
 		}))
 
-		return(t(data.frame(unlist(lapply(state_order, function(x){
+		return(t(data.frame(unlist(lapply(stateOrder, function(x){
 			sum(tt[tt$state_name == x,"coverage"])/(interval*2)
 		})))))
 	}))
-	return(table)
+	return(geneExpressionTable)
 }

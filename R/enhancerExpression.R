@@ -1,18 +1,18 @@
 #' Function which associated at each enhancer the gene expression level
 #'
-#' @param enhancer_table GRanges table contains genomic position (ex. return by ChromHMM tool)
-#' @param gene_expression_table a table contains gene expression and gene Ensembl name (RNAseq data)
+#' @param enhancerTable GRanges table contains genomic position (ex. return by ChromHMM tool)
+#' @param geneExpressionTable a table contains gene expression and gene Ensembl name (RNAseq data)
 #'
 #' @return GRanges table with for each genomic position all gene associated and the expression of these genes
 #' @export
-enhancerExpression = function(enhancer_table, gene_expression_table) {
+enhancerExpression = function(enhancerTable, geneExpressionTable) {
 
-  enhancer_table$gene_expression = unlist(lapply(1:length(enhancer_table), function(enhancer){
-    list_gene = enhancer_table[enhancer]$gene_list
+  enhancerTable$gene_expression = unlist(lapply(1:length(enhancerTable), function(enhancer){
+    list_gene = enhancerTable[enhancer]$gene_list
     list_gene = unlist(strsplit(list_gene,";"))
 
     expression = unlist(lapply(list_gene, function(gene) {
-      x = gene_expression_table[gene_expression_table$gene_ENS == gene,"gene_expression"]
+      x = geneExpressionTable[geneExpressionTable$gene_ENS == gene,"gene_expression"]
       if(length(x) != 1) {
         x = NA
       }
@@ -20,5 +20,5 @@ enhancerExpression = function(enhancer_table, gene_expression_table) {
     }))
     return(paste0(expression, collapse = ";"))
   }))
-  return(enhancer_table)
+  return(enhancerTable)
 }

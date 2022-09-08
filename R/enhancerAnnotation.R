@@ -1,6 +1,6 @@
 #' Function which associated at each enhancer all gene in the interval arount the enhancer
 #'
-#' @param enhancer_table GRanges table contains genomic position for each enhancer (ex. return by ChromHMM tool
+#' @param enhancerTable GRanges table contains genomic position for each enhancer (ex. return by ChromHMM tool
 #' @param genome a bed genome annotation file
 #' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for (default interval = 500000 (500kb))
 #' @param nCore a numeric value corresponding to the number of core used (default nCore = 1)
@@ -10,15 +10,15 @@
 #'
 #' @return a table with infromation about gene associated with enhancer
 #' @export
-enhancerAnnotation = function(enhancer_table,genome, interval = 500000, nCore = 1) {
+enhancerAnnotation = function(enhancerTable,genome, interval = 500000, nCore = 1) {
 
   set.seed(10)
-  if(class(enhancer_table) != "GRanges"){
+  if(class(enhancerTable) != "GRanges"){
     stop("'enhancer_table' is not a GRanges table")
   }
   ## Add interval value at each side enhancer
-  enhancer_table$start_500kb = start(enhancer_table) - interval
-  enhancer_table$end_500kb = end(enhancer_table) + interval
+  enhancerTable$start_500kb = start(enhancerTable) - interval
+  enhancerTable$end_500kb = end(enhancerTable) + interval
 
   ## Add TSS position in function strand
   genome$TSS = as.numeric(apply(genome,1,function(line) {
@@ -37,25 +37,26 @@ enhancerAnnotation = function(enhancer_table,genome, interval = 500000, nCore = 
   names(list_genome_table) = unique(genome$chr)
 
   # Return gene associate enhancer
-  list_sub_enhancer_table = split(1:length(enhancer_table),
-    rep_len(1:nCore, length(enhancer_table)))
+  list_sub_enhancerTable = split(1:length(enhancerTable),
+    rep_len(1:nCore, length(enhancerTable)))
 
-  list_enhancer_table = mclapply(list_sub_enhancer_table, function(pos,table) {
+  list_enhancerTable = mclapply(list_sub_enhancerTable, function(pos,table) {
     tt = table[pos,]
-    # results = lapply(1:length(tt),count_number_gene_associate,tt,genome_gene_file)
-    results = lapply(1:length(tt), comparison_position_gene_enhancer, tt, list_genome_table)
+
+    results = lapply(1:length(tt), comparisonPositionGeneEnhancer, enhancer_table = tt,
+      list_genome_table = list_genome_table)
 
     tt$gene_association = unlist(lapply(results,function(x) {return(x[1])}))
     tt$distance = unlist(lapply(results,function(x){return(x[2])}))
     tt$gene_list = unlist(lapply(results,function(x){return(x[3])}))
     return(tt)
-  }, table = enhancer_table, mc.cores = nCore)
+  }, table = enhancerTable, mc.cores = nCore)
 
-  table_final = unlist(as(list_enhancer_table,"GRangesList"))
+  table_final = unlist(as(list_enhancerTable,"GRangesList"))
   return(table_final)
 }
 
-comparison_position_gene_enhancer = function(enhancer,enhancer_table,list_genome_table){
+comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_table){
 
   ## Chromosome associate position
   chr_value_enhancer = seqnames(enhancer_table[enhancer,])@values

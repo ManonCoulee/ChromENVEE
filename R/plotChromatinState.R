@@ -1,30 +1,30 @@
 #' Function to return summary table from ChromHMM data and create associated plot
 #'
-#' @param genomic_region a table contains genomic region associate each chromatin state (output from ChromHH)
-#' @param state_name a vector of chromatin state name
-#' @param state_number a vector of chromatin state number (name from ChromHMM)
+#' @param tableChromatinState a bed table containing information about the chromatin state (ex. chromatin_state data)
+#' @param stateName a vector of chromatin state name
+#' @param stateNumber a vector of chromatin state number
 #' @param color a vector of color to colored plot
-#' @param plot a boolean to create plot
-#' @param merge a boolean to merge data if it's a list of table
-#' @param filename a string to name the plot create
-#' @param ylab a string
-#' @param xlab a string
+#' @param plot a boolean to create plot (default = T)
+#' @param merge a boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge
+#' @param filename a string to name the plot create (defualt = "chromatin_state_distribution")
+#' @param ylab a string (default = "chromatin state (%)")
+#' @param xlab a string (default = "")
 #'
-#' @return the table contains distribution of different chromatin state
+#' @return table contains distribution of different chromatin state
 #' @export
-plotChromatinState = function(genomic_region, state_name, state_number, color,
+plotChromatinState = function(tableChromatinState, stateName, stateNumber, color,
 					plot = T,
 					merge = F,
 					filename = "chromatin_state_distribution",
 					ylab = "chromatin state (%)",
 					xlab = "") {
 
-	if(class(genomic_region) == "data.frame") {
-		table = distribution_chromatin_state(genomic_region,state_name,state_number)
-	} else if(class(genomic_region) == "list") {
-		table = lapply(genomic_region,distribution_chromatin_state,state_name,state_number)
+	if(class(tableChromatinState) == "data.frame") {
+		table = distributionChromatinState(tableChromatinState,stateName,stateNumber)
+	} else if(class(tableChromatinState) == "list") {
+		table = lapply(tableChromatinState,distribution_chromatin_state,stateName,stateNumber)
 	} else {
-		stop("'genomic_region' must be a data frame or a list of data frame")
+		stop("'tableChromatinState' must be a data frame or a list of data frame")
 	}
 
 	if(merge == T & class(table) == "list") {
@@ -33,44 +33,44 @@ plotChromatinState = function(genomic_region, state_name, state_number, color,
 
 	if(plot == T) {
 		if(class(table) == "list") {
-			lapply(table,plot_distribution_chromatin_state,filename = filename, state_name = state_name,
-				color = color, state_number = state_number,
+			lapply(table,plot_distribution_chromatin_state,filename = filename, stateName = stateName,
+				color = color, stateNumber = stateNumber,
 				merge = merge,ylab = ylab,xlab = xlab)
 		} else {
-			plot_distribution_chromatin_state(table,filename = filename, state_name = state_name,
-				color = color, state_number = state_number,
+			plotDistributionChromatinState(table,filename = filename, stateName = stateName,
+				color = color, stateNumber = stateNumber,
 				merge = merge,ylab = ylab,xlab = xlab)
 		}
 	}
 	return(table)
 }
 
-distribution_chromatin_state = function(genomic_region,state_name, state_number) {
+distributionChromatinState = function(tableChromatinState,stateName, stateNumber) {
 
-	if(class(genomic_region) == "data.frame") {
-		resume = data.frame("state" = unique(state_name))
-		resume$state = factor(resume$state, levels = unique(state_name))
-		rownames(resume) = unique(state_name)
+	if(class(tableChromatinState) == "data.frame") {
+		resume = data.frame("state" = unique(stateName))
+		resume$state = factor(resume$state, levels = unique(stateName))
+		rownames(resume) = unique(stateName)
 
-		genomic_region$size = abs(genomic_region$start - genomic_region$end)
-		genomic_region$state_name = factor(genomic_region$state, levels = state_number, labels = state_name)
-		genome_length = sum(genomic_region$size)
+		tableChromatinState$size = abs(tableChromatinState$start - tableChromatinState$end)
+		tableChromatinState$state_name = factor(tableChromatinState$state, levels = stateNumber, labels = stateName)
+		genome_length = sum(tableChromatinState$size)
 
 		resume$coverage = unlist(lapply(rownames(resume), function(state) {
-				(sum(genomic_region[genomic_region$state_name == state,"size"])/genome_length)*100
+				(sum(tableChromatinState[tableChromatinState$stateName == state,"size"])/genome_length)*100
 		}))
-		resume$sample_name = unique(genomic_region$name)
+		resume$sample_name = unique(tableChromatinState$name)
 
 		return(resume)
 	} else {
-		stop("'genomic_region' must be a data frame or a list of data frame")
+		stop("'tableChromatinState' must be a data frame or a list of data frame")
 	}
 }
 
-plot_distribution_chromatin_state = function(table, filename, color, state_name, state_number,
+plotDistributionChromatinState = function(table, filename, color, stateName, stateNumber,
 	merge,ylab,xlab) {
 
-	col = getStateColor(state_name = state_name, state_number = state_number, color = color)
+	col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
 
 	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("Kit_m","Kit_p","SC","RS")))) +
 		geom_bar(aes(fill = factor(state),
@@ -78,7 +78,7 @@ plot_distribution_chromatin_state = function(table, filename, color, state_name,
 			position = "dodge",stat = "identity") +
 		facet_grid(.~factor(state), switch = "x") +
 		scale_alpha_manual(values = seq(0.5,1, (0.5/(length(unique(table$sample_name))-1)))) +
-		scale_fill_manual(values = col$state_name) +
+		scale_fill_manual(values = col$stateName) +
 		xlab(xlab) + ylab(ylab) +
 		labs(fill = "chomatin state", alpha = "cell type") +
 		themePlot() +

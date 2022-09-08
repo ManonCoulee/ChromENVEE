@@ -1,29 +1,29 @@
 #' Function to create a plot which represent the gene expression in function distance gene-enhancer
 #'
-#' @param data_table a GRanges table or list of GRanges obtains by enhancerExpression function
+#' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
 #' @param color a list of color value
-#' @param state_number a list of chromatin state number
-#' @param state_name a list of chromatin state name
-#' @param xlab a string
-#' @param ylab a string
-#' @param limit a value of limit for distance analysis
+#' @param stateNumber a list of chromatin state number
+#' @param stateName a list of chromatin state name
+#' @param xlab a string (default = "")
+#' @param ylab a string (default = "log(CPM)")
+#' @param limit a value of limit for distance analysis (default = 500000 (500kb))
 #'
 #' @import ggplot2
 #'
-#' @return the ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer
+#' @return ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer
 #' @export
-plotDistanceExpression = function(data_table,
+plotDistanceExpression = function(dataTable,
   xlab = "",
   ylab = "log(CPM)",
   color,
-  state_number,
-  state_name, limit = 500000) {
+  stateNumber,
+  stateName, limit = 500000) {
 
-  col = getStateColor(state_name = state_name, state_number = state_number, color = color)
+  col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
 
   lim = getLengthVector(limit)
 
-  information_table = getInformation(data_table)
+  information_table = getInformation(dataTable)
   information_table$distance = as.numeric(information_table$distance)
   information_table$expression = as.numeric(information_table$expression)
 
@@ -32,7 +32,7 @@ plotDistanceExpression = function(data_table,
     information_table[pos,"limit"] = lim[l]
   }
 
-  if(class(data_table) == "list") {
+  if(class(dataTable) == "list") {
     ylab = "mean(CPM)"
     list_mean = lapply(lim, function(x) {
       tt = information_table[information_table$limit == x,]
@@ -48,7 +48,7 @@ plotDistanceExpression = function(data_table,
       group = sample_name, linetype = sample_name)) +
       geom_point(size = 3) +
       geom_line(size = 2) +
-      scale_color_manual(values = col$state_number) +
+      scale_color_manual(values = col$stateNumber) +
       scale_linetype_manual(values = rep(c("solid","dashed"),length(unique(mean$sample_name))/2)) +
       xlab(xlab) + ylab(ylab) +
       themePlot() +
@@ -58,7 +58,7 @@ plotDistanceExpression = function(data_table,
   } else {
     p = ggplot(information_table,aes(x = factor(limit, levels = lim), y = log(expression+0.01))) +
       geom_boxplot(aes(fill = chromatin_state),width = 0.1) +
-      scale_fill_manual(values = col$state_number) +
+      scale_fill_manual(values = col$stateNumber) +
       xlab(xlab) + ylab(ylab) +
       themePlot() +
       theme(axis.text.x = element_text(angle = 45, hjust = 1),

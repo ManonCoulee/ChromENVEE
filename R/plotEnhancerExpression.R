@@ -1,25 +1,25 @@
 #' Function to create a plot which represent the distribution of gene expression
 #'
-#' @param data_table a GRanges table or list of GRanges obtains by enhancerExpression function
+#' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
 #' @param color a list of color value
-#' @param state_number a list of chromatin state number
-#' @param state_name a list of chromatin state name
+#' @param stateNumber a list of chromatin state number
+#' @param stateName a list of chromatin state name
 #' @param scale a value (log10, log2 or none) to rescale expression (default = "none")
 #' @param distance a value to zoom the expression focus (default = 0)
-#' @param xlab a string
-#' @param ylab a string
+#' @param xlab a string (default = "")
+#' @param ylab a string (default = "gene expression (CPM)")
 #'
 #' @import ggplot2
 #'
-#' @return the ggplot2 figure corresponding to the distribution of gene expression
+#' @return ggplot2 figure corresponding to the distribution of gene expression
 #' @export
-plotEnhancerExpression = function(data_table,
+plotEnhancerExpression = function(dataTable,
   xlab = "",
-  ylab = "gene expression log10(CPM)",
+  ylab = "gene expression (CPM)",
   scale = "none",
   color,
-  state_number,
-  state_name, distance = 0) {
+  stateNumber,
+  stateName, distance = 0) {
 
   if(class(distance) != "numeric") {
     stop("'distance' must be a numeric object")
@@ -29,7 +29,7 @@ plotEnhancerExpression = function(data_table,
     stop("'scale' must be 'none', 'log10','log2' value. Default is 'none'")
   }
 
-  information_table = getInformation(data_table)
+  information_table = getInformation(dataTable)
   information_table$expression = as.numeric(information_table$expression)
   information_table$distance = as.numeric(information_table$distance)
 
@@ -37,7 +37,7 @@ plotEnhancerExpression = function(data_table,
     information_table = information_table[information_table$distance <= distance,]
   }
 
-  col = getStateColor(state_name = state_name, state_number = state_number, color = color)
+  col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
 
   if(scale == "log10") {
     information_table$expression = log10(information_table$expression+0.01)
@@ -48,7 +48,7 @@ plotEnhancerExpression = function(data_table,
   p = ggplot(information_table,aes(x = sample_name, y = expression)) +
     geom_violin(aes(fill = chromatin_state),color = "black") +
     geom_boxplot(width = 0.1) +
-    scale_fill_manual(values = col$state_number) +
+    scale_fill_manual(values = col$stateNumber) +
     xlab(xlab) + ylab(ylab) +
     themePlot() +
     theme(axis.text.x = element_text(),
