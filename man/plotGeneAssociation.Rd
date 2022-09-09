@@ -7,12 +7,12 @@
 plotGeneAssociation(table, all = F)
 }
 \arguments{
-\item{table}{GRanges table contains results obtains by enhancerAnnotation()}
+\item{table}{a GRanges table or list of GRanges obtains by enhancerAnnotation function}
 
-\item{all}{a boolean, if TRUE, list of dataframe is merge}
+\item{all}{a boolean, if TRUE, list of dataframe is merge (default = F)}
 }
 \value{
-a plot of the number of gene associated to enhancer
+ggplot2 figure of the number of gene associated to enhancer
 }
 \description{
 Function which plot the number of gene associated to enhancer

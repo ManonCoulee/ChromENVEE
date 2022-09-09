@@ -2,22 +2,22 @@
 % Please edit documentation in R/enhancerAnnotation.R
 \name{enhancerAnnotation}
 \alias{enhancerAnnotation}
-\title{Function with associate at each enhancer the nearly gene}
+\title{Function which associated at each enhancer all gene in the interval arount the enhancer}
 \usage{
-enhancerAnnotation(enhancer_table, genome, interval = 5e+05, nCore = 1)
+enhancerAnnotation(enhancerTable, genome, interval = 5e+05, nCore = 1)
 }
 \arguments{
-\item{enhancer_table}{GRanges table contains genomic position return by ChromHMM tool}
+\item{enhancerTable}{GRanges table contains genomic position for each enhancer (ex. return by ChromHMM tool}
 
 \item{genome}{a bed genome annotation file}
 
-\item{interval}{a numeric value corresponding to the distance from enhancer where gene is looking for}
+\item{interval}{a numeric value corresponding to the distance from enhancer where gene is looking for (default interval = 500000 (500kb))}
 
-\item{nCore}{a numeric value corresponding to the number of core used}
+\item{nCore}{a numeric value corresponding to the number of core used (default nCore = 1)}
 }
 \value{
-the table with infromation concerning gene associate enhancer
+a table with infromation about gene associated with enhancer
 }
 \description{
-Function with associate at each enhancer the nearly gene
+Function which associated at each enhancer all gene in the interval arount the enhancer
 }

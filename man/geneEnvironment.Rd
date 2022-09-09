@@ -2,22 +2,27 @@
 % Please edit documentation in R/geneEnvironment.R
 \name{geneEnvironment}
 \alias{geneEnvironment}
-\title{Function with associate at each enhancer the nearly gene}
+\title{Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)}
 \usage{
-geneEnvironment(table, table_chromHMM, state_order, interval = 3000)
+geneEnvironment(
+  geneExpressionTable,
+  tableChromatinState,
+  stateOrder,
+  interval = 3000
+)
 }
 \arguments{
-\item{table}{a bed genome annotation file}
+\item{geneExpressionTable}{a table contains gene expression and gene Ensembl name (ex. geneExpression data)}
 
-\item{table_chromHMM}{a ChromHMM table}
+\item{tableChromatinState}{a bed table containing information about the chromatin state (ex. chromatin_state data)}
 
-\item{state_order}{a list of state}
+\item{stateOrder}{a list of chromatin state}
 
-\item{interval}{a numeric value corresponding to environment distance (default = 3000)}
+\item{interval}{a numeric value corresponding to environment distance (default = 3000 (3kb))}
 }
 \value{
-the table with the distribution of each chromatin state in the environment
+table with the distribution of each chromatin state in the environment
 }
 \description{
-Function with associate at each enhancer the nearly gene
+Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)
 }

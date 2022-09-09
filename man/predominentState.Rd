@@ -27,7 +27,7 @@ predominentState(
 \item{dist}{a numeric value (see umapr package)}
 }
 \value{
-the table with 2-dimensional value and predominent chromatin state
+table with 2-dimensional value and predominent chromatin state
 }
 \description{
 Function with estimate the predominant state associated at each gene
