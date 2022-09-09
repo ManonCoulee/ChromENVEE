@@ -4,10 +4,10 @@
 \alias{getInformation}
 \title{Function to return information (expression and distance) for each enhancer}
 \usage{
-getInformation(data_table)
+getInformation(dataTable)
 }
 \arguments{
-\item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
 }
 \value{
 the ggplot2 figure corresponding to the distribution of distance gene-enhancer

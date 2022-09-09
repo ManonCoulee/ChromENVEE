@@ -5,23 +5,23 @@
 \title{Function to create a plot which represent the distribution of distance gene-enhancer}
 \usage{
 plotGeneDistance(
-  data_table,
+  dataTable,
   limit = 5e+05,
   xlab = "",
   ylab = "distance enhancer-gene (bp)"
 )
 }
 \arguments{
-\item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
 
-\item{limit}{a value of limit for distance analysis}
+\item{limit}{a value of limit for distance analysis (default = 500000 (500kb))}
 
-\item{xlab}{a string}
+\item{xlab}{a string (default = "")}
 
-\item{ylab}{a string}
+\item{ylab}{a string (default = "distance enhancer-gene (bp))}
 }
 \value{
-the ggplot2 figure corresponding to the distribution of distance gene-enhancer
+ggplot2 figure corresponding to the distribution of distance gene-enhancer
 }
 \description{
 Function to create a plot which represent the distribution of distance gene-enhancer

@@ -2,18 +2,18 @@
 % Please edit documentation in R/enhancerExpression.R
 \name{enhancerExpression}
 \alias{enhancerExpression}
-\title{Function with associate at each enhancer the gene expression level}
+\title{Function which associated at each enhancer the gene expression level}
 \usage{
-enhancerExpression(enhancer_table, gene_expression_table)
+enhancerExpression(enhancerTable, geneExpressionTable)
 }
 \arguments{
-\item{enhancer_table}{GRanges table contains genomic position return by ChromHMM tool}
+\item{enhancerTable}{GRanges table contains genomic position (ex. return by ChromHMM tool)}
 
-\item{gene_expression_table}{a table contains gene expression and gene Ensembl gene (RNAseq)}
+\item{geneExpressionTable}{a table contains gene expression and gene Ensembl name (RNAseq data)}
 }
 \value{
-GRanges table with for each genomic position gene associate and the expression of gene
+GRanges table with for each genomic position all gene associated and the expression of these genes
 }
 \description{
-Function with associate at each enhancer the gene expression level
+Function which associated at each enhancer the gene expression level
 }

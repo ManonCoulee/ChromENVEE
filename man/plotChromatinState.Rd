@@ -5,9 +5,9 @@
 \title{Function to return summary table from ChromHMM data and create associated plot}
 \usage{
 plotChromatinState(
-  genomic_region,
-  state_name,
-  state_number,
+  tableChromatinState,
+  stateName,
+  stateNumber,
   color,
   plot = T,
   merge = F,
@@ -17,26 +17,26 @@ plotChromatinState(
 )
 }
 \arguments{
-\item{genomic_region}{a table contains genomic region associate each chromatin state (output from ChromHH)}
+\item{tableChromatinState}{a bed table containing information about the chromatin state (ex. chromatin_state data)}
 
-\item{state_name}{a vector of chromatin state name}
+\item{stateName}{a vector of chromatin state name}
 
-\item{state_number}{a vector of chromatin state number (name from ChromHMM)}
+\item{stateNumber}{a vector of chromatin state number}
 
 \item{color}{a vector of color to colored plot}
 
-\item{plot}{a boolean to create plot}
+\item{plot}{a boolean to create plot (default = T)}
 
-\item{merge}{a boolean to merge data if it's a list of table}
+\item{merge}{a boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge}
 
-\item{filename}{a string to name the plot create}
+\item{filename}{a string to name the plot create (defualt = "chromatin_state_distribution")}
 
-\item{ylab}{a string}
+\item{ylab}{a string (default = "chromatin state (\%)")}
 
-\item{xlab}{a string}
+\item{xlab}{a string (default = "")}
 }
 \value{
-the table contains distribution of different chromatin state
+table contains distribution of different chromatin state
 }
 \description{
 Function to return summary table from ChromHMM data and create associated plot

@@ -5,32 +5,32 @@
 \title{Function to create a plot which represent the gene expression in function distance gene-enhancer}
 \usage{
 plotDistanceExpression(
-  data_table,
+  dataTable,
   xlab = "",
   ylab = "log(CPM)",
   color,
-  state_number,
-  state_name,
+  stateNumber,
+  stateName,
   limit = 5e+05
 )
 }
 \arguments{
-\item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
 
-\item{xlab}{a string}
+\item{xlab}{a string (default = "")}
 
-\item{ylab}{a string}
+\item{ylab}{a string (default = "log(CPM)")}
 
 \item{color}{a list of color value}
 
-\item{state_number}{a list of chromatin state number}
+\item{stateNumber}{a list of chromatin state number}
 
-\item{state_name}{a list of chromatin state name}
+\item{stateName}{a list of chromatin state name}
 
-\item{limit}{a value of limit for distance analysis}
+\item{limit}{a value of limit for distance analysis (default = 500000 (500kb))}
 }
 \value{
-the ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer
+ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer
 }
 \description{
 Function to create a plot which represent the gene expression in function distance gene-enhancer

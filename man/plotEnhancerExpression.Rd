@@ -5,35 +5,35 @@
 \title{Function to create a plot which represent the distribution of gene expression}
 \usage{
 plotEnhancerExpression(
-  data_table,
+  dataTable,
   xlab = "",
-  ylab = "gene expression log10(CPM)",
+  ylab = "gene expression (CPM)",
   scale = "none",
   color,
-  state_number,
-  state_name,
+  stateNumber,
+  stateName,
   distance = 0
 )
 }
 \arguments{
-\item{data_table}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
 
-\item{xlab}{a string}
+\item{xlab}{a string (default = "")}
 
-\item{ylab}{a string}
+\item{ylab}{a string (default = "gene expression (CPM)")}
 
 \item{scale}{a value (log10, log2 or none) to rescale expression (default = "none")}
 
 \item{color}{a list of color value}
 
-\item{state_number}{a list of chromatin state number}
+\item{stateNumber}{a list of chromatin state number}
 
-\item{state_name}{a list of chromatin state name}
+\item{stateName}{a list of chromatin state name}
 
 \item{distance}{a value to zoom the expression focus (default = 0)}
 }
 \value{
-the ggplot2 figure corresponding to the distribution of gene expression
+ggplot2 figure corresponding to the distribution of gene expression
 }
 \description{
 Function to create a plot which represent the distribution of gene expression
