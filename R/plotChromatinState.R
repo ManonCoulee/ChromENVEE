@@ -72,9 +72,9 @@ plotDistributionChromatinState = function(table, filename, color, stateName, sta
 
 	col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
 
-	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("Kit_m","Kit_p","SC","RS")))) +
+	p = ggplot(table, aes(y = coverage, x = factor(sample_name))) +
 		geom_bar(aes(fill = factor(state),
-			alpha = factor(sample_name, levels = c("Kit_m","Kit_p","SC","RS"))),
+			alpha = factor(sample_name)),
 			position = "dodge",stat = "identity") +
 		facet_grid(.~factor(state), switch = "x") +
 		scale_alpha_manual(values = seq(0.5,1, (0.5/(length(unique(table$sample_name))-1)))) +
