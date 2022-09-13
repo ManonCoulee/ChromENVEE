@@ -13,6 +13,9 @@ devtools::install_github("ManonCoulee/ChromENVEE")
 ```
 library(ChromENVEE)
 ```
+
+[tuto](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.html)
+
 ### Citation
 
 To cite the package, please use this following citation :
