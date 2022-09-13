@@ -14,6 +14,8 @@ devtools::install_github("ManonCoulee/ChromENVEE")
 library(ChromENVEE)
 ```
 
+ChromENVEE is available for R  version >= 3.6
+
 A [vignette](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.pdf) is available to use ChromENVEE
 
 ### Citation
