@@ -14,7 +14,7 @@ devtools::install_github("ManonCoulee/ChromENVEE")
 library(ChromENVEE)
 ```
 
-[tuto](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.html)
+A [vignette](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.pdf) is available to use ChromENVEE
 
 ### Citation
 
