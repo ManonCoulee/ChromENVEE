@@ -101,7 +101,7 @@ head(table_overlapping)
 
 ## -----------------------------------------------------------------------------
 result_umap = predominentState(table_overlapping, state = unique(stateOrderReduce),
- header = unique(stateOrderReduce) ,neighbors = 32, metric = "euclidean", dist = 0.5)
+ header = unique(stateOrderReduce), neighbors = 32, metric = "euclidean", dist = 0.5)
 
 ## ----echo = FALSE-------------------------------------------------------------
 head(result_umap)

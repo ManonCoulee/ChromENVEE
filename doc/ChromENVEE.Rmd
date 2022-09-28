@@ -33,14 +33,14 @@ library(ChromENVEE)
 
 # Initialization of data
 
-Generated vector to associated each chromatin state number `stateNumber` to a name `stateName` and a color `colorValue` (usable for plot generation)
+Created initial vector contains informations about chromatin state number `stateNumber`, chromatin state name `stateName` and chromatin state color `colorValue` (used for plot generation).
 ```{r}
 stateNumber = c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12","U13","U14","U15","U16","U17","U18")
 stateName = c("TSSA","TSSFlnk","TSSFlnkD","Tx","TxWk","EnhG","EnhG","EnhA","EnhWk","ZNF/Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPCWk","Quies","Quies","Quies")
 colorValue = c("#B71C1C","#E65100","#E65100","#43A047","#1B5E20","#99FF66","#99FF66","#F5B041","#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949","#7B7D7D","#D0D3D4","#D0D3D4","#D0D3D4")
 ```
 
-Download the reference genome as a `.bed` file, in this study we use mouse genome (mm10).
+Download the reference genome as a `.bed` file, in this study we used mouse genome (mm10).
 
 ```{r}
 data(genomeFile)
@@ -49,7 +49,7 @@ data(genomeFile)
 head(genomeFile)
 ```
 
-Download the chromatin state file (output of ChromHMM). It's a `.bed` file which contains informations like genomic position, information about chromatin state.
+Download the chromatin state file (ex. output of ChromHMM). It's a `.bed` file which contains informations like genomic position and information about chromatin state.
 
 ```{r}
 data(chromatinState)
@@ -59,7 +59,7 @@ head(chromatinState)
 ```
 # Distribution of chromatin state in the genome
 
-We are interested to know the distribution of chromatin state in the genome. `plotChromatinState` calculates the percentage of each chromatin state in function the length of the genome used. We obtains a data frame with the percentage of coverage for each chromatin state and it's possible to plot the result in `.png` file.
+We are interested to know the distribution of chromatin state in the genome. `plotChromatinState` calculates the percentage of each chromatin state in function the length of the genome used. We obtains a data frame with the percentage of coverage for each chromatin state and it's possible to plot the result in `.png` file with the argument `plot = TRUE`.
 
 ```{r}
 summary_chromatin_state = plotChromatinState(chromatinState, stateName = stateName, stateNumber = stateNumber, merge = TRUE, plot = FALSE, color = colorValue, filename = "")
@@ -71,7 +71,7 @@ head(summary_chromatin_state)
 
 # Annotation of enhancer
 
-We are interested to associated at each enhancer, genes regulated by the enhancer. We focused on enhancer chromatin state (in this study, we have 4 tpe of enhancer : bivalent enhancer (EnhBiv), genic enhancer (EnhG), active enhancer (EnhA) and weak enhancer (EnhWk)). The file used must to be a `GRanges` file
+We are interested to associated at each enhancer, genes regulated by the enhancer. We focused on enhancer chromatin state (in this study, we have 4 tpe of enhancer : bivalent enhancer (EnhBiv), genic enhancer (EnhG), active enhancer (EnhA) and weak enhancer (EnhWk)). The function uses a `GRanges` object (producted by [`GenomicRanges`](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) package).
 
 ```{r}
 data(listTableEnhancer)
@@ -80,7 +80,7 @@ data(listTableEnhancer)
 listTableEnhancer[[1]]
 ```
 ## Annotated enhancer binding to enhancer position
-To estimated which gene is regulated by enhancer, we estimated that genes associated enhancer, all TSS genes in interval around enhancer. `enhancerAnnotation()` take few minutes to process in function the length of your enhancer table. It's possible to multithread the job with the `nCore` parameter. For each enhancer position, we obtains two informations, the distance between gene and enhancer (in bp) and the gene
+To estimated which gene is regulated by enhancer, we estimated that genes associated enhancer, all TSS genes in interval around enhancer. `enhancerAnnotation()` take few minutes to process in function the length of your enhancer table. It's possible to multithread the job with the `nCore` parameter. For each enhancer position, we obtains two informations, the distance between gene and enhancer (in bp) and the gene.
 ```{r}
 table_enhancer_gene = enhancerAnnotation(listTableEnhancer[[1]],genome = genomeFile, interval = 500000, nCore = 1)
 ```
@@ -90,13 +90,13 @@ table_enhancer_gene$sample_name = "RS"
 ```
 
 ### Number of gene associate at the enhancer
-We want to know the disribution of number of genes associated at each enhancer to adapted future filters
+We want to know the distribution of number of genes associated at each enhancer.
 ```{r, fig.width = 7,fig.asp = 0.6}
 plotGeneAssociation(table_enhancer_gene, all = F)
 ```
 
 ## Associated gene expression to enhancer
-We associated the level of gene expression at each gene associated to enhancer
+We associated the level of gene expression at each gene associated to enhancer.
 ```{r}
 data(geneExpression)
 ```
@@ -112,25 +112,25 @@ table_enhancer_gene_expression
 
 ## Profile of enhancer annotation
 ### Distance gene-enhancer according to their expression
-We generated plot to estimated the level of gene expression according to the distance between gene and enhancer
+We generated plot to estimated the level of gene expression according to the distance between gene and enhancer.
 ```{r, fig.width = 7,fig.asp = 0.6}
 plotDistanceExpression(table_enhancer_gene_expression, color = colorValue, stateName = stateName, stateNumber = stateNumber)
 ```
 
 ### Distance gene-enhancer
-We generated plot to estimated the distribution of gene according to the distance between gene and enhancer
+We generated plot to estimated the distribution of gene according to the distance between gene and enhancer.
 ```{r, fig.width = 7,fig.asp = 0.3}
 plotGeneDistance(table_enhancer_gene_expression)
 ```
 
 ### Enhancer expression
-We generated plot with the distribution of gene expression associated at enhancer region
+We generated plot with the distribution of gene expression associated at enhancer region.
 ```{r, fig.width = 7,fig.asp = 0.6}
 plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10", color = colorValue, stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
 ```
 
 # Enhancer annotation comparison
-It's possible to comparated different categories of enhancer. For that it's necessary to use a list of GRanges file each contains data like `list_table_enhancer` file.
+It's possible to compare different categories of enhancer. For that it's necessary to used a list of GRanges object each contains data like `list_table_enhancer` file.
 
 The first step is associated gene to each enhancer using `enhancerAnnotation()` on the list of enhancer. After the gene association, we associated the gene expression using `enhancerExpression()`.
 
@@ -165,7 +165,7 @@ The first step is associated gene to each enhancer using `enhancerAnnotation()` 
 ![](figures/enhancer_expression_distribution.png)
 
 # Gene environment
-We are interested to studying the chromatin environment of gene
+We are interested to studying the chromatin environment of gene.
 ```{r}
 stateOrderReduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk","ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
 ```
@@ -184,10 +184,10 @@ head(table_overlapping)
 ```
 
 ## Predominant state in environment binding to TSS regions
-We estimated as predominent chromatin state in the environment, the chromatin state with the higher coverage in the environment. For each gene, we use `umapr` package to estimated the cluster dimension.
+We estimated as predominent chromatin state in the environment, the chromatin state with the higher coverage in the environment. For each gene, we use `umap` package to estimated the cluster dimension.
 ```{r}
 result_umap = predominentState(table_overlapping, state = unique(stateOrderReduce),
- header = unique(stateOrderReduce) ,neighbors = 32, metric = "euclidean", dist = 0.5)
+ header = unique(stateOrderReduce), neighbors = 32, metric = "euclidean", dist = 0.5)
 ```
 ```{r echo = FALSE}
 head(result_umap)
@@ -195,7 +195,7 @@ head(result_umap)
 It's an exemple of UMAP representation to visualized the predominent chromatin state in each gene.
 ![](figures/umap_chromatin_state.png){width=100%}
 
-## Session Information
+# Session Information
 
 Here is the output of `sessionInfo()` on the system on which this document was compiled:
 
@@ -203,7 +203,7 @@ Here is the output of `sessionInfo()` on the system on which this document was c
 sessionInfo()
 ```
 
-## References
+# References
 Ernst J, Kellis M. ChromHMM: automating chromatin-state discovery and characterization. Nature Methods, 9:215-216, 2012
 
 Papier scientifique associé
