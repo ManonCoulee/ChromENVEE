@@ -57,7 +57,7 @@ distributionChromatinState = function(tableChromatinState,stateName, stateNumber
 		genome_length = sum(tableChromatinState$size)
 
 		resume$coverage = unlist(lapply(rownames(resume), function(state) {
-				(sum(tableChromatinState[tableChromatinState$stateName == state,"size"])/genome_length)*100
+				(sum(tableChromatinState[tableChromatinState$state_name == state,"size"])/genome_length)*100
 		}))
 		resume$sample_name = unique(tableChromatinState$name)
 
