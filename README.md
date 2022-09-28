@@ -1,7 +1,6 @@
 # ChromENVEE (Chromatin ENVironment and Enhancer Expression)
 
-This package implements functions to associated genes with enhancers, defined the chromatin environment of the gene from genomic data (e.g. ChromHMM output). Several visualization functions are available to summarized the distribution of chromatin states, the amount, distance and expression of genes to enhancers and the dispersion of chromatin states in gene sets.
-
+This package implements functions to associate genes with enhancers, define the chromatin environment of the gene from genomic data (e.g., ChromHMM output or a bed file). Several visualization functions are available to summarize the distribution of chromatin states, characterize genes associated with enhancers and also estimate the chromatin environment of genes.
 
 ### Installation
 
