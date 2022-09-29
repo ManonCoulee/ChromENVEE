@@ -3,9 +3,12 @@ title: "ChromENVEE: Chromatin ENVironment and Enhancer Expression"
 author: "Coulée Manon"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
-    theme: paper
+  pdf_document:
     toc: true
+  rmarkdown::html_document:
+      theme: paper
+      toc: true
+
 
 vignette: >
   %\VignetteIndexEntry{ChromENVEE: Chromatin ENVironment and Enhancer Expression}
@@ -92,7 +95,7 @@ table_enhancer_gene$sample_name = "RS"
 ### Number of gene associate at the enhancer
 We want to know the distribution of number of genes associated at each enhancer.
 ```{r, fig.width = 7,fig.asp = 0.6}
-plotGeneAssociation(table_enhancer_gene, all = F)
+plotGeneAssociation(table_enhancer_gene, all = FALSE)
 ```
 
 ## Associated gene expression to enhancer

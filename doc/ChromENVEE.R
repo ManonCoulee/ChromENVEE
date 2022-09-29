@@ -45,7 +45,7 @@ table_enhancer_gene
 table_enhancer_gene$sample_name = "RS"
 
 ## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
-plotGeneAssociation(table_enhancer_gene, all = F)
+plotGeneAssociation(table_enhancer_gene, all = FALSE)
 
 ## -----------------------------------------------------------------------------
 data(geneExpression)
