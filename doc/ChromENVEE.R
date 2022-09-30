@@ -61,3 +61,59 @@ table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene,
 ## ----echo = FALSE-------------------------------------------------------------
 head(table_enhancer_gene_expression)
 
+## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
+plotDistanceExpression(table_enhancer_gene_expression, color = colorValue, stateName = stateName,
+stateNumber = stateNumber)
+
+## ---- fig.width = 7,fig.asp = 0.3---------------------------------------------
+plotGeneDistance(table_enhancer_gene_expression)
+
+## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
+plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10", color = colorValue,
+stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
+
+## -----------------------------------------------------------------------------
+list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation, genome = genomeFile,
+interval = 500000, nCore = 1)
+list_table_enhancer_gene_expression = lapply(list_table_enhancer_gene, enhancerExpression,
+geneExpressionTable = geneExpression)
+
+## -----------------------------------------------------------------------------
+plotGeneAssociation(list_table_enhancer_gene_expression, all = TRUE)
+
+## -----------------------------------------------------------------------------
+plotDistanceExpression(list_table_enhancer_gene_expression, color = colorValue,
+stateName = stateName, stateNumber = stateNumber)
+
+## -----------------------------------------------------------------------------
+plotGeneDistance(list_table_enhancer_gene_expression)
+
+## -----------------------------------------------------------------------------
+plotEnhancerExpression(list_table_enhancer_gene_expression, scale = "log10", color = colorValue,
+stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
+
+## -----------------------------------------------------------------------------
+stateOrderReduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk",
+"ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
+
+## -----------------------------------------------------------------------------
+data(geneExpression)
+data(chromatinState)
+
+## -----------------------------------------------------------------------------
+table_overlapping = geneEnvironment(geneExpression, chromatinState, stateOrder = unique(stateOrderReduce), interval = 3000)
+rownames(table_overlapping) = table_overlapping$gene_ENS
+
+## ----echo = FALSE-------------------------------------------------------------
+head(table_overlapping)
+
+## -----------------------------------------------------------------------------
+result_umap = predominentState(table_overlapping, state = unique(stateOrderReduce),
+header = unique(stateOrderReduce), neighbors = 32, metric = "euclidean", dist = 0.5)
+
+## ----echo = FALSE-------------------------------------------------------------
+head(result_umap)
+
+## ----echo = FALSE-------------------------------------------------------------
+sessionInfo()
+

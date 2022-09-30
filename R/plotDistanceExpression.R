@@ -26,7 +26,6 @@ plotDistanceExpression = function(dataTable,
   information_table = getInformation(dataTable)
   information_table$distance = as.numeric(information_table$distance)
   information_table$expression = as.numeric(information_table$expression)
-  print(information_table)
 
   for(l in names(lim)) {
     pos = which(information_table$distance > as.numeric(l))
