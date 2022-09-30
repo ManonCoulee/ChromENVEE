@@ -45,15 +45,27 @@ plotEnhancerExpression = function(dataTable,
     information_table$expression = log2(information_table$expression+0.01)
   }
 
-  p = ggplot(information_table,aes(x = sample_name, y = expression)) +
-    geom_violin(aes(fill = chromatin_state),color = "black") +
-    geom_boxplot(width = 0.1) +
-    scale_fill_manual(values = col$stateNumber) +
-    xlab(xlab) + ylab(ylab) +
-    themePlot() +
-    theme(axis.text.x = element_text(),
-      axis.text.y = element_text(),
-      legend.position = "none")
+  if(class(dataTable) == "list") {
+      p = ggplot(information_table,aes(x = sample_name, y = expression)) +
+        geom_violin(aes(fill = chromatin_state),color = "black") +
+        geom_boxplot(width = 0.1) +
+        scale_fill_manual(values = col$stateNumber) +
+        xlab(xlab) + ylab(ylab) +
+        themePlot() +
+        theme(axis.text.x = element_text(),
+          axis.text.y = element_text(),
+          legend.position = "none")
+  } else {
+      p = ggplot(information_table,aes(x = "", y = expression)) +
+        geom_violin(aes(fill = chromatin_state),color = "black") +
+        geom_boxplot(width = 0.1) +
+        scale_fill_manual(values = col$stateNumber) +
+        xlab(xlab) + ylab(ylab) +
+        themePlot() +
+        theme(axis.text.x = element_text(),
+          axis.text.y = element_text(),
+          legend.position = "none")
+  }
 
   return(p)
 }

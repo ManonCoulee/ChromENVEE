@@ -24,13 +24,22 @@ plotGeneDistance = function(dataTable, limit = 500000,
     information_table[pos,"distance_red"] = lim[l]
   }
 
-  p = ggplot(information_table,aes(x = sample_name, fill = factor(distance_red,levels = lim))) +
-    geom_bar(stat = "count", position = "fill") +
-    coord_flip() + labs(fill = "") + xlab(xlab) + ylab(ylab) +
-    themePlot() +
-    theme(axis.text.y = element_text(),
-      legend.position = "bottom") +
-    scale_fill_manual(values = c("#f1948a","#c39bd3","#85c1e9","#76d7c4","#f7dc6f","#f0b27a"))
-
+  if(class(dataTable) == "list") {
+    p = ggplot(information_table,aes(x = sample_name, fill = factor(distance_red,levels = lim))) +
+      geom_bar(stat = "count", position = "fill") +
+      coord_flip() + labs(fill = "") + xlab(xlab) + ylab(ylab) +
+      theme_void() +
+      theme(axis.text.y = element_text(),
+        legend.position = "bottom") +
+      scale_fill_manual(values = c("#f1948a","#c39bd3","#85c1e9","#76d7c4","#f7dc6f","#f0b27a"))
+  } else {
+    p = ggplot(information_table,aes(x = "", fill = factor(distance_red,levels = lim))) +
+      geom_bar(stat = "count", position = "fill") +
+      coord_flip() + labs(fill = "") + xlab(xlab) + ylab(ylab) +
+      theme_void() +
+      theme(axis.text.y = element_text(),
+        legend.position = "bottom") +
+      scale_fill_manual(values = c("#f1948a","#c39bd3","#85c1e9","#76d7c4","#f7dc6f","#f0b27a"))
+  }
   return(p)
 }

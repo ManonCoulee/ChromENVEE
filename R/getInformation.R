@@ -9,6 +9,12 @@
 getInformation = function(dataTable) {
   if(class(dataTable) == "list") {
     df = lapply(dataTable,function(x) {
+      if(class(x) != "GRanges") {
+        stop("'dataTable' must be a list of GRanges object")
+      }
+      if(length(x$sample_name) == 0) {
+        stop("GRanges object need a 'sample_name' column")
+      }
       gene_name = unlist(strsplit(unlist(x$gene_list),";"))
       expression = unlist(strsplit(unlist(x$gene_expression),";"))
       distance = unlist(strsplit(unlist(x$distance),";"))
@@ -33,7 +39,6 @@ getInformation = function(dataTable) {
     expression = unlist(strsplit(unlist(dataTable$gene_expression),";"))
     distance = unlist(strsplit(unlist(dataTable$distance),";"))
     data_frame = data.frame(gene_name,expression,distance)
-    data_frame$sample_name = unique(dataTable$sample_name)
     group = unique(dataTable$chromatin_state)
     data_frame$chromatin_state =  unlist(lapply(group, function(state) {
       count = sum(dataTable[dataTable$chromatin_state == state]$gene_association)

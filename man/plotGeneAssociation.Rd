@@ -4,7 +4,7 @@
 \alias{plotGeneAssociation}
 \title{Function which plot the number of gene associated to enhancer}
 \usage{
-plotGeneAssociation(table, all = F)
+plotGeneAssociation(table, all = FALSE)
 }
 \arguments{
 \item{table}{a GRanges table or list of GRanges obtains by enhancerAnnotation function}

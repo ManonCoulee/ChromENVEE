@@ -7,9 +7,9 @@
 #'
 #' @return ggplot2 figure of the number of gene associated to enhancer
 #' @export
-plotGeneAssociation = function(table, all = F) {
+plotGeneAssociation = function(table, all = FALSE) {
 
-  if (all == T && class(table) == "list") {
+  if (all == TRUE && class(table) == "list") {
     list_table = lapply(names(table), function(name) {
       tt = table[[name]]
       df = data.frame(table(tt$gene_association))
