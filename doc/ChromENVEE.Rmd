@@ -97,7 +97,7 @@ head(summary_chromatin_state)
 # Annotation of enhancer
 
 We are interested to associated at each enhancer, genes regulated by the enhancer. We focused on
-enhancer chromatin state (in this study, we have 4 tpe of enhancer : bivalent enhancer (EnhBiv),
+enhancer chromatin state (in this study, we have 4 type of enhancer : bivalent enhancer (EnhBiv),
 genic enhancer (EnhG), active enhancer (EnhA) and weak enhancer (EnhWk)).
 
 `listTableEnhancer` is a GRanges object or a list of GRanges object (producted by [`GenomicRanges`](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) package). Like chromatinState data frame, `listTableEnhancer` required gene information and chromatin state information. Sample name (sample_name) is required if you want compared enhancer annotation (see Enhnacer annotation comparison part).
@@ -166,6 +166,7 @@ stateNumber = stateNumber)
 ```
 
 ### Distance gene-enhancer
+
 We generated plot to estimated the distribution of gene according to the distance between gene and enhancer.
 ```{r, fig.width = 7,fig.asp = 0.3}
 plotGeneDistance(table_enhancer_gene_expression)
@@ -200,7 +201,7 @@ We want to know the distribution of genes associated at each enhancer. `all = TR
 ```{r}
 plotGeneAssociation(list_table_enhancer_gene_expression, all = TRUE)
 ```
- ### Distance gene-enhancer in function their expression
+### Distance gene-enhancer in function their expression
 We generated plot to estimated the level of gene expression according to the distance between gene and enhancer.
 ```{r}
 plotDistanceExpression(list_table_enhancer_gene_expression, color = colorValue,
@@ -221,7 +222,8 @@ stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(
 ```
 
 # Gene environment
-We are interested to studying the chromatin environment of gene.
+We are interested to studying the chromatin environment of gene. For that we need gene information data (`geneExpression`) and chromatin state data (`chromatinState`).
+
 ```{r}
 stateOrderReduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk",
 "ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
@@ -232,10 +234,13 @@ data(chromatinState)
 ```
 
 ## Coverage of chromatin state in environment binding to TSS regions
-To studying the environment of genes, we estimated as environment the interval (`interval` argument) around the TSS. `geneEnvironment()` may take few minutes in function the number of genes analyzed. For each gene, we obtains informations about the coverage of each chromatin state in the environment.
+`geneEnvironment` is a function able to estimate the chromatin state environment of gene. For that, we estimated the environment size around gene TSS with `interval` parameter. For each gene, we obtains informations about the coverage of each chromatin state (`state` parameter) in the environment.
+
+`geneEnvironment` may take few minutes in function the number of genes analyzed.
 
 ```{r}
-table_overlapping = geneEnvironment(geneExpression, chromatinState, stateOrder = unique(stateOrderReduce), interval = 3000)
+table_overlapping = geneEnvironment(geneExpression, chromatinState,
+stateOrder = unique(stateOrderReduce), interval = 3000)
 rownames(table_overlapping) = table_overlapping$gene_ENS
 ```
 ```{r echo = FALSE}
@@ -243,7 +248,8 @@ head(table_overlapping)
 ```
 
 ## Predominant state in environment binding to TSS regions
-We estimated as predominent chromatin state in the environment, the chromatin state with the higher coverage in the environment. For each gene, we use `umap` package to estimated the cluster dimension.
+`predominentState` able to estimated the predominent chromatin state in the environment of the gene.
+The function estimate as predominent the chromatin state with the higher coverage in the environment. Genes are clusterized in function their chromatin state using `umap` package. The function return a data frame with information about the predominent chromatin state and UMAP dimension.
 ```{r}
 result_umap = predominentState(table_overlapping, state = unique(stateOrderReduce),
 header = unique(stateOrderReduce), neighbors = 32, metric = "euclidean", dist = 0.5)

@@ -101,7 +101,8 @@ data(geneExpression)
 data(chromatinState)
 
 ## -----------------------------------------------------------------------------
-table_overlapping = geneEnvironment(geneExpression, chromatinState, stateOrder = unique(stateOrderReduce), interval = 3000)
+table_overlapping = geneEnvironment(geneExpression, chromatinState,
+stateOrder = unique(stateOrderReduce), interval = 3000)
 rownames(table_overlapping) = table_overlapping$gene_ENS
 
 ## ----echo = FALSE-------------------------------------------------------------
