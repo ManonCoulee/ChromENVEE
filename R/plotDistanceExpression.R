@@ -1,9 +1,7 @@
 #' Function to create a plot which represent the gene expression in function distance gene-enhancer
 #'
 #' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
-#' @param color a list of color value
-#' @param stateNumber a list of chromatin state number
-#' @param stateName a list of chromatin state name
+#' @param colorTable a data frame which contains color information
 #' @param xlab a string (default = "")
 #' @param ylab a string (default = "log(CPM)")
 #' @param limit a value of limit for distance analysis (default = 500000 (500kb))
@@ -15,11 +13,9 @@
 plotDistanceExpression = function(dataTable,
   xlab = "",
   ylab = "log(CPM)",
-  color,
-  stateNumber,
-  stateName, limit = 500000) {
+  colorTable, limit = 500000) {
 
-  col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
+  col = getStateColor(colorTable)
 
   lim = getLengthVector(limit)
 

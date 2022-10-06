@@ -1,9 +1,7 @@
 #' Function to return summary table from ChromHMM data and create associated plot
 #'
 #' @param tableChromatinState a bed table containing information about the chromatin state (ex. chromatin_state data)
-#' @param stateName a vector of chromatin state name
-#' @param stateNumber a vector of chromatin state number
-#' @param color a vector of color to colored plot
+#' @param colorTable a data frame which contains color information
 #' @param plot a boolean to create plot (default = T)
 #' @param merge a boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge
 #' @param filename a string to name the plot create (defualt = "chromatin_state_distribution")
@@ -12,7 +10,7 @@
 #'
 #' @return table contains distribution of different chromatin state
 #' @export
-plotChromatinState = function(tableChromatinState, stateName, stateNumber, color,
+plotChromatinState = function(tableChromatinState, colorTable,
 					plot = T,
 					merge = F,
 					filename = "chromatin_state_distribution",
@@ -70,7 +68,7 @@ distributionChromatinState = function(tableChromatinState,stateName, stateNumber
 plotDistributionChromatinState = function(table, filename, color, stateName, stateNumber,
 	merge,ylab,xlab) {
 
-	col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
+	col = getStateColor(colorTable = colorTable)
 
 	p = ggplot(table, aes(y = coverage, x = factor(sample_name))) +
 		geom_bar(aes(fill = factor(state),

@@ -1,9 +1,7 @@
 #' Function to create a plot which represent the distribution of gene expression
 #'
 #' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
-#' @param color a list of color value
-#' @param stateNumber a list of chromatin state number
-#' @param stateName a list of chromatin state name
+#' @param colorTable a data frame which contains color information
 #' @param scale a value (log10, log2 or none) to rescale expression (default = "none")
 #' @param distance a value to zoom the expression focus (default = 0)
 #' @param xlab a string (default = "")
@@ -17,9 +15,7 @@ plotEnhancerExpression = function(dataTable,
   xlab = "",
   ylab = "gene expression (CPM)",
   scale = "none",
-  color,
-  stateNumber,
-  stateName, distance = 0) {
+  colorTable, distance = 0) {
 
   if(class(distance) != "numeric") {
     stop("'distance' must be a numeric object")
@@ -37,7 +33,7 @@ plotEnhancerExpression = function(dataTable,
     information_table = information_table[information_table$distance <= distance,]
   }
 
-  col = getStateColor(stateName = stateName, stateNumber = stateNumber, color = color)
+  col = getStateColor(colorTable = colorTable)
 
   if(scale == "log10") {
     information_table$expression = log10(information_table$expression+0.01)
