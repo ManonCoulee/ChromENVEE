@@ -17,7 +17,9 @@ ChromENVEE is available for R  version >= 3.6
 
 ### Installation with vignette building
 
-A [vignette](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.pdf) is available to use ChromENVEE
+A [vignette](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.pdf) is available to use ChromENVEE.
+
+
 It's possible to build this vignette in R with the following command :
 
 ```
