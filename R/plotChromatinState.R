@@ -18,9 +18,9 @@ plotChromatinState = function(tableChromatinState, colorTable,
 					xlab = "") {
 
 	if(class(tableChromatinState) == "data.frame") {
-		table = distributionChromatinState(tableChromatinState,stateName,stateNumber)
+		table = distributionChromatinState(tableChromatinState,colorTable)
 	} else if(class(tableChromatinState) == "list") {
-		table = lapply(tableChromatinState,distribution_chromatin_state,stateName,stateNumber)
+		table = lapply(tableChromatinState,distribution_chromatin_state,colorTable)
 	} else {
 		stop("'tableChromatinState' must be a data frame or a list of data frame")
 	}
@@ -43,15 +43,16 @@ plotChromatinState = function(tableChromatinState, colorTable,
 	return(table)
 }
 
-distributionChromatinState = function(tableChromatinState,stateName, stateNumber) {
+distributionChromatinState = function(tableChromatinState,colorTable) {
 
 	if(class(tableChromatinState) == "data.frame") {
-		resume = data.frame("state" = unique(stateName))
-		resume$state = factor(resume$state, levels = unique(stateName))
-		rownames(resume) = unique(stateName)
+		resume = data.frame("state" = unique(colorTable$stateName))
+		resume$state = factor(resume$state, levels = unique(colorTable$stateName))
+		rownames(resume) = unique(colorTable$stateName)
 
 		tableChromatinState$size = abs(tableChromatinState$start - tableChromatinState$end)
-		tableChromatinState$state_name = factor(tableChromatinState$state, levels = stateNumber, labels = stateName)
+		tableChromatinState$state_name = factor(tableChromatinState$state,
+				levels = colorTable$stateNumber, labels = colorTable$stateName)
 		genome_length = sum(tableChromatinState$size)
 
 		resume$coverage = unlist(lapply(rownames(resume), function(state) {
@@ -65,7 +66,7 @@ distributionChromatinState = function(tableChromatinState,stateName, stateNumber
 	}
 }
 
-plotDistributionChromatinState = function(table, filename, color, stateName, stateNumber,
+plotDistributionChromatinState = function(table, filename, colorTable,
 	merge,ylab,xlab) {
 
 	col = getStateColor(colorTable = colorTable)
