@@ -31,12 +31,12 @@ plotChromatinState = function(tableChromatinState, colorTable,
 
 	if(plot == T) {
 		if(class(table) == "list") {
-			lapply(table,plot_distribution_chromatin_state,filename = filename, stateName = stateName,
-				color = color, stateNumber = stateNumber,
+			lapply(table,plot_distribution_chromatin_state,filename = filename,
+				colorTable = colorTable,
 				merge = merge,ylab = ylab,xlab = xlab)
 		} else {
-			plotDistributionChromatinState(table,filename = filename, stateName = stateName,
-				color = color, stateNumber = stateNumber,
+			plotDistributionChromatinState(table,filename = filename,
+				colorTable = colorTable,
 				merge = merge,ylab = ylab,xlab = xlab)
 		}
 	}

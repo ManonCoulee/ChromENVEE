@@ -12,16 +12,6 @@ getStateColor = function(colorTable) {
     }
   })
 
-  if(length(colorTable$stateName) != length(colorTable$stateNumber)) {
-    stop("Not same length between each parameters !")
-  }
-  if(length(colorTable$stateName) != length(colorTable$colorValue)) {
-    stop("Not same length between each parameters !")
-  }
-  if(length(colorTable$stateNumber) != length(colorTable$colorValue)) {
-    stop("Not same length between each parameters !")
-  }
-
   colorName = colorTable$colorValue
   names(colorName) = colorTable$stateName
 

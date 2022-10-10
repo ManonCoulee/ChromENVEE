@@ -35,6 +35,9 @@ getInformation = function(dataTable) {
     return(data_frame)
 
   } else if(class(dataTable) == "GRanges") {
+    if(length(dataTable$sample_name) == 0) {
+      stop("GRanges object need a 'sample_name' column")
+    }
     gene_name = unlist(strsplit(unlist(dataTable$gene_list),";"))
     expression = unlist(strsplit(unlist(dataTable$gene_expression),";"))
     distance = unlist(strsplit(unlist(dataTable$distance),";"))
