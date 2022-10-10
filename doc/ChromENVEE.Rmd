@@ -6,7 +6,6 @@ output:
   pdf_document:
     toc: true
 
-
 vignette: >
   %\VignetteIndexEntry{ChromENVEE: Chromatin ENVironment and Enhancer Expression}
   %\VignetteEngine{knitr::rmarkdown}
@@ -30,6 +29,8 @@ ChromENVEE is a package developped to studying chromatin state without Hi-C data
 
 This package implements functions to associated genes with enhancers, define the chromatin environment of the gene from genomic data (e.g., ChromHMM output or a bed file). Several visualization functions are available to summarize the distribution of chromatin states, characterize genes associated with enhancers and also estimate the chromatin environment of genes.
 
+This package is available for R version >= 3.6.
+
 ```{r setup}
 # Loading package
 library(ChromENVEE)
@@ -37,15 +38,19 @@ library(ChromENVEE)
 
 # Initialization of data
 
-Created initial vector contains informations about chromatin state number `stateNumber`, chromatin state name `stateName` and chromatin state color `colorValue` (used for plot generation).
+`colorTable` is a data frame contains informations about chromatin state number `stateNumber`, chromatin state name `stateName` and chromatin state color `colorValue` (used for plot generation).
 
 ```{r}
-stateNumber = c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12","U13","U14","U15",
-"U16","U17","U18")
-stateName = c("TSSA","TSSFlnk","TSSFlnkD","Tx","TxWk","EnhG","EnhG","EnhA","EnhWk","ZNFRpts","Het",
-"TssBiv","EnhBiv","ReprPC","ReprPCWk","Quies","Quies","Quies")
-colorValue = c("#B71C1C","#E65100","#E65100","#43A047","#1B5E20","#99FF66","#99FF66","#F5B041",
-"#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949","#7B7D7D","#D0D3D4","#D0D3D4","#D0D3D4")
+data(colorTable)
+```
+
+```{r echo = FALSE}
+library(grid)
+library(gridExtra)
+tt = ttheme_minimal(
+  core = list(bg_params = list(fill = c(rep("white",36),colorTable$colorValue), col = 1))
+)
+grid.table(colorTable, theme = tt)
 ```
 
 `genomeFile` is a data frame contains informations about mouse reference genome.
@@ -65,7 +70,7 @@ head(genomeFile)
 
 It is generated with the output of ChromHMM tools. `chromatinState` required to contains
 informations like chromosome (chr), genomic regions (start and end), chromatin state information
-(state and state_name) and sample name (name)
+(state and state_name) and sample name (name).
 
 
 ```{r}
@@ -74,6 +79,7 @@ data(chromatinState)
 ```{r echo = FALSE}
 head(chromatinState)
 ```
+
 # Distribution of chromatin state in the genome
 
 We are interested to know the distribution of chromatin state in the genome.
@@ -85,14 +91,13 @@ of data frame, it's possible to merge all the data frame in merge data frame and
 with `merge = TRUE` argument.
 
 ```{r}
-summary_chromatin_state = plotChromatinState(chromatinState, stateName = stateName,
-stateNumber = stateNumber, merge = TRUE, plot = FALSE, color = colorValue, filename = "")
+summary_chromatin_state = plotChromatinState(chromatinState, merge = TRUE, plot = FALSE,
+colorTable = colorTable, filename = "")
 ```
 ```{r}
 head(summary_chromatin_state)
 ```
 ![](figures/chromatin_state_distribution.png){width=100%}
-
 
 # Annotation of enhancer
 
@@ -100,7 +105,7 @@ We are interested to associated at each enhancer, genes regulated by the enhance
 enhancer chromatin state (in this study, we have 4 type of enhancer : bivalent enhancer (EnhBiv),
 genic enhancer (EnhG), active enhancer (EnhA) and weak enhancer (EnhWk)).
 
-`listTableEnhancer` is a GRanges object or a list of GRanges object (producted by [`GenomicRanges`](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) package). Like chromatinState data frame, `listTableEnhancer` required gene information and chromatin state information. Sample name (sample_name) is required if you want compared enhancer annotation (see Enhnacer annotation comparison part).
+`listTableEnhancer` is a GRanges object or a list of GRanges object (producted by [`GenomicRanges`](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) package). Like chromatinState data frame, `listTableEnhancer` required gene information and chromatin state information. Sample name (sample_name) is required if you want compared enhancer annotation (see [Enhancer annotation comparison](#enhancerlist)).
 
 ```{r}
 data(listTableEnhancer)
@@ -108,6 +113,7 @@ data(listTableEnhancer)
 ```{r echo = FALSE}
 listTableEnhancer[[1]]
 ```
+
 ## Annotated enhancer binding to enhancer position
 
 To estimated which gene is regulated by enhancer, we estimated that genes associated enhancer, all
@@ -123,8 +129,9 @@ interval = 500000, nCore = 1)
 ```
 
 ### Number of gene associate at the enhancer
-We want to know the distribution of genes associated at each enhancer.
-```{r, fig.width = 7,fig.asp = 0.6}
+
+We want to know the distribution of genes associated at each enhancer using `plotGeneAssociation`.
+```{r, fig.width = 10,fig.asp = 0.6}
 plotGeneAssociation(table_enhancer_gene, all = FALSE)
 ```
 
@@ -151,96 +158,111 @@ According to `geneExpression` data frame, it's possible that gene-enhancer coupl
 
 ```{r}
 table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene,
-  geneExpressionTable = geneExpression)
+geneExpressionTable = geneExpression)
 ```
 ```{r echo = FALSE}
 head(table_enhancer_gene_expression)
 ```
+
 ## Profile of enhancer annotation
 ### Distance gene-enhancer according to their expression
-We generated plot to estimated the level of gene expression according to the distance between gene and enhancer.
 
-```{r, fig.width = 7,fig.asp = 0.6}
-plotDistanceExpression(table_enhancer_gene_expression, color = colorValue, stateName = stateName,
-stateNumber = stateNumber)
+We generated plot to estimated the level of gene expression according to the distance between gene and enhancer using `plotDistanceExpression`. The distance is estimated with `limit` argument and clusterized in 6 distance groups like the following plot.
+
+```{r, fig.width = 10,fig.asp = 0.6}
+plotDistanceExpression(table_enhancer_gene_expression, colorTable = colorTable,
+limit = 500000)
 ```
 
 ### Distance gene-enhancer
 
-We generated plot to estimated the distribution of gene according to the distance between gene and enhancer.
-```{r, fig.width = 7,fig.asp = 0.3}
-plotGeneDistance(table_enhancer_gene_expression)
+We generated plot to estimated the distribution of gene according to the distance between gene and enhancer using `plotGeneDistance`. The distance is estimated with `limit` argument and clusterized in 6 distance groups like the following plot.
+```{r, fig.width = 10,fig.asp = 0.3}
+plotGeneDistance(table_enhancer_gene_expression, limit = 500000, xlab = "",
+ylab = "distance enhancer-gene (bp)")
 ```
 
 ### Enhancer expression
-We generated plot with the distribution of gene expression associated at enhancer region. It's possible to rescale plot with `scale` argument ('none','log10' and 'log2' are accepted).
-```{r, fig.width = 7,fig.asp = 0.6}
-plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10", color = colorValue,
-stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
+
+We generated plot with the distribution of gene expression associated at enhancer region using `plotEnhancerExpression`. It's possible to rescale plot with `scale` argument ('none','log10' and 'log2' are accepted).
+```{r, fig.width = 10,fig.asp = 0.6}
+plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
+colorTable = colorTable, ylab = "gene expression log10(CPM)")
 ```
 
-# Enhancer annotation comparison
+# Enhancer annotation comparison <a name="enhancerlist"></a>
 
 It's possible to compared different categories of enhancer. For that it's necessary to used a list of GRanges object each contains data like `listTableEnhancer` data. Contrary to individual analysis, each GRanges object in the list required sample information (sample_name).
 
 The first step is associated gene to each enhancer using `enhancerAnnotation()` on the list of enhancer. After the gene association, we associated the gene expression using `enhancerExpression()`. In the case of this study, all enhancer categories come from same cell type, we also used the same `geneExpression` data frame.
 
+
 ```{r}
-list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation, genome = genomeFile,
-interval = 500000, nCore = 1)
-list_table_enhancer_gene_expression = lapply(list_table_enhancer_gene, enhancerExpression,
+list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation,
+genome = genomeFile,interval = 500000, nCore = 1)
+listTableEnhancerGeneExpression = lapply(list_table_enhancer_gene, enhancerExpression,
 geneExpressionTable = geneExpression)
 ```
 
-This process take many time. To reduce time, you can load `list_table_enhancer_gene_expression` data to process the next analysis.
-`data(list_table_enhancer_gene_expression)`
+This process take many time.
+
+To reduce time, you can load `listTableEnhancerGeneExpression` data to process the next analysis.
+
+
+`data(listTableEnhancerGeneExpression)`
 
 ### Number of gene associate at the enhancer
 
-We want to know the distribution of genes associated at each enhancer. `all = TRUE` parameter is used to compiled all enhancer table in same file.
-```{r}
-plotGeneAssociation(list_table_enhancer_gene_expression, all = TRUE)
-```
-### Distance gene-enhancer in function their expression
-We generated plot to estimated the level of gene expression according to the distance between gene and enhancer.
-```{r}
-plotDistanceExpression(list_table_enhancer_gene_expression, color = colorValue,
-stateName = stateName, stateNumber = stateNumber)
+We want to know the distribution of genes associated at each enhancer using `plotGeneAssociation`. `all = TRUE` parameter is used to compiled all enhancer table in same file.
+
+```{r, fig.width = 10,fig.asp = 0.6}
+plotGeneAssociation(listTableEnhancerGeneExpression, all = TRUE)
 ```
 
+
+### Distance gene-enhancer according to their expression
+
+We generate plot to estimated the level of gene expression according to the distance between gene and enhancer using `plotDistanceExpression`. The distance is estimated with `limit` argument and clusterized in 6 distance groups like the following plot. In the case of list analysis, the function showed the mean of expression.
+```{r, fig.width = 10,fig.asp = 0.6}
+plotDistanceExpression(listTableEnhancerGeneExpression, colorTable = colorTable,
+limit = 500000)
+```
+
+
 ### Distance gene-enhancer
-We generated plot to estimated the distribution of gene according to the distance between gene and enhancer.
-```{r}
-plotGeneDistance(list_table_enhancer_gene_expression)
+
+We generate plot to estimated the distribution of gene according to the distance between gene and enhancer using `plotGeneDistance`. The distance is estimated with `limit` argument and clusterized in 6 distance groups like the following plot.
+```{r, fig.width = 10,fig.asp = 0.6}
+plotGeneDistance(listTableEnhancerGeneExpression, limit = 500000,
+xlab = "", ylab = "distance enhancer-gene (bp)")
 ```
 
 ### Enhancer expression
-We generated plot with the distribution of gene expression associated at enhancer region. It's possible to rescale plot with `scale` argument ('none','log10' and 'log2' are accepted).
-```{r}
-plotEnhancerExpression(list_table_enhancer_gene_expression, scale = "log10", color = colorValue,
-stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
+
+We generate plot with the distribution of gene expression associated at enhancer region using `plotEnhancerExpression`. It's possible to rescale plot with `scale` argument ('none','log10' and 'log2' are accepted).
+```{r, fig.width = 10,fig.asp = 0.6}
+plotEnhancerExpression(listTableEnhancerGeneExpression, scale = "log10",
+colorTable = colorTable, ylab = "gene expression log10(CPM)")
 ```
 
 # Gene environment
+
 We are interested to studying the chromatin environment of gene. For that we need gene information data (`geneExpression`) and chromatin state data (`chromatinState`).
 
-```{r}
-stateOrderReduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk",
-"ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
-```
 ```{r}
 data(geneExpression)
 data(chromatinState)
 ```
 
 ## Coverage of chromatin state in environment binding to TSS regions
+
 `geneEnvironment` is a function able to estimate the chromatin state environment of gene. For that, we estimated the environment size around gene TSS with `interval` parameter. For each gene, we obtains informations about the coverage of each chromatin state (`state` parameter) in the environment.
 
 `geneEnvironment` may take few minutes in function the number of genes analyzed.
 
 ```{r}
 table_overlapping = geneEnvironment(geneExpression, chromatinState,
-stateOrder = unique(stateOrderReduce), interval = 3000)
+stateOrder = unique(colorTable$stateName), interval = 3000)
 rownames(table_overlapping) = table_overlapping$gene_ENS
 ```
 ```{r echo = FALSE}
@@ -248,11 +270,12 @@ head(table_overlapping)
 ```
 
 ## Predominant state in environment binding to TSS regions
+
 `predominentState` able to estimated the predominent chromatin state in the environment of the gene.
 The function estimate as predominent the chromatin state with the higher coverage in the environment. Genes are clusterized in function their chromatin state using `umap` package. The function return a data frame with information about the predominent chromatin state and UMAP dimension.
 ```{r}
-result_umap = predominentState(table_overlapping, state = unique(stateOrderReduce),
-header = unique(stateOrderReduce), neighbors = 32, metric = "euclidean", dist = 0.5)
+result_umap = predominentState(table_overlapping, state = unique(colorTable$stateName),
+header = unique(colorTable$stateName), neighbors = 32, metric = "euclidean", dist = 0.5)
 ```
 ```{r echo = FALSE}
 head(result_umap)
@@ -270,6 +293,7 @@ sessionInfo()
 ```
 
 # References
+
 Ernst J, Kellis M. ChromHMM: automating chromatin-state discovery and characterization. Nature Methods, 9:215-216, 2012
 
 Papier scientifique associé

@@ -9,12 +9,15 @@ knitr::opts_chunk$set(
 library(ChromENVEE)
 
 ## -----------------------------------------------------------------------------
-stateNumber = c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12","U13","U14","U15",
-"U16","U17","U18")
-stateName = c("TSSA","TSSFlnk","TSSFlnkD","Tx","TxWk","EnhG","EnhG","EnhA","EnhWk","ZNFRpts","Het",
-"TssBiv","EnhBiv","ReprPC","ReprPCWk","Quies","Quies","Quies")
-colorValue = c("#B71C1C","#E65100","#E65100","#43A047","#1B5E20","#99FF66","#99FF66","#F5B041",
-"#FFEB3B","#48C9B0","#B39DDB","#880E4F","#666633","#424949","#7B7D7D","#D0D3D4","#D0D3D4","#D0D3D4")
+data(colorTable)
+
+## ----echo = FALSE-------------------------------------------------------------
+library(grid)
+library(gridExtra)
+tt = ttheme_minimal(
+  core = list(bg_params = list(fill = c(rep("white",36),colorTable$colorValue), col = 1))
+)
+grid.table(colorTable, theme = tt)
 
 ## -----------------------------------------------------------------------------
 data(genomeFile)
@@ -29,8 +32,8 @@ data(chromatinState)
 head(chromatinState)
 
 ## -----------------------------------------------------------------------------
-summary_chromatin_state = plotChromatinState(chromatinState, stateName = stateName,
-stateNumber = stateNumber, merge = TRUE, plot = FALSE, color = colorValue, filename = "")
+summary_chromatin_state = plotChromatinState(chromatinState, merge = TRUE, plot = FALSE,
+colorTable = colorTable, filename = "")
 
 ## -----------------------------------------------------------------------------
 head(summary_chromatin_state)
@@ -45,7 +48,7 @@ listTableEnhancer[[1]]
 table_enhancer_gene = enhancerAnnotation(listTableEnhancer[[1]],genome = genomeFile,
 interval = 500000, nCore = 1)
 
-## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
 plotGeneAssociation(table_enhancer_gene, all = FALSE)
 
 ## -----------------------------------------------------------------------------
@@ -56,45 +59,43 @@ head(geneExpression)
 
 ## -----------------------------------------------------------------------------
 table_enhancer_gene_expression = enhancerExpression(table_enhancer_gene,
-  geneExpressionTable = geneExpression)
+geneExpressionTable = geneExpression)
 
 ## ----echo = FALSE-------------------------------------------------------------
 head(table_enhancer_gene_expression)
 
-## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
-plotDistanceExpression(table_enhancer_gene_expression, color = colorValue, stateName = stateName,
-stateNumber = stateNumber)
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+plotDistanceExpression(table_enhancer_gene_expression, colorTable = colorTable,
+limit = 500000)
 
-## ---- fig.width = 7,fig.asp = 0.3---------------------------------------------
-plotGeneDistance(table_enhancer_gene_expression)
+## ---- fig.width = 10,fig.asp = 0.3--------------------------------------------
+plotGeneDistance(table_enhancer_gene_expression, limit = 500000, xlab = "",
+ylab = "distance enhancer-gene (bp)")
 
-## ---- fig.width = 7,fig.asp = 0.6---------------------------------------------
-plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10", color = colorValue,
-stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
+colorTable = colorTable, ylab = "gene expression log10(CPM)")
 
 ## -----------------------------------------------------------------------------
-list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation, genome = genomeFile,
-interval = 500000, nCore = 1)
-list_table_enhancer_gene_expression = lapply(list_table_enhancer_gene, enhancerExpression,
+list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation,
+genome = genomeFile,interval = 500000, nCore = 1)
+listTableEnhancerGeneExpression = lapply(list_table_enhancer_gene, enhancerExpression,
 geneExpressionTable = geneExpression)
 
-## -----------------------------------------------------------------------------
-plotGeneAssociation(list_table_enhancer_gene_expression, all = TRUE)
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+plotGeneAssociation(listTableEnhancerGeneExpression, all = TRUE)
 
-## -----------------------------------------------------------------------------
-plotDistanceExpression(list_table_enhancer_gene_expression, color = colorValue,
-stateName = stateName, stateNumber = stateNumber)
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+plotDistanceExpression(listTableEnhancerGeneExpression, colorTable = colorTable,
+limit = 500000)
 
-## -----------------------------------------------------------------------------
-plotGeneDistance(list_table_enhancer_gene_expression)
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+plotGeneDistance(listTableEnhancerGeneExpression, limit = 500000,
+xlab = "", ylab = "distance enhancer-gene (bp)")
 
-## -----------------------------------------------------------------------------
-plotEnhancerExpression(list_table_enhancer_gene_expression, scale = "log10", color = colorValue,
-stateName = stateName, stateNumber = stateNumber, ylab = "gene expression log10(CPM)")
-
-## -----------------------------------------------------------------------------
-stateOrderReduce = c("TSSA","TSSFlnk","TSSFlnk","Tx","Tx","EnhG","EnhG","EnhA","EnhWk",
-"ZNF.Rpts","Het","TssBiv","EnhBiv","ReprPC","ReprPC","Quies","Quies","Quies")
+## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+plotEnhancerExpression(listTableEnhancerGeneExpression, scale = "log10",
+colorTable = colorTable, ylab = "gene expression log10(CPM)")
 
 ## -----------------------------------------------------------------------------
 data(geneExpression)
@@ -102,15 +103,15 @@ data(chromatinState)
 
 ## -----------------------------------------------------------------------------
 table_overlapping = geneEnvironment(geneExpression, chromatinState,
-stateOrder = unique(stateOrderReduce), interval = 3000)
+stateOrder = unique(colorTable$stateName), interval = 3000)
 rownames(table_overlapping) = table_overlapping$gene_ENS
 
 ## ----echo = FALSE-------------------------------------------------------------
 head(table_overlapping)
 
 ## -----------------------------------------------------------------------------
-result_umap = predominentState(table_overlapping, state = unique(stateOrderReduce),
-header = unique(stateOrderReduce), neighbors = 32, metric = "euclidean", dist = 0.5)
+result_umap = predominentState(table_overlapping, state = unique(colorTable$stateName),
+header = unique(colorTable$stateName), neighbors = 32, metric = "euclidean", dist = 0.5)
 
 ## ----echo = FALSE-------------------------------------------------------------
 head(result_umap)
