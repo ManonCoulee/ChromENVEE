@@ -1,6 +1,6 @@
 Package: ChromENVEE
 Title: Chromatin Environment and Enhancer Expression
-Version: 1.1.7
+Version: 1.1.8
 Authors@R:
     person(given = "Manon",
            family = "Coulee",
@@ -18,7 +18,8 @@ Depends:
 Suggests:
     rmarkdown,
     knitr,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    gridExtra
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports:
