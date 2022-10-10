@@ -4,21 +4,7 @@ library(testthat)
 test_that("Test the conformity of initial data", {
   data_table = c("table","expresion")
 
-  stateName = c("TSS","TSSFlnk","TSSFlnkD")
-  stateNumber = c("U1","U2")
-  color = c("#B71C1C","#E65100","#E65100","#43A047")
-
   data_frame = data.frame(c(1:10),c(1:10))
-
-  ## Test for getStateColor
-  expect_error(getStateColor(stateName,stateNumber,color),
-    regexp = "Not same length between each parameters !")
-
-  ## Test for getInformation
-  expect_error(getInformation(dataTable = data_table),
-    regexp = "'dataTable' must be a GRanges object or a list of GRanges object")
-  expect_error(getInformation(dataTable = data_frame),
-    regexp = "'dataTable' must be a GRanges object or a list of GRanges object")
 
   ## Test for plotChromatinState
   expect_error(plotChromatinState(tableChromatinState = data_table),
