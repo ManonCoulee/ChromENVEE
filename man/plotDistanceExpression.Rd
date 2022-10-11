@@ -8,9 +8,7 @@ plotDistanceExpression(
   dataTable,
   xlab = "",
   ylab = "log(CPM)",
-  color,
-  stateNumber,
-  stateName,
+  colorTable,
   limit = 5e+05
 )
 }
@@ -21,11 +19,7 @@ plotDistanceExpression(
 
 \item{ylab}{a string (default = "log(CPM)")}
 
-\item{color}{a list of color value}
-
-\item{stateNumber}{a list of chromatin state number}
-
-\item{stateName}{a list of chromatin state name}
+\item{colorTable}{a data frame which contains color information}
 
 \item{limit}{a value of limit for distance analysis (default = 500000 (500kb))}
 }

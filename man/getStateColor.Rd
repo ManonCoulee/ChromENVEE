@@ -4,14 +4,10 @@
 \alias{getStateColor}
 \title{Function to return chromatin state color table}
 \usage{
-getStateColor(stateName, stateNumber, color)
+getStateColor(colorTable)
 }
 \arguments{
-\item{stateName}{a vector of chromatin state name}
-
-\item{stateNumber}{a vector of chromatin state number}
-
-\item{color}{a vector of color to associated to each chromatin state}
+\item{colorTable}{a data frame which contains color information}
 }
 \value{
 list of vector with each chromatin state is associated to color

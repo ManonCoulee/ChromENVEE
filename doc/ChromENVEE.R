@@ -11,7 +11,7 @@ library(ChromENVEE)
 ## -----------------------------------------------------------------------------
 data(colorTable)
 
-## ----echo = FALSE-------------------------------------------------------------
+## ----echo = FALSE, fig.height = 10,fig.asp = 0.6------------------------------
 library(grid)
 library(gridExtra)
 tt = ttheme_minimal(
@@ -45,7 +45,7 @@ data(listTableEnhancer)
 listTableEnhancer[[1]]
 
 ## -----------------------------------------------------------------------------
-table_enhancer_gene = enhancerAnnotation(listTableEnhancer[[1]],genome = genomeFile,
+table_enhancer_gene = enhancerAnnotation(listTableEnhancer[[1]], genome = genomeFile,
 interval = 500000, nCore = 1)
 
 ## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
@@ -110,7 +110,7 @@ rownames(table_overlapping) = table_overlapping$gene_ENS
 head(table_overlapping)
 
 ## -----------------------------------------------------------------------------
-result_umap = predominentState(table_overlapping, state = unique(colorTable$stateName),
+result_umap = predominantState(table_overlapping, state = unique(colorTable$stateName),
 header = unique(colorTable$stateName), neighbors = 32, metric = "euclidean", dist = 0.5)
 
 ## ----echo = FALSE-------------------------------------------------------------

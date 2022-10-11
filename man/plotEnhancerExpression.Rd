@@ -9,9 +9,7 @@ plotEnhancerExpression(
   xlab = "",
   ylab = "gene expression (CPM)",
   scale = "none",
-  color,
-  stateNumber,
-  stateName,
+  colorTable,
   distance = 0
 )
 }
@@ -24,11 +22,7 @@ plotEnhancerExpression(
 
 \item{scale}{a value (log10, log2 or none) to rescale expression (default = "none")}
 
-\item{color}{a list of color value}
-
-\item{stateNumber}{a list of chromatin state number}
-
-\item{stateName}{a list of chromatin state name}
+\item{colorTable}{a data frame which contains color information}
 
 \item{distance}{a value to zoom the expression focus (default = 0)}
 }

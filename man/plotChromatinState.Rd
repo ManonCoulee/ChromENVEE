@@ -6,9 +6,7 @@
 \usage{
 plotChromatinState(
   tableChromatinState,
-  stateName,
-  stateNumber,
-  color,
+  colorTable,
   plot = T,
   merge = F,
   filename = "chromatin_state_distribution",
@@ -19,11 +17,7 @@ plotChromatinState(
 \arguments{
 \item{tableChromatinState}{a bed table containing information about the chromatin state (ex. chromatin_state data)}
 
-\item{stateName}{a vector of chromatin state name}
-
-\item{stateNumber}{a vector of chromatin state number}
-
-\item{color}{a vector of color to colored plot}
+\item{colorTable}{a data frame which contains color information}
 
 \item{plot}{a boolean to create plot (default = T)}
 

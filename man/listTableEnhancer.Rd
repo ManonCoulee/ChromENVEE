@@ -11,6 +11,7 @@ A list of 8 GRanges data frame:
 \item{ranges}{start and end position, in bp}
 \item{strand}{strand value}
 \item{chromatin_state}{chromatin state number}
+\item{sample_name}{name of the sample}
 }
 }
 \usage{
