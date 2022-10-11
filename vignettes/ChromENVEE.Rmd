@@ -43,8 +43,7 @@ library(ChromENVEE)
 ```{r}
 data(colorTable)
 ```
-
-```{r echo = FALSE, fig.height = 15,fig.asp = 0.6}
+```{r echo = FALSE, fig.asp = 1}
 library(grid)
 library(gridExtra)
 tt = ttheme_minimal(

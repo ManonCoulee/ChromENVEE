@@ -11,7 +11,7 @@ library(ChromENVEE)
 ## -----------------------------------------------------------------------------
 data(colorTable)
 
-## ----echo = FALSE, fig.height = 10,fig.asp = 0.6------------------------------
+## ----echo = FALSE, fig.asp = 1------------------------------------------------
 library(grid)
 library(gridExtra)
 tt = ttheme_minimal(

@@ -3,7 +3,7 @@ title: "ChromENVEE: Chromatin ENVironment and Expression at Enhancer"
 author: "Coulée Manon"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  rmarkdown::html_document:
     toc: true
 
 vignette: >
@@ -43,8 +43,7 @@ library(ChromENVEE)
 ```{r}
 data(colorTable)
 ```
-
-```{r echo = FALSE, fig.height = 10,fig.asp = 0.6}
+```{r echo = FALSE, fig.asp = 1}
 library(grid)
 library(gridExtra)
 tt = ttheme_minimal(
