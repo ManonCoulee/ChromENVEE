@@ -11,7 +11,7 @@ library(ChromENVEE)
 ## -----------------------------------------------------------------------------
 data(colorTable)
 
-## ----echo = FALSE, fig.asp = 1------------------------------------------------
+## ----echo = FALSE, fig.asp = 0.9----------------------------------------------
 library(grid)
 library(gridExtra)
 tt = ttheme_minimal(
@@ -35,7 +35,7 @@ head(chromatinState)
 summary_chromatin_state = plotChromatinState(chromatinState, merge = TRUE, plot = FALSE,
 colorTable = colorTable, filename = "")
 
-## -----------------------------------------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
 head(summary_chromatin_state)
 
 ## -----------------------------------------------------------------------------
@@ -48,7 +48,10 @@ listTableEnhancer[[1]]
 table_enhancer_gene = enhancerAnnotation(listTableEnhancer[[1]], genome = genomeFile,
 interval = 500000, nCore = 1)
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ----echo = FALSE-------------------------------------------------------------
+head(table_enhancer_gene)
+
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotGeneAssociation(table_enhancer_gene, all = FALSE)
 
 ## -----------------------------------------------------------------------------
@@ -64,7 +67,7 @@ geneExpressionTable = geneExpression)
 ## ----echo = FALSE-------------------------------------------------------------
 head(table_enhancer_gene_expression)
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotDistanceExpression(table_enhancer_gene_expression, colorTable = colorTable,
 limit = 500000)
 
@@ -72,7 +75,7 @@ limit = 500000)
 plotGeneDistance(table_enhancer_gene_expression, limit = 500000, xlab = "",
 ylab = "distance enhancer-gene (bp)")
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.4--------------------------------------------
 plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
 colorTable = colorTable, ylab = "gene expression log10(CPM)")
 
@@ -82,18 +85,18 @@ genome = genomeFile,interval = 500000, nCore = 1)
 listTableEnhancerGeneExpression = lapply(list_table_enhancer_gene, enhancerExpression,
 geneExpressionTable = geneExpression)
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotGeneAssociation(listTableEnhancerGeneExpression, all = TRUE)
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotDistanceExpression(listTableEnhancerGeneExpression, colorTable = colorTable,
 limit = 500000)
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotGeneDistance(listTableEnhancerGeneExpression, limit = 500000,
 xlab = "", ylab = "distance enhancer-gene (bp)")
 
-## ---- fig.width = 10,fig.asp = 0.6--------------------------------------------
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotEnhancerExpression(listTableEnhancerGeneExpression, scale = "log10",
 colorTable = colorTable, ylab = "gene expression log10(CPM)")
 
