@@ -18,8 +18,7 @@ Depends:
 Suggests:
     rmarkdown,
     knitr,
-    testthat (>= 3.0.0),
-    gridExtra
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
 VignetteBuilder: knitr
 Imports:
@@ -27,5 +26,6 @@ Imports:
     GenomicRanges,
     parallel,
     stringr,
-    umap
+    umap,
+    gridExtra
 biocViews: GenomicRanges
