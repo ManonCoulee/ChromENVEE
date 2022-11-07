@@ -3,7 +3,7 @@ title: "ChromENVEE: Chromatin ENVironment and Enhancer-dependent Expression"
 author: "Coulée Manon"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
+  pdf_document:
     toc: true
 
 vignette: >
@@ -21,13 +21,22 @@ knitr::opts_chunk$set(
 
 # Abstract
 
+ChromENVEE is a package developed to study chromatin states.
+
+This package implements functions to associate all the neighbouring genes to a list of enhancers and to define the chromatin environment of genes using chromatin states informations (e.g., ChromHMM output). Several visualization functions are available to summarize the distribution of chromatin states, characterize genes associated with enhancers and also assign chromatin environment to genes.
+
 # Citation
 
 # Introduction
 
-ChromENVEE is a package developed to study chromatin states.
+ChromENVEE (Chromatin ENVrironment and Enhancer-dependent Expression) is a package initially developed to define chromatin dynamics during spermatogenesis and to characterize H3K79me2 at the enhancer level and its chromatin environment. Several recent studies using ChromHMM have shown that H3K79me2 may have a role on gene expression when associated with enhancers (*Ferrari et al*; *Godfrey et al*)
 
-This package implements functions to associate all the neighbouring genes to a list of enhancers and to define the chromatin environment of genes using chromatin states informations (e.g., ChromHMM output). Several visualization functions are available to summarize the distribution of chromatin states, characterize genes associated with enhancers and also assign chromatin environment to genes.
+ChromHMM (*Ersnt et al*) is a tool using the Hidden Markov Model (HMM) method to predict the most likely chromatin state of each genomic segment. The tool uses ChIPseq data from multiple epigenetic marks (ChIPseq data) to predict chromatin states, each characterized by one or more epigenetic marks. In the case of this study, six epigenetic marks from 15 different cell types were used to build a model of 18 chromatin states.
+
+The package contains several applications all using the model defined by ChromHMM.
+* It allows to characterize the distribution of the chromatin states in a given cell type, thus giving a global idea of the distribution of each chromatin state.
+* From the chromatin states defined as enhancers, the package allows the association of potentially regulated genes. It also allows to analyze the expression of genes associated with the enhancers and to visualize the results using several graphical functions.
+* From transcriptomic data (RNAseq data), it is possible to determine the chromatin environment of a gene and to estimate the predominant chromatin state.
 
 This package is available for R version >= 3.6.
 
@@ -77,8 +86,6 @@ head(chromatinState)
 
 # Distribution of chromatin states in the genome
 
-We want to know chromatin states distribution in the genome.
-
 `plotChromatinState()` calculates the percentage of each chromatin state according to the length of the genome used. We obtain a dataframe with the percentage of coverage for each chromatin state. It is possible to plot the results in `.png` file with the argument `plot = TRUE`. If you have a list of dataframe, it is possible to merge all the dataframe in an unique merged dataframe and in an unique plot with the argument `merge = TRUE`.
 
 ```{r}
@@ -92,7 +99,8 @@ head(summary_chromatin_state)
 
 # Annotation of enhancers
 
-We want to associate at each enhancer, all its neighbouring genes, making the assumption that an enhancer regulates all its neighbouring genes. We focus on enhancer chromatin states (in this study, we have 4 types of enhancers : bivalent enhancers (EnhBiv), genic enhancers (EnhG), active enhancers (EnhA) and weak enhancers (EnhWk)).
+
+Enhancers are genomic regions that distant (more or less closely) regulate a gene. To know which gene is regulated by the enhancer, we associate at each enhancer, all its neighbouring genes, making the assumption that an enhancer regulates all its neighbouring genes. We focus on enhancer chromatin states (in this study, we have 4 types of enhancers : bivalent enhancers (EnhBiv), genic enhancers (EnhG), active enhancers (EnhA) and weak enhancers (EnhWk)).
 
 `listTableEnhancer` is a GRanges object or a list of GRanges object (producted by [`GenomicRanges`](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html) package). Similar to `chromatinState` dataframe, `listTableEnhancer` should contain genes and chromatin states informations. Sample name (sample_name) is mandatory if you want to compare enhancer annotation (see [Enhancer annotation comparison](#enhancerlist)).
 
@@ -122,7 +130,8 @@ head(table_enhancer_gene)
 
 ### Number of genes associated with an enhancer
 
-We want to know the distribution of genes associated at each enhancer using `plotGeneAssociation` function.
+With the `enhancerAnnotation()` function, each enhancer region can be associated with one or more genes. The function `plotGeneAssociation()` allows to represent the distribution of the number of genes associated with the enhancers. The function uses polynomial linear regression as representation.
+
 ```{r, fig.width = 10,fig.asp = 0.5}
 plotGeneAssociation(table_enhancer_gene, all = FALSE)
 ```
@@ -141,9 +150,7 @@ data(geneExpression)
 head(geneExpression)
 ```
 
-
-We want to associate the level of gene expression to each gene-enhancer pair which is determined with `enhancerAnnotation` function.
-
+`enhancerExpression()` able to associate the level of gene expression to each gene-enhancer pair which is determined with `enhancerAnnotation` function.
 It is possible than a gene-enhancer pair does not have an expression level. In this case, the function returns NA value.
 
 ```{r}
@@ -203,7 +210,7 @@ This process takes few minutes. To reduce time, you can load the `listTableEnhan
 
 ### Number of gene associate at the enhancer
 
-We want to know the distribution of genes associated at each enhancer using `plotGeneAssociation`. `all = TRUE` parameter is used to compile all enhancer tables in same '.png' file.
+With the `enhancerAnnotation()` function, each enhancer region can be associated with one or more genes. The function `plotGeneAssociation()` allows to represent the distribution of the number of genes associated with the enhancers. The function uses polynomial linear regression as representation. `all = TRUE` parameter is used to compile all enhancer tables in same '.png' file.
 
 ```{r, fig.width = 10,fig.asp = 0.5}
 plotGeneAssociation(listTableEnhancerGeneExpression, all = TRUE)
@@ -274,6 +281,19 @@ head(result_umap)
 ```
 
 It is an example of UMAP representation to visualize the predominant chromatin state in each gene. Each point corresponds to a gene and is colored according to its predominant chromatin state.
+
+```
+ggplot(result_umap,aes(UMAP1,UMAP2, color = factor(state,
+    levels = unique(colorTable$stateName)))) +
+	geom_point() +
+	scale_color_manual(values = col$stateName) +
+	theme_bw() + theme(strip.background  = element_blank(),
+		text = element_text(size=25, angle = 0),
+		panel.grid.major = element_blank(),
+		axis.ticks = element_blank(),
+		strip.text.x = element_text(size = 25, angle = 0, hjust = 1),
+		legend.position = "none")
+```
 
 ![](figures/umap_chromatin_state.png){width=100%}
 
