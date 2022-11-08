@@ -6,7 +6,7 @@ This package implements functions to associate all the neighbouring genes to a l
 
 ### Installation
 
-To install ChromENVEE package from GitHub using [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) package :
+To install ChromENVEE package from GitHub using [`devtools`](https://cran.r-project.org/web/packages/devtools/index.html) package:
 
 ```
 devtools::install_github("ManonCoulee/ChromENVEE")
@@ -22,7 +22,7 @@ ChromENVEE is available for R  version >= 3.6
 A [vignette](https://github.com/ManonCoulee/ChromENVEE/blob/master/doc/ChromENVEE.pdf) is available to use ChromENVEE.
 
 
-It's possible to build this vignette in R with the following command :
+It is possible to build this vignette in R with the following command:
 
 ```
 devtools::install_github("ManonCoulee/ChromENVEE", build_vignettes = TRUE)
@@ -30,4 +30,8 @@ devtools::install_github("ManonCoulee/ChromENVEE", build_vignettes = TRUE)
 
 ### Citation
 
-To cite the package, please use this following citation :
+To cite the package, please use this following citation:
+
+```
+Manon Coulee, Guillaume Meurice, Mitra Barzine, Laila El Khattabi and Julie Cocquet (2022).     ChromENVEE: Chromatin Environment and Enhancer-dependent Expression. R package version 1.1.8.
+```
