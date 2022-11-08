@@ -32,6 +32,4 @@ devtools::install_github("ManonCoulee/ChromENVEE", build_vignettes = TRUE)
 
 To cite the package, please use this following citation:
 
-```
 Manon Coulee, Guillaume Meurice, Mitra Barzine, Laila El Khattabi and Julie Cocquet (2022).     ChromENVEE: Chromatin Environment and Enhancer-dependent Expression. R package version 1.1.8.
-```
