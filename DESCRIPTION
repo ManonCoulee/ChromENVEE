@@ -4,10 +4,10 @@ Version: 1.1.8
 Authors@R:
     c(
       person(given = "Manon", family = "Coulee", role = c("aut", "cre"), email = "manoncoulee@hotmail.com"),
-      person(given = "Guillaume", family = "Meurice", role = "ctb", email = "guillaume.meurice@aphp.fr"),
-      person(given = "Mitra", family = "Barzine", role = "ctb", email = "mitra.barzine@inserm.fr"),
-      person(given = "Laila", family = "El Khattabi", role = "ctb", email = "laila.el-khattabi@aphp.fr"),
-      person(given = "Julie", family = "Cocquet", role = "ctb", email = "julie.cocquet@inserm.fr")
+      person(given = "Guillaume", family = "Meurice", role = "aut", email = "guillaume.meurice@aphp.fr"),
+      person(given = "Mitra", family = "Barzine", role = "aut", email = "mitra.barzine@inserm.fr"),
+      person(given = "Laila", family = "El Khattabi", role = "aut", email = "laila.el-khattabi@aphp.fr"),
+      person(given = "Julie", family = "Cocquet", role = "aut", email = "julie.cocquet@inserm.fr")
     )
 Description: ChromENVEE is a package developed to study chromatin states.
   This package implements functions to associate all the neighbouring genes to a list of enhancers
