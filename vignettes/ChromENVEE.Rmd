@@ -287,6 +287,8 @@ head(result_umap)
 
 It is an example of UMAP representation to visualize the predominant chromatin state in each gene. Each point corresponds to a gene and is colored according to its predominant chromatin state. The representation of the figure may not be exactly the same as the one presented in this thumbnail. Indeed, the calculation of the dimensions may differ, however the clusters remain the same.
 
+
+Here is an example of code to generate the figure below:
 ```
 ggplot(result_umap,aes(UMAP1,UMAP2, color = factor(state,
     levels = unique(colorTable$stateName)))) +
