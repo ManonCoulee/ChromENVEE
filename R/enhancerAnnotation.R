@@ -24,7 +24,7 @@ enhancerAnnotation = function(enhancerTable, genome,
 					interval = 500000,
           nCore = 1) {
 
-  if(class(enhancerTable) != "GRanges"){
+  if(!is(enhancerTable,"GRanges")){
     stop("'enhancerTable' is not a GRanges table")
   }
 

@@ -8,9 +8,9 @@
 #' @return distance, expression, gene name information
 #' @export
 getInformation = function(dataTable) {
-  if(class(dataTable) == "list") {
+  if(is(dataTable,"list")) {
     df = lapply(dataTable,function(x) {
-      if(class(x) != "GRanges") {
+      if(!is(x,"GRanges")) {
         stop("'dataTable' must be a list of GRanges object")
       }
       if(length(x$sample_name) == 0) {
@@ -35,7 +35,7 @@ getInformation = function(dataTable) {
     data_frame = do.call(rbind,df)
     return(data_frame)
 
-  } else if(class(dataTable) == "GRanges") {
+  } else if(is(dataTable, "GRanges")) {
     if(length(dataTable$sample_name) == 0) {
       stop("GRanges object need a 'sample_name' column")
     }

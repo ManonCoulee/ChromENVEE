@@ -37,7 +37,7 @@ plotGeneDistance = function(dataTable,
     information_table[pos,"distance_red"] = lim[l]
   }
 
-  if(class(dataTable) == "list") {
+  if(is(dataTable, "list")) {
     p = ggplot(information_table,aes(x = sample_name, fill = factor(distance_red,levels = lim))) +
       geom_bar(stat = "count", position = "fill") +
       coord_flip() + labs(fill = "") + xlab(xlab) + ylab(ylab) +

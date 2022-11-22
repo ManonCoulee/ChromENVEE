@@ -44,7 +44,7 @@ plotDistanceExpression = function(dataTable,
     information_table[pos,"limit"] = lim[l]
   }
 
-  if(class(dataTable) == "list") {
+  if(is(dataTable, "list")) {
     ylab = "mean(CPM)"
     list_mean = lapply(lim, function(x) {
       tt = information_table[information_table$limit == x,]

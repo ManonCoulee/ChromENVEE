@@ -26,20 +26,20 @@ plotChromatinState = function(tableChromatinState, colorTable,
 					ylab = "chromatin state (%)",
 					xlab = "") {
 
-	if(class(tableChromatinState) == "data.frame") {
+	if(is(tableChromatinState,"data.frame")) {
 		table = distributionChromatinState(tableChromatinState,colorTable)
-	} else if(class(tableChromatinState) == "list") {
+	} else if(is(tableChromatinState, "list")) {
 		table = lapply(tableChromatinState,distributionChromatinState,colorTable)
 	} else {
-		stop("'tableChromatinState' must be a data frame or a list of data frame")
+		stop("'tableChromatinState' must be a dataframe or a list of dataframe")
 	}
 
-	if(merge == TRUE & class(table) == "list") {
+	if(merge && is(table, "list")) {
 		table = do.call("rbind",lapply(table,"[",,))
 	}
 
-	if(plot == TRUE) {
-		if(class(table) == "list") {
+	if(plot) {
+		if(is(table, "list")) {
 			lapply(table,plotDistributionChromatinState,filename = filename,
 				colorTable = colorTable,
 				merge = merge,ylab = ylab,xlab = xlab)
@@ -54,7 +54,7 @@ plotChromatinState = function(tableChromatinState, colorTable,
 
 distributionChromatinState = function(tableChromatinState,colorTable) {
 
-	if(class(tableChromatinState) == "data.frame") {
+	if(is(tableChromatinState, "data.frame")) {
 		resume = data.frame("state" = unique(colorTable$stateName))
 		resume$state = factor(resume$state, levels = unique(colorTable$stateName))
 		rownames(resume) = unique(colorTable$stateName)
@@ -71,7 +71,7 @@ distributionChromatinState = function(tableChromatinState,colorTable) {
 
 		return(resume)
 	} else {
-		stop("'tableChromatinState' must be a data frame or a list of data frame")
+		stop("'tableChromatinState' must be a dataframe or a list of dataframe")
 	}
 }
 

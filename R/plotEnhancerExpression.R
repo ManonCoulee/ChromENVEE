@@ -31,7 +31,7 @@ plotEnhancerExpression = function(dataTable,
   scale = "none",
   colorTable, distance = 0) {
 
-  if(class(distance) != "numeric") {
+  if(!is(distance, "numeric")) {
     stop("'distance' must be a numeric object")
   }
 
@@ -55,7 +55,7 @@ plotEnhancerExpression = function(dataTable,
     information_table$expression = log2(information_table$expression+0.01)
   }
 
-  if(class(dataTable) == "list") {
+  if(is(dataTable, "list")) {
       p = ggplot(information_table,aes(x = sample_name, y = expression)) +
         geom_violin(aes(fill = chromatin_state),color = "black") +
         geom_boxplot(width = 0.1) +
