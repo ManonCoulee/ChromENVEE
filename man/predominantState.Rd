@@ -2,7 +2,7 @@
 % Please edit documentation in R/predominantState.R
 \name{predominantState}
 \alias{predominantState}
-\title{Function with estimate the predominant state associated at each gene}
+\title{predominantState}
 \usage{
 predominantState(
   table,
@@ -14,21 +14,35 @@ predominantState(
 )
 }
 \arguments{
-\item{table}{a table corresponding to the result of geneEnvironment function}
+\item{table}{table with the output of geneEnvironment}
 
-\item{state}{a list of chromatin state}
+\item{state}{list of chromatin state}
 
-\item{header}{a list of column in table to analysed with UMAP}
+\item{header}{list of column in table to analysed with UMAP}
 
-\item{neighbors}{a numeric value (see umapr package)}
+\item{neighbors}{numeric value (see umap package)}
 
-\item{metric}{a chracter value (see umapr package)}
+\item{metric}{chracter value (see umap package)}
 
-\item{dist}{a numeric value (see umapr package)}
+\item{dist}{numeric value (see umap package)}
 }
 \value{
 table with 2-dimensional value and predominant chromatin state
 }
 \description{
 Function with estimate the predominant state associated at each gene
+}
+\examples{
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
+data(chromatinState)
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+data(colorTable)
+enviro = geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
+predominantState(enviro,state = unique(colorTable$stateName),
+  header = unique(colorTable$stateName))
+
 }

@@ -43,6 +43,6 @@ colorTable = system.file("extdata", "colorTable.rda", package = "ChromENVEE")
 data(colorTable)
 anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 expression = enhancerExpression(anno, geneExpression)
-plotEnhancerExpression(expression, colorTable)
+plotEnhancerExpression(expression, colorTable = colorTable)
 
 }
