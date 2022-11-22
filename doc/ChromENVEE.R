@@ -67,10 +67,6 @@ geneExpressionTable = geneExpression)
 ## ----echo = FALSE-------------------------------------------------------------
 head(table_enhancer_gene_expression)
 
-## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
-plotDistanceExpression(table_enhancer_gene_expression, colorTable = colorTable,
-limit = 500000)
-
 ## ---- fig.width = 10,fig.asp = 0.3--------------------------------------------
 plotGeneDistance(table_enhancer_gene_expression, limit = 500000, xlab = "",
 ylab = "distance enhancer-gene (bp)")
@@ -79,18 +75,18 @@ ylab = "distance enhancer-gene (bp)")
 plotEnhancerExpression(table_enhancer_gene_expression, scale = "log10",
 colorTable = colorTable, ylab = "gene expression log10(CPM)")
 
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
+plotDistanceExpression(table_enhancer_gene_expression, colorTable = colorTable,
+limit = 500000)
+
 ## -----------------------------------------------------------------------------
 list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation,
-genome = genomeFile,interval = 500000, nCore = 1)
+genome = genomeFile, interval = 500000, nCore = 1)
 listTableEnhancerGeneExpression = lapply(list_table_enhancer_gene, enhancerExpression,
 geneExpressionTable = geneExpression)
 
 ## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotGeneAssociation(listTableEnhancerGeneExpression, all = TRUE)
-
-## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
-plotDistanceExpression(listTableEnhancerGeneExpression, colorTable = colorTable,
-limit = 500000)
 
 ## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotGeneDistance(listTableEnhancerGeneExpression, limit = 500000,
@@ -99,6 +95,10 @@ xlab = "", ylab = "distance enhancer-gene (bp)")
 ## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotEnhancerExpression(listTableEnhancerGeneExpression, scale = "log10",
 colorTable = colorTable, ylab = "gene expression log10(CPM)")
+
+## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
+plotDistanceExpression(listTableEnhancerGeneExpression, colorTable = colorTable,
+limit = 500000)
 
 ## -----------------------------------------------------------------------------
 data(geneExpression)
