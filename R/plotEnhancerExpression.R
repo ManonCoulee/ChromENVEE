@@ -21,7 +21,7 @@
 #' data(colorTable)
 #' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 #' expression = enhancerExpression(anno, geneExpression)
-#' plotEnhancerExpression(expression, colorTable)
+#' plotEnhancerExpression(expression, colorTable = colorTable)
 #'
 #' @return ggplot2 figure corresponding to the distribution of gene expression
 #' @export
