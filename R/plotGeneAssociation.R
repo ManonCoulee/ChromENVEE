@@ -1,9 +1,18 @@
 #' Function which plot the number of gene associated to enhancer
 #'
-#' @param table a GRanges table or list of GRanges obtains by enhancerAnnotation function
-#' @param all a boolean, if TRUE, list of dataframe is merge (default = F)
+#' @title plotGeneAssociation
+#' @param table GRanges object or list of GRanges output of enhancerAnnotation
+#' @param all boolean, if TRUE, list of dataframe is merge (default = FALSE)
 #'
 #' @import ggplot2
+#'
+#' @examples
+#' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+#' data(listTableEnhancer)
+#' genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+#' data(genomeFile)
+#' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+#' plotGeneAssociation(anno)
 #'
 #' @return ggplot2 figure of the number of gene associated to enhancer
 #' @export
@@ -22,7 +31,7 @@ plotGeneAssociation = function(table, all = FALSE) {
 
     ## Interpolation polynomiale
     p = ggplot(df,aes(x = as.numeric(gene_association), y = count, color = name)) +
-      geom_smooth(method = "lm",formula = y~poly(x,11),se = F) +
+      geom_smooth(method = "lm",formula = y~poly(x,11), se = FALSE) +
       xlab("number of gene associated") + ylab("frequence") + labs(color = "") +
       themePlot() +
       theme(axis.text.x = element_text(),
@@ -35,7 +44,7 @@ plotGeneAssociation = function(table, all = FALSE) {
 
     p = ggplot(df,aes(x = as.numeric(gene_association), y = count)) +
       geom_point() +
-      geom_smooth(method = "lm",formula = y~poly(x,10),se = F,color = "red") +
+      geom_smooth(method = "lm",formula = y~poly(x,10),se = FALSE ,color = "red") +
       xlab("number of gene associated") + ylab("frequence") +
       themePlot() +
       theme(axis.text.x = element_text(),

@@ -1,24 +1,36 @@
 #' Function which associated at each enhancer all gene in the interval arount the enhancer
 #'
-#' @param enhancerTable GRanges table contains genomic position for each enhancer (ex. return by ChromHMM tool
-#' @param genome a bed genome annotation file
-#' @param interval a numeric value corresponding to the distance from enhancer where gene is looking for (default interval = 500000 (500kb))
-#' @param nCore a numeric value corresponding to the number of core used (default nCore = 1)
+#' @title enhancerAnnotation
+#' @param enhancerTable GRanges object or list of GRanges object with enhancer position
+#' @param genome dataframe of genome annotation file
+#' @param interval distance from enhancer where gene is looking for (default = 500000 (500kb))
+#' @param nCore number of core used (default nCore = 1)
 #'
 #' @import GenomicRanges
 #' @import parallel
+#' @import methods
+#'
+#' @examples
+#' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+#' data(listTableEnhancer)
+#' genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+#' data(genomeFile)
+#' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+#' anno
 #'
 #' @return a table with infromation about gene associated with enhancer
 #' @export
-enhancerAnnotation = function(enhancerTable,genome, interval = 500000, nCore = 1) {
+enhancerAnnotation = function(enhancerTable, genome,
+					interval = 500000,
+          nCore = 1) {
 
-  set.seed(10)
   if(class(enhancerTable) != "GRanges"){
     stop("'enhancerTable' is not a GRanges table")
   }
+
   ## Add interval value at each side enhancer
-  enhancerTable$start_500kb = start(enhancerTable) - interval
-  enhancerTable$end_500kb = end(enhancerTable) + interval
+  enhancerTable$start_500kb = GenomicRanges::start(enhancerTable) - interval
+  enhancerTable$end_500kb = GenomicRanges::end(enhancerTable) + interval
 
   ## Add TSS position in function strand
   genome$TSS = as.numeric(apply(genome,1,function(line) {
@@ -37,13 +49,13 @@ enhancerAnnotation = function(enhancerTable,genome, interval = 500000, nCore = 1
   names(list_genome_table) = unique(genome$chr)
 
   # Return gene associate enhancer
-  list_sub_enhancerTable = split(1:length(enhancerTable),
-    rep_len(1:nCore, length(enhancerTable)))
+  list_sub_enhancerTable = split(seq_len(length(enhancerTable)),
+    rep_len(seq_len(nCore), length(enhancerTable)))
 
   list_enhancerTable = mclapply(list_sub_enhancerTable, function(pos,table) {
     tt = table[pos,]
 
-    results = lapply(1:length(tt), comparisonPositionGeneEnhancer, enhancer_table = tt,
+    results = lapply(seq_len(length(tt)), comparisonPositionGeneEnhancer, enhancer_table = tt,
       list_genome_table = list_genome_table)
 
     tt$gene_association = unlist(lapply(results,function(x) {return(x[1])}))
@@ -59,13 +71,13 @@ enhancerAnnotation = function(enhancerTable,genome, interval = 500000, nCore = 1
 comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_table){
 
   ## Chromosome associate position
-  chr_value_enhancer = seqnames(enhancer_table[enhancer,])@values
+  chr_value_enhancer = GenomicRanges::seqnames(enhancer_table[enhancer,])@values
 
   genome = list_genome_table[[chr_value_enhancer]]
 
   ## Position of enhancer
-  start = start(enhancer_table[enhancer,])
-  end = end(enhancer_table[enhancer,])
+  start = GenomicRanges::start(enhancer_table[enhancer,])
+  end = GenomicRanges::end(enhancer_table[enhancer,])
   start_500kb =  enhancer_table[enhancer,]$start_500kb
   end_500kb = enhancer_table[enhancer,]$end_500kb
 

@@ -1,13 +1,27 @@
 #' Function to create a plot which represent the distribution of gene expression
 #'
-#' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
-#' @param colorTable a data frame which contains color information
-#' @param scale a value (log10, log2 or none) to rescale expression (default = "none")
-#' @param distance a value to zoom the expression focus (default = 0)
-#' @param xlab a string (default = "")
-#' @param ylab a string (default = "gene expression (CPM)")
+#' @title plotEnhancerExpression
+#' @param dataTable GRanges object or list of GRanges output of enhancerExpression
+#' @param colorTable dataframe with color information
+#' @param scale value (log10, log2 or none) to rescale expression (default = "none")
+#' @param distance numeric value to focus on region (default = 0)
+#' @param xlab x-axis label (default = "")
+#' @param ylab y-axis label (default = "gene expression (CPM)")
 #'
 #' @import ggplot2
+#'
+#' @examples
+#' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+#' data(listTableEnhancer)
+#' genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+#' data(genomeFile)
+#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+#' data(geneExpression)
+#' colorTable = system.file("extdata", "colorTable.rda", package = "ChromENVEE")
+#' data(colorTable)
+#' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+#' expression = enhancerExpression(anno, geneExpression)
+#' plotEnhancerExpression(expression, colorTable)
 #'
 #' @return ggplot2 figure corresponding to the distribution of gene expression
 #' @export
@@ -62,6 +76,5 @@ plotEnhancerExpression = function(dataTable,
           axis.text.y = element_text(),
           legend.position = "none")
   }
-
   return(p)
 }

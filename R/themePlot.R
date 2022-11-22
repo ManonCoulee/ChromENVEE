@@ -1,7 +1,6 @@
 #' Function to return the theme usable for each plot
 #'
 #' @return the theme usable with ggplot
-#' @export
 themePlot = function() {
   theme = theme_minimal() + theme(strip.background  = element_blank(),
       text = element_text(size=20, angle = 0),

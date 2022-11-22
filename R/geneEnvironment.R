@@ -1,15 +1,26 @@
 #' Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)
 #'
-#' @param geneExpressionTable a table contains gene expression and gene Ensembl name (ex. geneExpression data)
-#' @param tableChromatinState a bed table containing information about the chromatin state (ex. chromatin_state data)
-#' @param stateOrder a list of chromatin state
-#' @param interval a numeric value corresponding to environment distance (default = 3000 (3kb))
+#' @title geneEnvironment
+#' @param geneExpressionTable table with gene expression and gene Ensembl name (ex. geneExpression)
+#' @param tableChromatinState table with information on the chromatin state (ex. chromatinState)
+#' @param stateOrder list of chromatin state
+#' @param interval numeric value corresponding to environment distance (default = 3000 (3kb))
+#'
+#' @examples
+#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+#' data(geneExpression)
+#' chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
+#' data(chromatinState)
+#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+#' data(geneExpression)
+#' colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+#' data(colorTable)
+#' geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
 #'
 #' @return table with the distribution of each chromatin state in the environment
 #' @export
 geneEnvironment = function(geneExpressionTable,tableChromatinState, stateOrder, interval = 3000) {
 
-	## Return TSS position (start if + strand or end if - strand)
 	geneExpressionTable$TSS = as.numeric(apply(geneExpressionTable,1,function(line) {
 	  if(line["strand"] == "+") {
 	    return(line["start"])

@@ -1,10 +1,11 @@
 #' Function to return information (expression and distance) for each enhancer
 #'
-#' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
+#' @title getInformation
+#' @param dataTable GRanges object or list of GRanges output of enhancerExpression
 #'
 #' @import ggplot2
 #'
-#' @return the ggplot2 figure corresponding to the distribution of distance gene-enhancer
+#' @return distance, expression, gene name information
 #' @export
 getInformation = function(dataTable) {
   if(class(dataTable) == "list") {

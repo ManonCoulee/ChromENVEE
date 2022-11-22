@@ -1,21 +1,37 @@
 #' Function to create a plot which represent the gene expression in function distance gene-enhancer
 #'
-#' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
-#' @param colorTable a data frame which contains color information
-#' @param xlab a string (default = "")
-#' @param ylab a string (default = "log(CPM)")
-#' @param limit a value of limit for distance analysis (default = 500000 (500kb))
+#' @title plotDistanceExpression
+#' @param dataTable GRanges object or list of GRanges output of enhancerExpression
+#' @param colorTable dataframe which contains color information (colorTable data)
+#' @param xlab x-axis label (default = "")
+#' @param ylab y-axis label (default = "log(CPM)")
+#' @param limit limit for distance analysis (default = 500000 (500kb))
 #'
 #' @import ggplot2
+#' @import stats
 #'
-#' @return ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer
+#' @examples
+#' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+#' data(listTableEnhancer)
+#' genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+#' data(genomeFile)
+#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+#' data(geneExpression)
+#' colorTable = system.file("extdata", "colorTable", package = "ChromENVEE")
+#' data(colorTable)
+#' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+#' expression = enhancerExpression(anno, geneExpression)
+#' plotDistanceExpression(expression, colorTable = colorTable)
+#'
+#' @return gene expression in function distance gene-enhancer
 #' @export
 plotDistanceExpression = function(dataTable,
-  xlab = "",
-  ylab = "log(CPM)",
-  colorTable, limit = 500000) {
+					xlab = "",
+          ylab = "log(CPM)",
+          colorTable,
+          limit = 500000) {
 
-  col = getStateColor(colorTable)
+  col = getStateColor(colorTable = colorTable)
 
   lim = getLengthVector(limit)
 

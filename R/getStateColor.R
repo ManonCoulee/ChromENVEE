@@ -1,6 +1,12 @@
 #' Function to return chromatin state color table
 #'
-#' @param colorTable a data frame which contains color information
+#' @title getStateColor
+#' @param colorTable dataframe color information
+#'
+#' @examples
+#' colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+#' data(colorTable)
+#' colorTable
 #'
 #' @return list of vector with each chromatin state is associated to color
 #' @export

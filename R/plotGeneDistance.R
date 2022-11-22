@@ -1,17 +1,30 @@
 #' Function to create a plot which represent the distribution of distance gene-enhancer
 #'
-#' @param dataTable a GRanges table or list of GRanges obtains by enhancerExpression function
-#' @param xlab a string (default = "")
-#' @param ylab a string (default = "distance enhancer-gene (bp))
-#' @param limit a value of limit for distance analysis (default = 500000 (500kb))
+#' @title plotGeneDistance
+#' @param dataTable GRanges object or list of GRanges output of enhancerExpression
+#' @param xlab x-axis label (default = "")
+#' @param ylab y-axis label (default = "distance enhancer-gene (bp))
+#' @param limit limit for distance analysis (default = 500000 (500kb))
 #'
 #' @import ggplot2
 #'
-#' @return ggplot2 figure corresponding to the distribution of distance gene-enhancer
+#' @examples
+#' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+#' data(listTableEnhancer)
+#' genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+#' data(genomeFile)
+#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+#' data(geneExpression)
+#' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+#' expression = enhancerExpression(anno, geneExpression)
+#' plotGeneDistance(expression)
+#'
+#' @return distribution of distance gene-enhancer
 #' @export
-plotGeneDistance = function(dataTable, limit = 500000,
-  xlab = "",
-  ylab = "distance enhancer-gene (bp)") {
+plotGeneDistance = function(dataTable,
+					limit = 500000,
+					xlab = "",
+					ylab = "distance enhancer-gene (bp)") {
 
   lim = getLengthVector(limit)
 

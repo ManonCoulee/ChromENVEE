@@ -1,18 +1,27 @@
 #' Function to return summary table from ChromHMM data and create associated plot
 #'
-#' @param tableChromatinState a bed table containing information about the chromatin state (ex. chromatin_state data)
-#' @param colorTable a data frame which contains color information
-#' @param plot a boolean to create plot (default = T)
-#' @param merge a boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge
-#' @param filename a string to name the plot create (defualt = "chromatin_state_distribution")
-#' @param ylab a string (default = "chromatin state (%)")
-#' @param xlab a string (default = "")
+#' @title plotChromatinState
+#' @param tableChromatinState bed table containing information about the chromatin state (ex. chromatinState data)
+#' @param colorTable dataframe which contains color information (ex. colorTable data)
+#' @param plot boolean to create plot (default = TRUE)
+#' @param merge boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge
+#' @param filename string to name the plot create (default = "chromatin_state_distribution")
+#' @param ylab x-axis label (default = "chromatin state (%)")
+#' @param xlab y-axis label (default = "")
+#'
+#' @examples
+#' chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
+#' data(chromatinState)
+#' colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+#' data(colorTable)
+#' state = plotChromatinState(chromatinState, colorTable)
+#' state
 #'
 #' @return table contains distribution of different chromatin state
 #' @export
 plotChromatinState = function(tableChromatinState, colorTable,
-					plot = T,
-					merge = F,
+					plot = TRUE,
+					merge = FALSE,
 					filename = "chromatin_state_distribution",
 					ylab = "chromatin state (%)",
 					xlab = "") {
@@ -20,18 +29,18 @@ plotChromatinState = function(tableChromatinState, colorTable,
 	if(class(tableChromatinState) == "data.frame") {
 		table = distributionChromatinState(tableChromatinState,colorTable)
 	} else if(class(tableChromatinState) == "list") {
-		table = lapply(tableChromatinState,distribution_chromatin_state,colorTable)
+		table = lapply(tableChromatinState,distributionChromatinState,colorTable)
 	} else {
 		stop("'tableChromatinState' must be a data frame or a list of data frame")
 	}
 
-	if(merge == T & class(table) == "list") {
+	if(merge == TRUE & class(table) == "list") {
 		table = do.call("rbind",lapply(table,"[",,))
 	}
 
-	if(plot == T) {
+	if(plot == TRUE) {
 		if(class(table) == "list") {
-			lapply(table,plot_distribution_chromatin_state,filename = filename,
+			lapply(table,plotDistributionChromatinState,filename = filename,
 				colorTable = colorTable,
 				merge = merge,ylab = ylab,xlab = xlab)
 		} else {

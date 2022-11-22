@@ -1,6 +1,7 @@
 #' Function to create a vector of limit value
 #'
-#' @param lim a limit value for distance
+#' @title getLengthVector
+#' @param lim limit value for distance
 #'
 #' @import stringr
 #'
@@ -10,7 +11,7 @@ getLengthVector = function(lim) {
   lim = lim/2
   limit = seq(0,lim,length.out = 6)
 
-  limit_label = unlist(lapply(1:length(limit), function(l) {
+  limit_label = unlist(lapply(seq_len(length(limit)), function(l) {
     lab = paste0(str_replace(as.character(as.integer(limit[l])),"000$","kb"),"-",
       str_replace(as.character(as.integer(limit[l+1])),"000$","kb"))
     if((l+1) > length(limit)) {
