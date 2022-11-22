@@ -2,12 +2,12 @@
 % Please edit documentation in R/getLengthVector.R
 \name{getLengthVector}
 \alias{getLengthVector}
-\title{Function to create a vector of limit value}
+\title{getLengthVector}
 \usage{
 getLengthVector(lim)
 }
 \arguments{
-\item{lim}{a limit value for distance}
+\item{lim}{limit value for distance}
 }
 \value{
 a vector of limit

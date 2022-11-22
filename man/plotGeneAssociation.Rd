@@ -2,18 +2,27 @@
 % Please edit documentation in R/plotGeneAssociation.R
 \name{plotGeneAssociation}
 \alias{plotGeneAssociation}
-\title{Function which plot the number of gene associated to enhancer}
+\title{plotGeneAssociation}
 \usage{
 plotGeneAssociation(table, all = FALSE)
 }
 \arguments{
-\item{table}{a GRanges table or list of GRanges obtains by enhancerAnnotation function}
+\item{table}{GRanges object or list of GRanges output of enhancerAnnotation}
 
-\item{all}{a boolean, if TRUE, list of dataframe is merge (default = F)}
+\item{all}{boolean, if TRUE, list of dataframe is merge (default = FALSE)}
 }
 \value{
 ggplot2 figure of the number of gene associated to enhancer
 }
 \description{
 Function which plot the number of gene associated to enhancer
+}
+\examples{
+listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+data(listTableEnhancer)
+genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+data(genomeFile)
+anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+plotGeneAssociation(anno)
+
 }

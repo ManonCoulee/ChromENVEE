@@ -2,15 +2,15 @@
 % Please edit documentation in R/getInformation.R
 \name{getInformation}
 \alias{getInformation}
-\title{Function to return information (expression and distance) for each enhancer}
+\title{getInformation}
 \usage{
 getInformation(dataTable)
 }
 \arguments{
-\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{GRanges object or list of GRanges output of enhancerExpression}
 }
 \value{
-the ggplot2 figure corresponding to the distribution of distance gene-enhancer
+distance, expression, gene name information
 }
 \description{
 Function to return information (expression and distance) for each enhancer

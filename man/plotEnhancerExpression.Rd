@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotEnhancerExpression.R
 \name{plotEnhancerExpression}
 \alias{plotEnhancerExpression}
-\title{Function to create a plot which represent the distribution of gene expression}
+\title{plotEnhancerExpression}
 \usage{
 plotEnhancerExpression(
   dataTable,
@@ -14,21 +14,35 @@ plotEnhancerExpression(
 )
 }
 \arguments{
-\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{GRanges object or list of GRanges output of enhancerExpression}
 
-\item{xlab}{a string (default = "")}
+\item{xlab}{x-axis label (default = "")}
 
-\item{ylab}{a string (default = "gene expression (CPM)")}
+\item{ylab}{y-axis label (default = "gene expression (CPM)")}
 
-\item{scale}{a value (log10, log2 or none) to rescale expression (default = "none")}
+\item{scale}{value (log10, log2 or none) to rescale expression (default = "none")}
 
-\item{colorTable}{a data frame which contains color information}
+\item{colorTable}{dataframe with color information}
 
-\item{distance}{a value to zoom the expression focus (default = 0)}
+\item{distance}{numeric value to focus on region (default = 0)}
 }
 \value{
 ggplot2 figure corresponding to the distribution of gene expression
 }
 \description{
 Function to create a plot which represent the distribution of gene expression
+}
+\examples{
+listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+data(listTableEnhancer)
+genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+data(genomeFile)
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+colorTable = system.file("extdata", "colorTable.rda", package = "ChromENVEE")
+data(colorTable)
+anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+expression = enhancerExpression(anno, geneExpression)
+plotEnhancerExpression(expression, colorTable)
+
 }

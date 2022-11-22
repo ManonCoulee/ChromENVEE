@@ -2,16 +2,22 @@
 % Please edit documentation in R/getStateColor.R
 \name{getStateColor}
 \alias{getStateColor}
-\title{Function to return chromatin state color table}
+\title{getStateColor}
 \usage{
 getStateColor(colorTable)
 }
 \arguments{
-\item{colorTable}{a data frame which contains color information}
+\item{colorTable}{dataframe color information}
 }
 \value{
 list of vector with each chromatin state is associated to color
 }
 \description{
 Function to return chromatin state color table
+}
+\examples{
+colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+data(colorTable)
+colorTable
+
 }

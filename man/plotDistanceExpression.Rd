@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotDistanceExpression.R
 \name{plotDistanceExpression}
 \alias{plotDistanceExpression}
-\title{Function to create a plot which represent the gene expression in function distance gene-enhancer}
+\title{plotDistanceExpression}
 \usage{
 plotDistanceExpression(
   dataTable,
@@ -13,19 +13,33 @@ plotDistanceExpression(
 )
 }
 \arguments{
-\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{GRanges object or list of GRanges output of enhancerExpression}
 
-\item{xlab}{a string (default = "")}
+\item{xlab}{x-axis label (default = "")}
 
-\item{ylab}{a string (default = "log(CPM)")}
+\item{ylab}{y-axis label (default = "log(CPM)")}
 
-\item{colorTable}{a data frame which contains color information}
+\item{colorTable}{dataframe which contains color information (colorTable data)}
 
-\item{limit}{a value of limit for distance analysis (default = 500000 (500kb))}
+\item{limit}{limit for distance analysis (default = 500000 (500kb))}
 }
 \value{
-ggplot2 figure corresponding to the mean of gene expression in function distance gene-enhancer
+gene expression in function distance gene-enhancer
 }
 \description{
 Function to create a plot which represent the gene expression in function distance gene-enhancer
+}
+\examples{
+listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+data(listTableEnhancer)
+genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+data(genomeFile)
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+colorTable = system.file("extdata", "colorTable", package = "ChromENVEE")
+data(colorTable)
+anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+expression = enhancerExpression(anno, geneExpression)
+plotDistanceExpression(expression, colorTable = colorTable)
+
 }

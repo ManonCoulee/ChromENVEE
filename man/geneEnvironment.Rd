@@ -2,7 +2,7 @@
 % Please edit documentation in R/geneEnvironment.R
 \name{geneEnvironment}
 \alias{geneEnvironment}
-\title{Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)}
+\title{geneEnvironment}
 \usage{
 geneEnvironment(
   geneExpressionTable,
@@ -12,17 +12,29 @@ geneEnvironment(
 )
 }
 \arguments{
-\item{geneExpressionTable}{a table contains gene expression and gene Ensembl name (ex. geneExpression data)}
+\item{geneExpressionTable}{table with gene expression and gene Ensembl name (ex. geneExpression)}
 
-\item{tableChromatinState}{a bed table containing information about the chromatin state (ex. chromatin_state data)}
+\item{tableChromatinState}{table with information on the chromatin state (ex. chromatinState)}
 
-\item{stateOrder}{a list of chromatin state}
+\item{stateOrder}{list of chromatin state}
 
-\item{interval}{a numeric value corresponding to environment distance (default = 3000 (3kb))}
+\item{interval}{numeric value corresponding to environment distance (default = 3000 (3kb))}
 }
 \value{
 table with the distribution of each chromatin state in the environment
 }
 \description{
 Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)
+}
+\examples{
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
+data(chromatinState)
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+data(colorTable)
+geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
+
 }

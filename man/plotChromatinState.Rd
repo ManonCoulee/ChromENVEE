@@ -2,36 +2,45 @@
 % Please edit documentation in R/plotChromatinState.R
 \name{plotChromatinState}
 \alias{plotChromatinState}
-\title{Function to return summary table from ChromHMM data and create associated plot}
+\title{plotChromatinState}
 \usage{
 plotChromatinState(
   tableChromatinState,
   colorTable,
-  plot = T,
-  merge = F,
+  plot = TRUE,
+  merge = FALSE,
   filename = "chromatin_state_distribution",
   ylab = "chromatin state (\%)",
   xlab = ""
 )
 }
 \arguments{
-\item{tableChromatinState}{a bed table containing information about the chromatin state (ex. chromatin_state data)}
+\item{tableChromatinState}{bed table containing information about the chromatin state (ex. chromatinState data)}
 
-\item{colorTable}{a data frame which contains color information}
+\item{colorTable}{dataframe which contains color information (ex. colorTable data)}
 
-\item{plot}{a boolean to create plot (default = T)}
+\item{plot}{boolean to create plot (default = TRUE)}
 
-\item{merge}{a boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge}
+\item{merge}{boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge}
 
-\item{filename}{a string to name the plot create (defualt = "chromatin_state_distribution")}
+\item{filename}{string to name the plot create (default = "chromatin_state_distribution")}
 
-\item{ylab}{a string (default = "chromatin state (\%)")}
+\item{ylab}{x-axis label (default = "chromatin state (\%)")}
 
-\item{xlab}{a string (default = "")}
+\item{xlab}{y-axis label (default = "")}
 }
 \value{
 table contains distribution of different chromatin state
 }
 \description{
 Function to return summary table from ChromHMM data and create associated plot
+}
+\examples{
+chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
+data(chromatinState)
+colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
+data(colorTable)
+state = plotChromatinState(chromatinState, colorTable)
+state
+
 }

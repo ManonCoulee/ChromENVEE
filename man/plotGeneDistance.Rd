@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotGeneDistance.R
 \name{plotGeneDistance}
 \alias{plotGeneDistance}
-\title{Function to create a plot which represent the distribution of distance gene-enhancer}
+\title{plotGeneDistance}
 \usage{
 plotGeneDistance(
   dataTable,
@@ -12,17 +12,29 @@ plotGeneDistance(
 )
 }
 \arguments{
-\item{dataTable}{a GRanges table or list of GRanges obtains by enhancerExpression function}
+\item{dataTable}{GRanges object or list of GRanges output of enhancerExpression}
 
-\item{limit}{a value of limit for distance analysis (default = 500000 (500kb))}
+\item{limit}{limit for distance analysis (default = 500000 (500kb))}
 
-\item{xlab}{a string (default = "")}
+\item{xlab}{x-axis label (default = "")}
 
-\item{ylab}{a string (default = "distance enhancer-gene (bp))}
+\item{ylab}{y-axis label (default = "distance enhancer-gene (bp))}
 }
 \value{
-ggplot2 figure corresponding to the distribution of distance gene-enhancer
+distribution of distance gene-enhancer
 }
 \description{
 Function to create a plot which represent the distribution of distance gene-enhancer
+}
+\examples{
+listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
+data(listTableEnhancer)
+genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
+data(genomeFile)
+geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
+data(geneExpression)
+anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
+expression = enhancerExpression(anno, geneExpression)
+plotGeneDistance(expression)
+
 }
