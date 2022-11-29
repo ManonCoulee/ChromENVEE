@@ -3,7 +3,7 @@ title: "ChromENVEE: Chromatin ENVironment and Enhancer-dependent Expression"
 author: "Manon Coulée"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
+  pdf_document:
     toc: true
 
 vignette: >
@@ -45,6 +45,7 @@ The package contains several applications all using the results obtained with Ch
 * Using transcriptomic (RNAseq) data it can also analyze the expression of those nearby genes and produce graphs to visualize the results. ChomENVEE can also determine the chromatin environment of a gene and estimate the predominant chromatin state.
 
 The package was developed to in depth characterize a chromatin mark and correlate it with gene expression and chromatin environment in given cell types. In the present study, we focused on the chromatin mark H3K79me2 because two recent studies had shown that the presence of H3K79me2 at a subset of active enhancers can regulate gene expression (*Ferrari et al, 2020*; *Godfrey et al, 2019*).
+
 
 ```{r setup}
 # Loading package

@@ -8,7 +8,8 @@
 #' @param limit limit for distance analysis (default = 500000 (500kb))
 #'
 #' @import ggplot2
-#' @import stats
+#' @importFrom stats aggregate
+#' @importFrom methods is
 #'
 #' @examples
 #' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")

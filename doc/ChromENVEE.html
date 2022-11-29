@@ -486,13 +486,7 @@ H3K79me2 because two recent studies had shown that the presence of
 H3K79me2 at a subset of active enhancers can regulate gene expression
 (<em>Ferrari et al, 2020</em>; <em>Godfrey et al, 2019</em>).</p>
 <pre class="r"><code># Loading package
-library(ChromENVEE)
-#&gt; Warning: remplacement de l&#39;importation précédente &#39;GenomicRanges::start&#39; par
-#&gt; &#39;stats::start&#39; lors du chargement de &#39;ChromENVEE&#39;
-#&gt; Warning: remplacement de l&#39;importation précédente &#39;GenomicRanges::end&#39; par
-#&gt; &#39;stats::end&#39; lors du chargement de &#39;ChromENVEE&#39;
-#&gt; Warning: remplacement de l&#39;importation précédente &#39;GenomicRanges::update&#39; par
-#&gt; &#39;stats::update&#39; lors du chargement de &#39;ChromENVEE&#39;</code></pre>
+library(ChromENVEE)</code></pre>
 </div>
 <div id="data-initialization" class="section level1">
 <h1>Data initialization</h1>
@@ -866,13 +860,13 @@ header = unique(colorTable$stateName), neighbors = 32, metric = &quot;euclidean&
 #&gt; ENSMUSG00000000037.16 0.1655       0   0 0.0000000    0.0 0.0000        0
 #&gt; ENSMUSG00000000049.11 0.0000       0   0 0.3000000    0.3 0.3410        0
 #&gt; ENSMUSG00000000056.7  0.0000       0   0 0.3333333    0.0 0.0000        0
-#&gt;                           Quies       UMAP1      UMAP2  state
-#&gt; ENSMUSG00000000001.4  0.0000000 -20.9854450 12.9033754   EnhG
-#&gt; ENSMUSG00000000028.15 0.0000000  -1.0417590  9.6227743   EnhG
-#&gt; ENSMUSG00000000031.16 0.2905000  -2.5861100 -8.3002154 EnhBiv
-#&gt; ENSMUSG00000000037.16 0.4011667  -5.8321759 -0.3500425  Quies
-#&gt; ENSMUSG00000000049.11 0.0590000  -0.5353483 -8.8462016 ReprPC
-#&gt; ENSMUSG00000000056.7  0.0000000  -1.2468352  8.7123281   EnhG</code></pre>
+#&gt;                           Quies     UMAP1     UMAP2  state
+#&gt; ENSMUSG00000000001.4  0.0000000  5.805004  3.343731   EnhG
+#&gt; ENSMUSG00000000028.15 0.0000000  5.496002  8.309912   EnhG
+#&gt; ENSMUSG00000000031.16 0.2905000  1.597152 -8.182030 EnhBiv
+#&gt; ENSMUSG00000000037.16 0.4011667 -6.277985 -3.585531  Quies
+#&gt; ENSMUSG00000000049.11 0.0590000  3.923267 -4.401755 ReprPC
+#&gt; ENSMUSG00000000056.7  0.0000000 -1.033818 10.537645   EnhG</code></pre>
 <p>Below is an example of UMAP representation to visualize the
 predominant chromatin state in each gene. Each dot corresponds to a gene
 and is colored according to its predominant chromatin state. The

@@ -8,7 +8,8 @@
 #'
 #' @import GenomicRanges
 #' @import parallel
-#' @import methods
+#' @importFrom methods as
+#' @importFrom methods is
 #'
 #' @examples
 #' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
@@ -58,13 +59,13 @@ enhancerAnnotation = function(enhancerTable, genome,
     results = lapply(seq_len(length(tt)), comparisonPositionGeneEnhancer, enhancer_table = tt,
       list_genome_table = list_genome_table)
 
-    tt$gene_association = unlist(lapply(results,function(x) {return(x[1])}))
+    tt$gene_association = unlist(lapply(results,function(x){return(x[1])}))
     tt$distance = unlist(lapply(results,function(x){return(x[2])}))
     tt$gene_list = unlist(lapply(results,function(x){return(x[3])}))
     return(tt)
   }, table = enhancerTable, mc.cores = nCore)
 
-  table_final = unlist(as(list_enhancerTable,"GRangesList"))
+  table_final = unlist(methods::as(list_enhancerTable,"GRangesList"))
   return(table_final)
 }
 

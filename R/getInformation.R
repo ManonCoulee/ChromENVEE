@@ -4,6 +4,7 @@
 #' @param dataTable GRanges object or list of GRanges output of enhancerExpression
 #'
 #' @import ggplot2
+#' @importFrom methods is
 #'
 #' @return distance, expression, gene name information
 #' @export

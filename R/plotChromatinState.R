@@ -9,6 +9,8 @@
 #' @param ylab x-axis label (default = "chromatin state (%)")
 #' @param xlab y-axis label (default = "")
 #'
+#' @importFrom methods is
+#'
 #' @examples
 #' chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
 #' data(chromatinState)
