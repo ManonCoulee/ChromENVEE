@@ -11,14 +11,6 @@ library(ChromENVEE)
 ## -----------------------------------------------------------------------------
 data(colorTable)
 
-## ----echo = FALSE, fig.asp = 0.9----------------------------------------------
-library(grid)
-library(gridExtra)
-tt = ttheme_minimal(
-  core = list(bg_params = list(fill = c(rep("white",36),colorTable$colorValue), col = 1))
-)
-grid.table(colorTable, theme = tt)
-
 ## -----------------------------------------------------------------------------
 data(genomeFile)
 

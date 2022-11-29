@@ -21,8 +21,8 @@
 #' @return a table with infromation about gene associated with enhancer
 #' @export
 enhancerAnnotation = function(enhancerTable, genome,
-					interval = 500000,
-          nCore = 1) {
+		interval = 500000,
+		nCore = 1){
 
   if(!is(enhancerTable,"GRanges")){
     stop("'enhancerTable' is not a GRanges table")
@@ -33,8 +33,8 @@ enhancerAnnotation = function(enhancerTable, genome,
   enhancerTable$end_500kb = GenomicRanges::end(enhancerTable) + interval
 
   ## Add TSS position in function strand
-  genome$TSS = as.numeric(apply(genome,1,function(line) {
-    if(line["strand"] == "+") {
+  genome$TSS = as.numeric(apply(genome,1,function(line){
+    if(line["strand"] == "+"){
       return(line["start"])
     } else {
       return(line["end"])
@@ -42,7 +42,7 @@ enhancerAnnotation = function(enhancerTable, genome,
   }))
 
   ## Divide gene table in function of the chromosome
-  list_genome_table = lapply(unique(genome$chr),function(chr) {
+  list_genome_table = lapply(unique(genome$chr),function(chr){
     tt = genome[genome$chr == chr,c("TSS","gene_ENS")]
     return(tt)
   })
@@ -52,7 +52,7 @@ enhancerAnnotation = function(enhancerTable, genome,
   list_sub_enhancerTable = split(seq_len(length(enhancerTable)),
     rep_len(seq_len(nCore), length(enhancerTable)))
 
-  list_enhancerTable = mclapply(list_sub_enhancerTable, function(pos,table) {
+  list_enhancerTable = mclapply(list_sub_enhancerTable, function(pos,table){
     tt = table[pos,]
 
     results = lapply(seq_len(length(tt)), comparisonPositionGeneEnhancer, enhancer_table = tt,

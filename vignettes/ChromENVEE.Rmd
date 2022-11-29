@@ -21,30 +21,30 @@ knitr::opts_chunk$set(
 
 # Abstract
 
-Standard analyses on ChIPseq data provide information (annotation, enrichment level) at the gene body level restricting the chromatin roles of histone marks. The ChromHMM tool allows to go further by predicting chromatin states defined by one or more histone marks, the present package allows from these data to analyze the chromatin states by comparing them to transcriptomic data (RNAseq) and other histone marks.
+Standard analyses on ChIPseq data provide information (annotation, enrichment level) at the gene body level but do not necessarily investigate other genomic regions. ChromHMM R package allows to go further by predicting chromatin states using ChIPSeq datasets for several histone marks. The present R package ChromENVEE uses the chromatin states obtained by ChromHMM and compare them with transcriptomic data (RNAseq) and other ChIP-Seq data.
 
-This package implements functions to associate all the neighbouring genes to a list of enhancers and to define the chromatin environment of genes using chromatin states informations (e.g., ChromHMM output). Several visualization functions are available to summarize the distribution of chromatin states, characterize genes associated with enhancers and also assign chromatin environment to genes.
+Specifically, ChromENVEE implements functions to associate all the neighbouring genes to a list of enhancers and to define the chromatin environment of genes using chromatin states informations. Several visualization functions are available to summarize the distribution of chromatin states, characterize genes associated with enhancers and also assign chromatin environment to genes.
 
 # Citation
 
 If you use ChromENVEE in published research, please cite:
 
-- Manon Coulee, Guillaume Meurice, Mitra Barzine, Julie Cocquet\* and Laila El Khattabi\* (2022). ChromENVEE: Chromatin Environment and Enhancer-dependent Expression. R package version 1.1.8.
+- Manon Coulee, Guillaume Meurice, Julie Cocquet\* and Laila El Khattabi\* (2022). ChromENVEE: Chromatin Environment and Enhancer-dependent Expression. R package version 1.1.8.
 \*co-authorship
 
 # Introduction
 
-**ChromENVEE** (**C**hromatin **ENV**ironment and **E**nhancer-dependent **E**xpression) is a package that was developed to define chromatin dynamics in a specific cell type and to characterize a histone mark at the enhancer level and its chromatin environment. Two recent studies using ChromHMM have shown that H3K79me2 may have a role in gene expression when associated with enhancers. (*Ferrari et al, 2020*; *Godfrey et al, 2019*)
+**ChromENVEE** (**C**hromatin **ENV**ironment and **E**nhancer-dependent **E**xpression) is a package that was developed to define chromatin dynamics in a specific cell type and to characterize a histone mark at the enhancer level and its chromatin environment.
 
-ChromHMM (*Ersnt et al, 2012*) is a tool using the Hidden Markov Model (HMM) method to predict the most likely chromatin state of each genomic segment. The tool uses ChIPseq data from multiple epigenetic marks to predict chromatin states, each characterized by at least one epigenetic marks. In the case of this present study, six epigenetic marks from 15 different cell types were used to build a model of 18 chromatin states.
+ChromHMM (*Ersnt et al, 2012*) is a tool using the Hidden Markov Model (HMM) method to predict the most likely chromatin state of each genomic segment. The tool uses ChIPseq data from multiple epigenetic marks to predict chromatin states, each characterized by at least one epigenetic mark. In the case of this present study, six epigenetic marks from 15 different cell types were used to build a model of 18 chromatin states.
 
 The package contains several applications all using the results obtained with ChromHMM tools.
 
-* It characterize the distribution of the chromatin states in a given cell type.
+* It characterizes the distribution of the chromatin states in a given cell type.
 * The package can associate chromatin states defined as enhancers with genes located nearby.
 * Using transcriptomic (RNAseq) data it can also analyze the expression of those nearby genes and produce graphs to visualize the results. ChomENVEE can also determine the chromatin environment of a gene and estimate the predominant chromatin state.
 
-This package is available for R version >= 3.6.
+The package was developed to in depth characterize a chromatin mark and correlate it with gene expression and chromatin environment in given cell types. In the present study, we focused on the chromatin mark H3K79me2 because two recent studies had shown that the presence of H3K79me2 at a subset of active enhancers can regulate gene expression (*Ferrari et al, 2020*; *Godfrey et al, 2019*).
 
 ```{r setup}
 # Loading package
@@ -58,14 +58,9 @@ library(ChromENVEE)
 ```{r}
 data(colorTable)
 ```
-```{r echo = FALSE, fig.asp = 0.9}
-library(grid)
-library(gridExtra)
-tt = ttheme_minimal(
-  core = list(bg_params = list(fill = c(rep("white",36),colorTable$colorValue), col = 1))
-)
-grid.table(colorTable, theme = tt)
-```
+
+![](figures/colorTable.png){width=50%}
+
 
 `genomeFile` is a dataframe generated from an annotation bed file. In the case of this present study, we used the mouse Ensembl annotation file.
 
@@ -77,7 +72,6 @@ data(genomeFile)
 ```{r echo = FALSE}
 head(genomeFile)
 ```
-
 
 `chromatinState` is a dataframe that contains chromatin states information. It is generated with the output of the ChromHMM tool.
 
@@ -166,6 +160,7 @@ geneExpressionTable = geneExpression)
 ```{r echo = FALSE}
 head(table_enhancer_gene_expression)
 ```
+
 
 ## Visualization of enhancer annotation
 ### Distribution of genes according to their distance from the enhancer
