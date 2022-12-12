@@ -1,6 +1,6 @@
 #' BED file contains name, position of genes in mm10 genome
 #'
-#' @format A data frame with 54446 rows and 6 variables:
+#' @format A GRanges object with 54446 ranges and 2 metadata columns:
 #' \describe{
 #'  \item{gene_ENS}{gene name in ENSEMBL nomenclature}
 #'  \item{chr}{chromosome number}

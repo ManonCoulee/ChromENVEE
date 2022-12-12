@@ -2,7 +2,7 @@
 #'
 #' @title enhancerAnnotation
 #' @param enhancerTable GRanges object or list of GRanges object with enhancer position
-#' @param genome dataframe of genome annotation file
+#' @param genome GRanges of genome annotation file
 #' @param interval distance from enhancer where gene is looking for (default = 500000 (500kb))
 #' @param nCore number of core used (default nCore = 1)
 #'
@@ -19,7 +19,7 @@
 #' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 #' anno
 #'
-#' @return a table with infromation about gene associated with enhancer
+#' @return GRanges with infromation about gene associated with enhancer
 #' @export
 enhancerAnnotation = function(enhancerTable, genome,
 		interval = 500000,
@@ -34,20 +34,20 @@ enhancerAnnotation = function(enhancerTable, genome,
   enhancerTable$end_500kb = GenomicRanges::end(enhancerTable) + interval
 
   ## Add TSS position in function strand
-  genome$TSS = as.numeric(apply(genome,1,function(line){
-    if(line["strand"] == "+"){
-      return(line["start"])
+  genome$TSS = as.numeric(lapply(seq_len(length(genome)),function(line){
+    if(GenomicRanges::strand(genome[line,])@values == "+"){
+      return(GenomicRanges::start(genome[line,]))
     } else {
-      return(line["end"])
+      return(GenomicRanges::end(genome[line,]))
     }
   }))
 
   ## Divide gene table in function of the chromosome
-  list_genome_table = lapply(unique(genome$chr),function(chr){
-    tt = genome[genome$chr == chr,c("TSS","gene_ENS")]
+  list_genome_table = lapply(unique(seqnames(genome)),function(chr){
+		tt = genome[seqnames(genome) == chr,]
     return(tt)
   })
-  names(list_genome_table) = unique(genome$chr)
+  names(list_genome_table) = unique(seqnames(genome))
 
   # Return gene associate enhancer
   list_sub_enhancerTable = split(seq_len(length(enhancerTable)),
@@ -88,9 +88,9 @@ comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_ta
   tt = genome[genome$TSS > end,]
   sub_genome2 = tt[tt$TSS < end_500kb,]
   sub_genome2$distance = abs(sub_genome2$TSS - end)
-  genome_res = rbind(sub_genome,sub_genome2)
+  genome_res = unlist(methods::as(list(sub_genome,sub_genome2),"GRangesList"))
 
-  nb_gene = nrow(genome_res)
+  nb_gene = length(genome_res)
   distance = paste0(genome_res$distance, collapse = ";")
   gene = paste0(genome_res$gene_ENS, collapse = ";")
 

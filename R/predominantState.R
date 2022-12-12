@@ -1,7 +1,7 @@
 #' Function with estimate the predominant state associated at each gene
 #'
 #' @title predominantState
-#' @param table table with the output of geneEnvironment
+#' @param table GRanges with the output of geneEnvironment
 #' @param state list of chromatin state
 #' @param header list of column in table to analysed with UMAP
 #' @param neighbors numeric value (see umap package)
@@ -15,20 +15,25 @@
 #' data(geneExpression)
 #' chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
 #' data(chromatinState)
-#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
-#' data(geneExpression)
 #' colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
 #' data(colorTable)
-#' enviro = geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
+#' enviro = geneEnvironment(geneExpression[1:100,], chromatinState, unique(colorTable$stateName))
 #' predominantState(enviro,state = unique(colorTable$stateName),
 #'   header = unique(colorTable$stateName))
 #'
 #' @return table with 2-dimensional value and predominant chromatin state
 #' @export
-predominantState = function(table, state, header, neighbors = 32, metric = "euclidean", dist = 0.5) {
+predominantState = function(table,
+    state,
+    header,
+    neighbors = 32,
+    metric = "euclidean",
+    dist = 0.5) {
 
-  message("\n==> It will be take few minutes to process\n")
-  result = invisible(umap(table[,header], n_neighbors = neighbors, metric = metric, min_dist = dist))
+  message("==> It will be take few minutes to process")
+  table = data.frame(table)
+  result = invisible(umap(table[,header], n_neighbors = neighbors,
+      metric = metric, min_dist = dist))
   colnames(result$layout) = c("UMAP1","UMAP2")
 
   result = cbind(result$data,result$layout)

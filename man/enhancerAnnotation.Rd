@@ -9,14 +9,14 @@ enhancerAnnotation(enhancerTable, genome, interval = 5e+05, nCore = 1)
 \arguments{
 \item{enhancerTable}{GRanges object or list of GRanges object with enhancer position}
 
-\item{genome}{dataframe of genome annotation file}
+\item{genome}{GRanges of genome annotation file}
 
 \item{interval}{distance from enhancer where gene is looking for (default = 500000 (500kb))}
 
 \item{nCore}{number of core used (default nCore = 1)}
 }
 \value{
-a table with infromation about gene associated with enhancer
+GRanges with infromation about gene associated with enhancer
 }
 \description{
 Function which associated at each enhancer all gene in the interval arount the enhancer

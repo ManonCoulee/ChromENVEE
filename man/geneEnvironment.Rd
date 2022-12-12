@@ -14,14 +14,14 @@ geneEnvironment(
 \arguments{
 \item{geneExpressionTable}{table with gene expression and gene Ensembl name (ex. geneExpression)}
 
-\item{tableChromatinState}{table with information on the chromatin state (ex. chromatinState)}
+\item{tableChromatinState}{GRanges with information on the chromatin state (ex. chromatinState)}
 
 \item{stateOrder}{list of chromatin state}
 
 \item{interval}{numeric value corresponding to environment distance (default = 3000 (3kb))}
 }
 \value{
-table with the distribution of each chromatin state in the environment
+GRanges with the distribution of each chromatin state in the environment
 }
 \description{
 Function which estimated the chromatin state in the environment around gene (estimated with interval around gene TSS)
@@ -31,10 +31,8 @@ geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
 data(geneExpression)
 chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
 data(chromatinState)
-geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
-data(geneExpression)
 colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
 data(colorTable)
-geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
+geneEnvironment(geneExpression[1:100,], chromatinState, unique(colorTable$stateName))
 
 }

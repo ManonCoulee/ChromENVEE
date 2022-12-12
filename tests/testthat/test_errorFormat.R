@@ -8,7 +8,7 @@ test_that("Test the conformity of initial data", {
 
   ## Test for plotChromatinState
   expect_error(plotChromatinState(tableChromatinState = data_table),
-    regexp = "'tableChromatinState' must be a dataframe or a list of dataframe")
+    regexp = "'tableChromatinState' must be a GRanges or a list of GRanges")
 
   ## Test for enhancerAnnotation
   expect_error(enhancerAnnotation(enhancerTable = data_frame),

@@ -3,7 +3,7 @@ title: "ChromENVEE: Chromatin ENVironment and Enhancer-dependent Expression"
 author: "Manon Coulée"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
+  rmarkdown::html_document:
     toc: true
 
 vignette: >
@@ -63,7 +63,7 @@ data(colorTable)
 ![](figures/colorTable.png){width=50%}
 
 
-`genomeFile` is a dataframe generated from an annotation bed file. In the case of this present study, we used the mouse Ensembl annotation file.
+`genomeFile` is a GRanges object generated from an annotation bed file. In the case of this present study, we used the mouse Ensembl annotation file.
 
 `genomeFile` should contain the following information: chromosome (chr), gene position (start and end), strand information (strand) and gene name (gene_ENS). The score information is suggested but not mandatory.
 
@@ -74,7 +74,7 @@ data(genomeFile)
 head(genomeFile)
 ```
 
-`chromatinState` is a dataframe that contains chromatin states information. It is generated with the output of the ChromHMM tool.
+`chromatinState` is a GRanges object that contains chromatin states information. It is generated with the output of the ChromHMM tool.
 
 `chromatinState` should contain the following information: chromosome (chr), genomic regions (start and end), chromatin states (state and state_name) and sample name (name).
 
@@ -119,7 +119,6 @@ To determine which genes are associated to which enhancers, we assign to each en
 To do that, `enhancerAnnotation()` uses a `GRanges` object.
 
 The function takes few minutes to process depending on the size of your enhancer table. It is possible to preformed multithreading using the `nCore` parameter. To each enhancer position, we obtain the list of associated genes and their distance from the enhancer (in bp).
-
 
 ```{r}
 table_enhancer_gene = enhancerAnnotation(listTableEnhancer[[1]], genome = genomeFile,
@@ -198,17 +197,18 @@ It is possible to compare different categories of enhancers by means of a list o
 The first step is to assign to each enhancer all the genes located within an interval using `enhancerAnnotation()`. After gene association, we associate the gene expression at enhancer using `enhancerExpression()`.
 
 
-```{r}
+```
 list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation,
 genome = genomeFile, interval = 500000, nCore = 1)
 listTableEnhancerGeneExpression = lapply(list_table_enhancer_gene, enhancerExpression,
 geneExpressionTable = geneExpression)
 ```
 
-
 This process takes a few minutes. To reduce time, you can load the `listTableEnhancerGeneExpression` data to process the following analyses.
 
-`data(listTableEnhancerGeneExpression)`
+```{r}
+data(listTableEnhancerGeneExpression)
+```
 
 ### Number of genes associated with the enhancer
 
@@ -263,7 +263,6 @@ The `geneEnvironment()`function calculates the percentage of overlap of each chr
 ```{r}
 table_overlapping = geneEnvironment(geneExpression, chromatinState,
 stateOrder = unique(colorTable$stateName), interval = 3000)
-rownames(table_overlapping) = table_overlapping$gene_ENS
 ```
 ```{r echo = FALSE}
 head(table_overlapping)
@@ -280,6 +279,7 @@ header = unique(colorTable$stateName), neighbors = 32, metric = "euclidean", dis
 ```{r echo = FALSE}
 head(result_umap)
 ```
+
 
 Below is an example of UMAP representation to visualize the predominant chromatin state in each gene. Each dot corresponds to a gene and is colored according to its predominant chromatin state. The resulting figure may not be exactly the same than the one presented in this thumbnail since the order of display?? of dimension axes may differ; however, the clusters remain the same.
 

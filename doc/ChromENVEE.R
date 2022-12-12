@@ -72,10 +72,7 @@ plotDistanceExpression(table_enhancer_gene_expression, colorTable = colorTable,
 limit = 500000)
 
 ## -----------------------------------------------------------------------------
-list_table_enhancer_gene = lapply(listTableEnhancer, enhancerAnnotation,
-genome = genomeFile, interval = 500000, nCore = 1)
-listTableEnhancerGeneExpression = lapply(list_table_enhancer_gene, enhancerExpression,
-geneExpressionTable = geneExpression)
+data(listTableEnhancerGeneExpression)
 
 ## ---- fig.width = 10,fig.asp = 0.5--------------------------------------------
 plotGeneAssociation(listTableEnhancerGeneExpression, all = TRUE)
@@ -99,7 +96,6 @@ data(chromatinState)
 ## -----------------------------------------------------------------------------
 table_overlapping = geneEnvironment(geneExpression, chromatinState,
 stateOrder = unique(colorTable$stateName), interval = 3000)
-rownames(table_overlapping) = table_overlapping$gene_ENS
 
 ## ----echo = FALSE-------------------------------------------------------------
 head(table_overlapping)

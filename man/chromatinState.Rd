@@ -5,7 +5,7 @@
 \alias{chromatinState}
 \title{chromatinState}
 \format{
-A data frame with 566398 rows and 6 variables:
+A GRanges object with 566398 ranges and 3 metadata columns:
 \describe{
 \item{chr}{chromosome number}
 \item{start}{start position, in bp}

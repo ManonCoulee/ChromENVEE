@@ -15,7 +15,7 @@ plotChromatinState(
 )
 }
 \arguments{
-\item{tableChromatinState}{bed table containing information about the chromatin state (ex. chromatinState data)}
+\item{tableChromatinState}{GRanges object containing information about the chromatin state (ex. chromatinState data)}
 
 \item{colorTable}{dataframe which contains color information (ex. colorTable data)}
 

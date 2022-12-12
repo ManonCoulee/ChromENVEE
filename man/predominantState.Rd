@@ -14,7 +14,7 @@ predominantState(
 )
 }
 \arguments{
-\item{table}{table with the output of geneEnvironment}
+\item{table}{GRanges with the output of geneEnvironment}
 
 \item{state}{list of chromatin state}
 
@@ -37,11 +37,9 @@ geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
 data(geneExpression)
 chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
 data(chromatinState)
-geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
-data(geneExpression)
 colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
 data(colorTable)
-enviro = geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
+enviro = geneEnvironment(geneExpression[1:100,], chromatinState, unique(colorTable$stateName))
 predominantState(enviro,state = unique(colorTable$stateName),
   header = unique(colorTable$stateName))
 

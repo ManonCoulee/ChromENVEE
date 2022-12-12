@@ -1,7 +1,7 @@
 #' Function to return summary table from ChromHMM data and create associated plot
 #'
 #' @title plotChromatinState
-#' @param tableChromatinState bed table containing information about the chromatin state (ex. chromatinState data)
+#' @param tableChromatinState GRanges object containing information about the chromatin state (ex. chromatinState data)
 #' @param colorTable dataframe which contains color information (ex. colorTable data)
 #' @param plot boolean to create plot (default = TRUE)
 #' @param merge boolean to merge data if it's a list of table (default = F), if TRUE, list of dataframe is merge
@@ -10,6 +10,7 @@
 #' @param xlab y-axis label (default = "")
 #'
 #' @importFrom methods is
+#' @import GenomicRanges
 #'
 #' @examples
 #' chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
@@ -28,12 +29,12 @@ plotChromatinState = function(tableChromatinState, colorTable,
 					ylab = "chromatin state (%)",
 					xlab = "") {
 
-	if(is(tableChromatinState,"data.frame")) {
+	if(is(tableChromatinState,"GRanges")) {
 		table = distributionChromatinState(tableChromatinState,colorTable)
 	} else if(is(tableChromatinState, "list")) {
 		table = lapply(tableChromatinState,distributionChromatinState,colorTable)
 	} else {
-		stop("'tableChromatinState' must be a dataframe or a list of dataframe")
+		stop("'tableChromatinState' must be a GRanges or a list of GRanges")
 	}
 
 	if(merge && is(table, "list")) {
@@ -56,24 +57,25 @@ plotChromatinState = function(tableChromatinState, colorTable,
 
 distributionChromatinState = function(tableChromatinState,colorTable) {
 
-	if(is(tableChromatinState, "data.frame")) {
+	if(is(tableChromatinState, "GRanges")) {
 		resume = data.frame("state" = unique(colorTable$stateName))
 		resume$state = factor(resume$state, levels = unique(colorTable$stateName))
 		rownames(resume) = unique(colorTable$stateName)
 
-		tableChromatinState$size = abs(tableChromatinState$start - tableChromatinState$end)
+		tableChromatinState$size = abs(GenomicRanges::start(tableChromatinState) -
+			GenomicRanges::end(tableChromatinState))
 		tableChromatinState$state_name = factor(tableChromatinState$state,
 				levels = colorTable$stateNumber, labels = colorTable$stateName)
 		genome_length = sum(tableChromatinState$size)
 
 		resume$coverage = unlist(lapply(rownames(resume), function(state) {
-				(sum(tableChromatinState[tableChromatinState$state_name == state,"size"])/genome_length)*100
+				(sum(tableChromatinState[tableChromatinState$state_name == state,]$size)/genome_length)*100
 		}))
 		resume$sample_name = unique(tableChromatinState$name)
 
 		return(resume)
 	} else {
-		stop("'tableChromatinState' must be a dataframe or a list of dataframe")
+		stop("'tableChromatinState' must be a GRanges or a list of GRanges")
 	}
 }
 
