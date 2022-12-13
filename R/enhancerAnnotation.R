@@ -41,6 +41,7 @@ enhancerAnnotation = function(enhancerTable, genome,
   ## Divide gene table in function of the chromosome
   list_genome_table = lapply(unique(seqnames(genome)),function(chr){
 		tt = genome[seqnames(genome) == chr,]
+		tt = as.data.frame(tt)[,c("TSS","gene_ENS")]
     return(tt)
   })
   names(list_genome_table) = unique(seqnames(genome))
@@ -52,7 +53,7 @@ enhancerAnnotation = function(enhancerTable, genome,
   list_enhancerTable = mclapply(list_sub_enhancerTable, function(pos,table){
     tt = table[pos,]
 
-    results = lapply(seq_len(length(tt)), comparisonPositionGeneEnhancer, enhancer_table = tt,
+    results = lapply(seq_along(tt), comparisonPositionGeneEnhancer, enhancer_table = tt,
       list_genome_table = list_genome_table)
 
     tt$gene_association = unlist(lapply(results,function(x){return(x[1])}))
@@ -84,7 +85,7 @@ comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_ta
   tt = genome[genome$TSS > end,]
   sub_genome2 = tt[tt$TSS < end_500kb,]
   sub_genome2$distance = abs(sub_genome2$TSS - end)
-  genome_res = unlist(methods::as(list(sub_genome,sub_genome2),"GRangesList"))
+  genome_res = rbind(sub_genome,sub_genome2)
 
   nb_gene = length(genome_res)
   distance = paste0(genome_res$distance, collapse = ";")
