@@ -34,13 +34,9 @@ enhancerAnnotation = function(enhancerTable, genome,
   enhancerTable$end_500kb = GenomicRanges::end(enhancerTable) + interval
 
   ## Add TSS position in function strand
-  genome$TSS = as.numeric(lapply(seq_len(length(genome)),function(line){
-    if(GenomicRanges::strand(genome[line,])@values == "+"){
-      return(GenomicRanges::start(genome[line,]))
-    } else {
-      return(GenomicRanges::end(genome[line,]))
-    }
-  }))
+  genome$TSS = GenomicRanges::start(genome)
+	genome[GenomicRanges::strand(genome)@values == "-",]$TSS = end(
+			genome[GenomicRanges::strand(genome)@values == "-",])
 
   ## Divide gene table in function of the chromosome
   list_genome_table = lapply(unique(seqnames(genome)),function(chr){
