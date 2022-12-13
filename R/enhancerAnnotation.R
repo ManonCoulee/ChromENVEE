@@ -87,7 +87,7 @@ comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_ta
   sub_genome2$distance = abs(sub_genome2$TSS - end)
   genome_res = rbind(sub_genome,sub_genome2)
 
-  nb_gene = length(genome_res)
+  nb_gene = nrow(genome_res)
   distance = paste0(genome_res$distance, collapse = ";")
   gene = paste0(genome_res$gene_ENS, collapse = ";")
 
