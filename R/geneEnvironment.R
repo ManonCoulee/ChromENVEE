@@ -71,10 +71,10 @@ geneEnvironment = function(geneExpressionTable,tableChromatinState, stateOrder,
 		}))/(interval*2)
 
 		value = geneExpressionTable[gene,stateOrder]
-		t = unlist(lapply(unique(tt$state_name), function(x){
+		t = unlist(lapply(unique(stateOrder), function(x){
 			sum(tt[tt$state_name == x,]$coverage)
 		}))
-		names(t) = unique(tt$state_name)
+		names(t) = unique(stateOrder)
 		value[,names(t)] = t
 		return(value)
 
