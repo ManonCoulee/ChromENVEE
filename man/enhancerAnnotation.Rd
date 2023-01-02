@@ -22,9 +22,7 @@ GRanges with infromation about gene associated with enhancer
 Function which associated at each enhancer all gene in the interval arount the enhancer
 }
 \examples{
-listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
 data(listTableEnhancer)
-genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
 data(genomeFile)
 anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 anno

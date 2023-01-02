@@ -3,7 +3,7 @@ title: "ChromENVEE: Chromatin ENVironment and Enhancer-dependent Expression"
 author: "Manon Coulée"
 date: "`r Sys.Date()`"
 output:
-  rmarkdown::html_document:
+  pdf_document:
     toc: true
 
 vignette: >

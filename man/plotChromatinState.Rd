@@ -36,9 +36,7 @@ table contains distribution of different chromatin state
 Function to return summary table from ChromHMM data and create associated plot
 }
 \examples{
-chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
 data(chromatinState)
-colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
 data(colorTable)
 state = plotChromatinState(chromatinState, colorTable)
 state

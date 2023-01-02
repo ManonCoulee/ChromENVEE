@@ -13,9 +13,7 @@
 #' @import GenomicRanges
 #'
 #' @examples
-#' chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
 #' data(chromatinState)
-#' colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
 #' data(colorTable)
 #' state = plotChromatinState(chromatinState, colorTable)
 #' state

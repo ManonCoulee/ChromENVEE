@@ -18,9 +18,7 @@ ggplot2 figure of the number of gene associated to enhancer
 Function which plot the number of gene associated to enhancer
 }
 \examples{
-listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
 data(listTableEnhancer)
-genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
 data(genomeFile)
 anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 plotGeneAssociation(anno)

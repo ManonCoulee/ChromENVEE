@@ -33,14 +33,12 @@ table with 2-dimensional value and predominant chromatin state
 Function with estimate the predominant state associated at each gene
 }
 \examples{
-geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
-data(geneExpression)
-chromatinState = system.file("extdata", chromatinState, package = "ChromENVEE")
+geneFile = system.file("extdata", "gene.tsv", package = "ChromENVEE")
+geneExpression = read.table(geneFile, h = TRUE)
 data(chromatinState)
-colorTable = system.file("extdata", colorTable, package = "ChromENVEE")
 data(colorTable)
-enviro = geneEnvironment(geneExpression[1:100,], chromatinState, unique(colorTable$stateName))
-predominantState(enviro,state = unique(colorTable$stateName),
+enviro = geneEnvironment(geneExpression, chromatinState, unique(colorTable$stateName))
+predominantState(enviro, state = unique(colorTable$stateName),
   header = unique(colorTable$stateName))
 
 }

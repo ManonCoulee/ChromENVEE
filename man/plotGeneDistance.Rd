@@ -27,11 +27,8 @@ distribution of distance gene-enhancer
 Function to create a plot which represent the distribution of distance gene-enhancer
 }
 \examples{
-listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
 data(listTableEnhancer)
-genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
 data(genomeFile)
-geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
 data(geneExpression)
 anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 expression = enhancerExpression(anno, geneExpression)

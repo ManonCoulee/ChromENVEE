@@ -12,13 +12,9 @@
 #' @importFrom methods is
 #'
 #' @examples
-#' listTableEnhancer = system.file("extdata", listTableEnhancer, package = "ChromENVEE")
 #' data(listTableEnhancer)
-#' genomeFile = system.file("extdata", genomeFile, package = "ChromENVEE")
 #' data(genomeFile)
-#' geneExpression = system.file("extdata", geneExpression, package = "ChromENVEE")
 #' data(geneExpression)
-#' colorTable = system.file("extdata", "colorTable", package = "ChromENVEE")
 #' data(colorTable)
 #' anno = enhancerAnnotation(listTableEnhancer[[1]], genomeFile)
 #' expression = enhancerExpression(anno, geneExpression)
