@@ -1,6 +1,6 @@
 Package: ChromENVEE
 Title: Chromatin Environment and Enhancer-dependent Expression
-Version: 0.99.8
+Version: 0.99.9
 Authors@R:
     c(
       person(given = "Manon", family = "Coulee", role = c("aut", "cre"), email = "manoncoulee@hotmail.com"),
