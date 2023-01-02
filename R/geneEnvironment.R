@@ -46,9 +46,9 @@ geneEnvironment = function(geneExpressionTable,tableChromatinState, stateOrder,
 
 		m3kb = geneExpressionTable[gene,"TSS_moins_3kb"]
 		p3kb = geneExpressionTable[gene,"TSS_plus_3kb"]
-		chr = geneExpressionTable[gene,"chr"]
+		chr = geneExpressionTable[gene,"seqnames"]
 
-		tableChromatinState_chr = list_tableChromatinState[[chr]]
+		tableChromatinState_chr = list_tableChromatinState[[as.character(chr)]]
 
 		## Remove chromatin state before interval
 		tt = tableChromatinState_chr[end(tableChromatinState_chr) > m3kb,]

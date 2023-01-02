@@ -107,6 +107,19 @@ header = unique(colorTable$stateName), neighbors = 32, metric = "euclidean", dis
 ## ----echo = FALSE-------------------------------------------------------------
 head(result_umap)
 
+## -----------------------------------------------------------------------------
+library(ggplot2)
+ggplot(result_umap,aes(UMAP1,UMAP2, color = factor(state,
+    levels = unique(colorTable$stateName)))) +
+	geom_point() +
+  scale_color_manual(values = getStateColor(colorTable)$stateName) +
+  theme_bw() + theme(strip.background  = element_blank(),
+		text = element_text(size=25, angle = 0),
+		panel.grid.major = element_blank(),
+		axis.ticks = element_blank(),
+		strip.text.x = element_text(size = 25, angle = 0, hjust = 1),
+		legend.position = "none")
+
 ## ----echo = FALSE-------------------------------------------------------------
 sessionInfo()
 

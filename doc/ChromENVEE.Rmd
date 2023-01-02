@@ -129,7 +129,6 @@ head(table_enhancer_gene)
 ```
 
 ### Number of genes associated with an enhancer
-
 With the `enhancerAnnotation()` function, each enhancer region can be associated at least one genes. The function `plotGeneAssociation()` allows to represent the distribution of the number of genes associated with the enhancers. The function uses polynomial linear regression for the graph representation.
 
 ```{r, fig.width = 10,fig.asp = 0.5}
@@ -260,6 +259,7 @@ The `geneEnvironment()`function calculates the percentage of overlap of each chr
 
 `geneEnvironment()` may take a few minutes depending on the number of genes analyzed.
 
+
 ```{r}
 table_overlapping = geneEnvironment(geneExpression, chromatinState,
 stateOrder = unique(colorTable$stateName), interval = 3000)
@@ -267,6 +267,7 @@ stateOrder = unique(colorTable$stateName), interval = 3000)
 ```{r echo = FALSE}
 head(table_overlapping)
 ```
+
 
 ## Predominant chromatin state at gene promoters
 
@@ -280,25 +281,22 @@ header = unique(colorTable$stateName), neighbors = 32, metric = "euclidean", dis
 head(result_umap)
 ```
 
-
 Below is an example of UMAP representation to visualize the predominant chromatin state in each gene. Each dot corresponds to a gene and is colored according to its predominant chromatin state. The resulting figure may not be exactly the same than the one presented in this thumbnail since the order of display?? of dimension axes may differ; however, the clusters remain the same.
 
-
 Here is an example of code to generate the figure below:
-```
+```{r}
+library(ggplot2)
 ggplot(result_umap,aes(UMAP1,UMAP2, color = factor(state,
     levels = unique(colorTable$stateName)))) +
 	geom_point() +
-	scale_color_manual(values = colorTable$colorValue) +
-	theme_bw() + theme(strip.background  = element_blank(),
+  scale_color_manual(values = getStateColor(colorTable)$stateName) +
+  theme_bw() + theme(strip.background  = element_blank(),
 		text = element_text(size=25, angle = 0),
 		panel.grid.major = element_blank(),
 		axis.ticks = element_blank(),
 		strip.text.x = element_text(size = 25, angle = 0, hjust = 1),
 		legend.position = "none")
 ```
-
-![](figures/umap_chromatin_state.png){width=100%}
 
 # Session Information
 

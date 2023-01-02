@@ -49,19 +49,19 @@ plotDistanceExpression = function(dataTable,
     ylab = "mean(CPM)"
     list_mean = lapply(lim, function(x) {
       tt = information_table[information_table$limit == x,]
-      df = aggregate(tt$expression,list(tt$sample_name,tt$chromatin_state), mean)
+      df = aggregate(tt$expression,list(tt$sample_name), mean)
       df$grp = x
-      colnames(df) = c("sample_name","chromatin_state","expression","grp")
+      colnames(df) = c("sample_name","expression","grp")
       return(df)
     })
     mean = do.call(rbind,list_mean)
 
     p = ggplot(mean,aes(x = factor(grp, levels = lim), y = expression,
-      color = chromatin_state,
+      color = sample_name,
       group = sample_name, linetype = sample_name)) +
       geom_point(size = 3) +
       geom_line(size = 2) +
-      scale_color_manual(values = col$stateNumber) +
+      scale_color_manual(values = col$stateName) +
       scale_linetype_manual(values = rep(c("solid","dashed"),length(unique(mean$sample_name))/2)) +
       xlab(xlab) + ylab(ylab) +
       themePlot() +

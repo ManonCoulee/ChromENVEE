@@ -57,9 +57,9 @@ plotEnhancerExpression = function(dataTable,
 
   if(is(dataTable, "list")) {
       p = ggplot(information_table,aes(x = sample_name, y = expression)) +
-        geom_violin(aes(fill = chromatin_state),color = "black") +
+        geom_violin(aes(fill = sample_name),color = "black") +
         geom_boxplot(width = 0.1) +
-        scale_fill_manual(values = col$stateNumber) +
+        scale_fill_manual(values = col$stateName) +
         xlab(xlab) + ylab(ylab) +
         themePlot() +
         theme(axis.text.x = element_text(),

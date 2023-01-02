@@ -50,7 +50,7 @@ enhancerAnnotation = function(enhancerTable, genome,
   list_sub_enhancerTable = split(seq_len(length(enhancerTable)),
     rep_len(seq_len(nCore), length(enhancerTable)))
 
-  list_enhancerTable = mclapply(list_sub_enhancerTable, function(pos,table){
+  list_enhancerTable = parallel::mclapply(list_sub_enhancerTable, function(pos,table){
     tt = table[pos,]
 
     results = lapply(seq_along(tt), comparisonPositionGeneEnhancer, enhancer_table = tt,
@@ -71,7 +71,7 @@ comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_ta
   ## Chromosome associate position
   chr_value_enhancer = GenomicRanges::seqnames(enhancer_table[enhancer,])@values
 
-  genome = list_genome_table[[chr_value_enhancer]]
+  genome = list_genome_table[[as.character(chr_value_enhancer)]]
 
   ## Position of enhancer
   start = GenomicRanges::start(enhancer_table[enhancer,])
