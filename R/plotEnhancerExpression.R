@@ -21,11 +21,12 @@
 #'
 #' @return ggplot2 figure corresponding to the distribution of gene expression
 #' @export
-plotEnhancerExpression = function(dataTable,
+plotEnhancerExpression = function(enhancerTable,
   xlab = "",
   ylab = "gene expression (CPM)",
   scale = "none",
-  colorTable, distance = 0) {
+  colorTable,
+  distance = 0) {
 
   if(!is(distance, "numeric")) {
     stop("'distance' must be a numeric object")
@@ -35,42 +36,42 @@ plotEnhancerExpression = function(dataTable,
     stop("'scale' must be 'none', 'log10','log2' value. Default is 'none'")
   }
 
-  information_table = getInformation(dataTable)
-  information_table$expression = as.numeric(information_table$expression)
-  information_table$distance = as.numeric(information_table$distance)
+  informationTable <- getInformation(enhancerTable)
+  informationTable$expression <- as.numeric(informationTable$expression)
+  informationTable$distance <- as.numeric(informationTable$distance)
 
   if(distance != 0) {
-    information_table = information_table[information_table$distance <= distance,]
+    informationTable <- informationTable[informationTable$distance <= distance,]
   }
 
-  col = getStateColor(colorTable = colorTable)
+  col <- getStateColor(colorTable = colorTable)
 
   if(scale == "log10") {
-    information_table$expression = log10(information_table$expression+0.01)
+    informationTable$expression <- log10(informationTable$expression + 0.01)
   } else if(scale == "log2") {
-    information_table$expression = log2(information_table$expression+0.01)
+    informationTable$expression <- log2(informationTable$expression + 0.01)
   }
 
-  if(is(dataTable, "list")) {
-      p = ggplot(information_table,aes(x = sample_name, y = expression)) +
-        geom_violin(aes(fill = sample_name),color = "black") +
-        geom_boxplot(width = 0.1) +
-        scale_fill_manual(values = col$stateName) +
-        xlab(xlab) + ylab(ylab) +
-        themePlot() +
-        theme(axis.text.x = element_text(),
-          axis.text.y = element_text(),
-          legend.position = "none")
-  } else {
-      p = ggplot(information_table,aes(x = "", y = expression)) +
-        geom_violin(aes(fill = chromatin_state),color = "black") +
-        geom_boxplot(width = 0.1) +
+  if(is(enhancerTable, "list")) {
+      plot = ggplot(informationTable, aes(x = sampleName, y = expression)) +
+        geom_violin(aes(fill = chromatinState), color = "black") +
+        geom_boxplot(aes(x = sampleName, fill = chromatinState), width = 0.1) +
         scale_fill_manual(values = col$stateNumber) +
         xlab(xlab) + ylab(ylab) +
         themePlot() +
         theme(axis.text.x = element_text(),
           axis.text.y = element_text(),
           legend.position = "none")
+  } else {
+      plot = ggplot(informationTable, aes(x = "", y = expression)) +
+        geom_violin(aes(fill = chromatinState),color = "black") +
+        geom_boxplot(width = 0.1) +
+        scale_fill_manual(values = col$stateNumber) +
+        xlab(xlab) + ylab(ylab) +
+        themePlot() +
+        theme(axis.text.x = element_text(angle = 45),
+          axis.text.y = element_text(),
+          legend.position = "none")
   }
-  return(p)
+  return(plot)
 }

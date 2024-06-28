@@ -2,7 +2,7 @@
 #'
 #' @title plotGeneAssociation
 #' @param table GRanges object or list of GRanges output of enhancerAnnotation
-#' @param all boolean, if TRUE, list of dataframe is merge (default = FALSE)
+#' @param merge boolean, if TRUE, list of dataframe is merge (default = FALSE)
 #'
 #' @import ggplot2
 #'
@@ -14,22 +14,22 @@
 #'
 #' @return ggplot2 figure of the number of gene associated to enhancer
 #' @export
-plotGeneAssociation = function(table, all = FALSE) {
+plotGeneAssociation <- function(enhancerTable, merge = FALSE) {
 
-  if (all && is(table, "list")) {
-    list_table = lapply(names(table), function(name) {
-      tt = table[[name]]
-      df = data.frame(table(tt$gene_association))
-      colnames(df) = c("gene_association","count")
-      df$gene_association = as.numeric(df$gene_association)
-      df$name = name
-      return(df)
+  if (merge && is(enhancerTable, "list")) {
+    listTableAssociation <- lapply(names(enhancerTable), function(name) {
+      subEnhancerTable <- enhancerTable[[name]]
+      countAssociationTable <- data.frame(table(subEnhancerTable$geneAssociation))
+      colnames(countAssociationTable) <- c("geneAssociation", "count")
+      countAssociationTable$geneAssociation <- as.numeric(countAssociationTable$geneAssociation)
+      countAssociationTable$name <- name
+      return(countAssociationTable)
     })
-    df = do.call(rbind,list_table)
+    tableAssociation = do.call(rbind, listTableAssociation)
 
     ## Interpolation polynomiale
-    p = ggplot(df,aes(x = as.numeric(gene_association), y = count, color = name)) +
-      geom_smooth(method = "lm",formula = y~poly(x,11), se = FALSE) +
+    plot <- ggplot(tableAssociation, aes(x = as.numeric(geneAssociation), y = count, color = name)) +
+      geom_smooth(method = "lm", formula = y ~ poly(x, 11), se = FALSE) +
       xlab("number of gene associated") + ylab("frequence") + labs(color = "") +
       themePlot() +
       theme(axis.text.x = element_text(),
@@ -37,17 +37,17 @@ plotGeneAssociation = function(table, all = FALSE) {
         legend.position = "bottom")
   } else {
 
-    df = data.frame(table(table$gene_association))
-    colnames(df) = c("gene_association","count")
+    tableAssociation <- data.frame(table(enhancerTable$geneAssociation))
+    colnames(tableAssociation) <- c("geneAssociation","count")
 
-    p = ggplot(df,aes(x = as.numeric(gene_association), y = count)) +
+    plot <- ggplot(tableAssociation, aes(x = as.numeric(geneAssociation), y = count)) +
       geom_point() +
-      geom_smooth(method = "lm",formula = y~poly(x,10),se = FALSE ,color = "red") +
+      geom_smooth(method = "lm", formula = y ~ poly(x, 10), se = FALSE, color = "red") +
       xlab("number of gene associated") + ylab("frequence") +
       themePlot() +
       theme(axis.text.x = element_text(),
         axis.text.y = element_text(),
         legend.position = "bottom")
   }
-  return(p)
+  return(plot)
 }

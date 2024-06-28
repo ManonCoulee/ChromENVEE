@@ -17,66 +17,72 @@
 #'
 #' @return GRanges with the distribution of each chromatin state in the environment
 #' @export
-geneEnvironment = function(geneExpressionTable,tableChromatinState, stateOrder,
+geneEnvironment <- function(geneExpressionTable,
+		tableChromatinState,
+		stateOrder,
 	 	interval = 3000) {
 
-	geneExpressionTable$TSS = as.numeric(apply(geneExpressionTable,1,function(line) {
-	  if(line["strand"] == "+") {
-	    return(line["start"])
-	  } else {
-	    return(line["end"])
-	  }
-	}))
+	geneExpressionTable$TSS <- geneExpressionTable$start
+	geneExpressionTable[geneExpressionTable$strand == "-", "TSS"] <-
+		geneExpressionTable[geneExpressionTable$strand == "-", "end"]
+	# as.numeric(apply(geneExpressionTable,1,function(line) {
+	#   if(line["strand"] == "+") {
+	#     return(line["start"])
+	#   } else {
+	#     return(line["end"])
+	#   }
+	# }))
 
-	geneExpressionTable$TSS_moins_3kb = geneExpressionTable$TSS - interval
-	geneExpressionTable$TSS_plus_3kb = geneExpressionTable$TSS + interval
+	geneExpressionTable$TSS3kbBefore <- geneExpressionTable$TSS - interval
+	geneExpressionTable$TSS3kbAfter <- geneExpressionTable$TSS + interval
 
-	geneExpressionTable[,stateOrder] = 0
+	geneExpressionTable[,stateOrder] <- 0
 
-	list_tableChromatinState = lapply(unique(seqnames(tableChromatinState)),function(chr) {
-		tt = tableChromatinState[seqnames(tableChromatinState) == chr,]
-		return(tt)
+	listTableChromatinState <- lapply(unique(seqnames(tableChromatinState)), function(chr) {
+		subTableChromatinState = tableChromatinState[seqnames(tableChromatinState) == chr,]
+		return(subTableChromatinState)
 	})
-	names(list_tableChromatinState) = unique(seqnames(tableChromatinState))
+	names(listTableChromatinState) = unique(seqnames(tableChromatinState))
 
-	geneExpressionTable[,stateOrder] = do.call("rbind",lapply(rownames(geneExpressionTable),
-			function(gene, geneExpressionTable,list_tableChromatinState) {
+	geneExpressionTable[,stateOrder] = do.call("rbind", lapply(rownames(geneExpressionTable),
+			function(geneName, geneExpressionTable, listTableChromatinState) {
 
-		m3kb = geneExpressionTable[gene,"TSS_moins_3kb"]
-		p3kb = geneExpressionTable[gene,"TSS_plus_3kb"]
-		chr = geneExpressionTable[gene,"seqnames"]
+		BeforePosGene <- geneExpressionTable[geneName, "TSS3kbBefore"]
+		AfterPosGene <- geneExpressionTable[geneName, "TSS3kbAfter"]
+		chr <- geneExpressionTable[geneName, "seqnames"]
 
-		tableChromatinState_chr = list_tableChromatinState[[as.character(chr)]]
+		tableChromatinStateChr <- listTableChromatinState[[as.character(chr)]]
 
 		## Remove chromatin state before interval
-		tt = tableChromatinState_chr[end(tableChromatinState_chr) > m3kb,]
+		tableRedChromatinState <- tableChromatinStateChr[end(tableChromatinStateChr) > BeforePosGene,]
 		## Remove chromatin state after interval
-		tt = tt[start(tt) < p3kb,]
+		tableRedChromatinState <- tableRedChromatinState[start(tableRedChromatinState) < AfterPosGene,]
 
-		tt$coverage = unlist(lapply(seq_along(tt),function(state) {
-			tt_state = tt[state,]
-			S = GenomicRanges::start(tt_state)
-			E = GenomicRanges::end(tt_state)
+		s = start(tableRedChromatinState) < BeforePosGene
+		start(tableRedChromatinState[s]) = BeforePosGene
+		e = end(tableRedChromatinState) > AfterPosGene
+		end(tableRedChromatinState[e]) = AfterPosGene
 
-			if(E > p3kb) {
-				length_overlapping = abs(S - p3kb)
-			} else if(S < m3kb){
-				length_overlapping = abs(m3kb - E)
-			} else {
-				length_overlapping = abs(S - E)
-			}
-			return(length_overlapping)
-		}))/(interval*2)
+		tableRedChromatinState$coverage <- abs(GenomicRanges::start(tableRedChromatinState) - GenomicRanges::end(tableRedChromatinState)) / (interval*2)
 
-		value = geneExpressionTable[gene,stateOrder]
-		t = unlist(lapply(unique(stateOrder), function(x){
-			sum(tt[tt$state_name == x,]$coverage)
-		}))
-		names(t) = unique(stateOrder)
-		value[,names(t)] = t
+		endStateFirst <- GenomicRanges::end(tableRedChromatinState[1])
+		startStateLast <- GenomicRanges::start(tableRedChromatinState[length(tableRedChromatinState)])
+		tableRedChromatinState[1]$coverage <- abs(BeforePosGene - endStateFirst) / (interval*2)
+		tableRedChromatinState[length(tableRedChromatinState)]$coverage <- abs(startStateLast - AfterPosGene) / (interval*2)
+
+		value <- geneExpressionTable[geneName, stateOrder]
+		# stateCoverage <- unlist(lapply(unique(stateOrder), function(state){
+		# 	sum(tableRedChromatinState[tableRedChromatinState$stateName == state,]$coverage)
+		# }))
+		tableCoverage <- aggregate(tableRedChromatinState$coverage,
+				by = list(tableRedChromatinState$stateName), sum)
+		value[,as.character(tableCoverage$`Group.1`)] <- tableCoverage$x
+
+		# names(stateCoverage) = unique(stateOrder)
+		# value[,names(stateCoverage)] = stateCoverage
 		return(value)
 
-	}, geneExpressionTable = geneExpressionTable,
-		list_tableChromatinState = list_tableChromatinState))
+	}, geneExpressionTable = geneExpressionTable, listTableChromatinState = listTableChromatinState))
+
 	return(geneExpressionTable)
 }

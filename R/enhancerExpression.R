@@ -13,18 +13,18 @@
 #'
 #' @return GRanges table with for each genomic position all gene associated and the expression of these genes
 #' @export
-enhancerExpression = function(enhancerTable, geneExpressionTable) {
+enhancerExpression <- function(enhancerTable, geneExpressionTable) {
 
-  enhancerTable$gene_expression = unlist(lapply(seq_len(length(enhancerTable)), function(enhancer){
-    list_gene = enhancerTable[enhancer]$gene_list
-    list_gene = unlist(strsplit(list_gene,";"))
+  enhancerTable$geneExpression <- unlist(lapply(seq_len(length(enhancerTable)), function(enhancer) {
+    listGene <- enhancerTable[enhancer]$geneList
+    listGene <- unlist(strsplit(listGene, ";"))
 
-    expression = unlist(lapply(list_gene, function(gene) {
-      x = geneExpressionTable[geneExpressionTable$gene_ENS == gene,"gene_expression"]
-      if(length(x) != 1) {
-        x = NA
+    expression <- unlist(lapply(listGene, function(gene) {
+      subGeneExpressionTable <- geneExpressionTable[geneExpressionTable$geneENS == gene, "geneExpression"]
+      if(length(subGeneExpressionTable) != 1) {
+        subGeneExpressionTable <- NA
       }
-      return(x)
+      return(subGeneExpressionTable)
     }))
     return(paste0(expression, collapse = ";"))
   }))

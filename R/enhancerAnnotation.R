@@ -19,75 +19,95 @@
 #'
 #' @return GRanges with infromation about gene associated with enhancer
 #' @export
-enhancerAnnotation = function(enhancerTable, genome,
+enhancerAnnotation <- function(enhancerTable,
+		genome,
 		interval = 500000,
 		nCore = 1){
 
-  if(!is(enhancerTable,"GRanges")){
+  if(!is(enhancerTable, "GRanges")) {
     stop("'enhancerTable' is not a GRanges table")
   }
 
   ## Add interval value at each side enhancer
-  enhancerTable$start_500kb = GenomicRanges::start(enhancerTable) - interval
-  enhancerTable$end_500kb = GenomicRanges::end(enhancerTable) + interval
+  enhancerTable$start500kb <- GenomicRanges::start(enhancerTable) - interval
+  enhancerTable$end500kb <-GenomicRanges::end(enhancerTable) + interval
 
   ## Add TSS position in function strand
-  genome$TSS = GenomicRanges::start(genome)
-	genome[GenomicRanges::strand(genome)@values == "-",]$TSS = end(
-			genome[GenomicRanges::strand(genome)@values == "-",])
+  genome$TSS <- GenomicRanges::start(genome)
+	genome[GenomicRanges::strand(genome)@values == "-", ]$TSS <- end(
+			genome[GenomicRanges::strand(genome)@values == "-", ])
 
   ## Divide gene table in function of the chromosome
-  list_genome_table = lapply(unique(seqnames(genome)),function(chr){
-		tt = genome[seqnames(genome) == chr,]
-		tt = as.data.frame(tt)[,c("TSS","gene_ENS")]
-    return(tt)
+  listGenomeTable <- lapply(unique(seqnames(genome)), function(chr) {
+		genomeTable <- genome[seqnames(genome) == chr, ]
+		genomeTable <- as.data.frame(genomeTable)[,c("TSS", "geneENS")]
+    return(genomeTable)
   })
-  names(list_genome_table) = unique(seqnames(genome))
+  names(listGenomeTable) <- unique(seqnames(genome))
 
   # Return gene associate enhancer
-  list_sub_enhancerTable = split(seq_len(length(enhancerTable)),
+  listSubEnhancerPosition <- split(seq_len(length(enhancerTable)),
     rep_len(seq_len(nCore), length(enhancerTable)))
 
-  list_enhancerTable = parallel::mclapply(list_sub_enhancerTable, function(pos,table){
-    tt = table[pos,]
+  listEnhancerTable <- parallel::mclapply(listSubEnhancerPosition,
+		function(position, enhancerTable) {
 
-    results = lapply(seq_along(tt), comparisonPositionGeneEnhancer, enhancer_table = tt,
-      list_genome_table = list_genome_table)
+    subEnhancerTable <- enhancerTable[position, ]
+    results <- lapply(seq_along(subEnhancerTable), comparisonPositionGeneEnhancer,
+			subEnhancerTable = subEnhancerTable, listGenomeTable = listGenomeTable)
 
-    tt$gene_association = unlist(lapply(results,function(x){return(x[1])}))
-    tt$distance = unlist(lapply(results,function(x){return(x[2])}))
-    tt$gene_list = unlist(lapply(results,function(x){return(x[3])}))
-    return(tt)
-  }, table = enhancerTable, mc.cores = nCore)
+    subEnhancerTable$geneAssociation = unlist(lapply(results, function(x) {return(x[1])}))
+    subEnhancerTable$distance = unlist(lapply(results, function(x) {return(x[2])}))
+    subEnhancerTable$geneList = unlist(lapply(results, function(x) {return(x[3])}))
 
-  table_final = unlist(methods::as(list_enhancerTable,"GRangesList"))
-  return(table_final)
+    return(subEnhancerTable)
+  }, enhancerTable = enhancerTable, mc.cores = nCore)
+
+  tableFinal <- unlist(methods::as(listEnhancerTable, "GRangesList"))
+
+  return(tableFinal)
 }
 
-comparisonPositionGeneEnhancer = function(enhancer,enhancer_table,list_genome_table){
+comparisonPositionGeneEnhancer <- function(seqLength, subEnhancerTable, listGenomeTable){
 
   ## Chromosome associate position
-  chr_value_enhancer = GenomicRanges::seqnames(enhancer_table[enhancer,])@values
+  chrValueEnhancer <- GenomicRanges::seqnames(subEnhancerTable[seqLength,])@values
 
-  genome = list_genome_table[[as.character(chr_value_enhancer)]]
+  genome <- listGenomeTable[[as.character(chrValueEnhancer)]]
+	if(is.null(genome)) {
+		return(list(nbGene = 0,distance = NA, gene = NA))
+	}
 
   ## Position of enhancer
-  start = GenomicRanges::start(enhancer_table[enhancer,])
-  end = GenomicRanges::end(enhancer_table[enhancer,])
-  start_500kb =  enhancer_table[enhancer,]$start_500kb
-  end_500kb = enhancer_table[enhancer,]$end_500kb
+  start <- GenomicRanges::start(subEnhancerTable[seqLength, ])
+  end <- GenomicRanges::end(subEnhancerTable[seqLength, ])
+  start500kb <-  subEnhancerTable[seqLength, ]$start500kb
+  end500kb <- subEnhancerTable[seqLength, ]$end500kb
 
-  tt = genome[genome$TSS < start,]
-  sub_genome = tt[tt$TSS > start_500kb,]
-  sub_genome$distance = abs(sub_genome$TSS - start)
-  tt = genome[genome$TSS > end,]
-  sub_genome2 = tt[tt$TSS < end_500kb,]
-  sub_genome2$distance = abs(sub_genome2$TSS - end)
-  genome_res = rbind(sub_genome,sub_genome2)
+  genomeRed <- genome[genome$TSS < start,]
+  genomeRed1 <- genomeRed[genomeRed$TSS > start500kb,]
+  genomeRed1$distance <- abs(genomeRed1$TSS - start)
 
-  nb_gene = nrow(genome_res)
-  distance = paste0(genome_res$distance, collapse = ";")
-  gene = paste0(genome_res$gene_ENS, collapse = ";")
+  genomeRed <- genome[genome$TSS > end,]
+  genomeRed2 <- genomeRed[genomeRed$TSS < end500kb,]
+  genomeRed2$distance <- abs(genomeRed2$TSS - end)
+  genomeRedFinal <- rbind(genomeRed1,genomeRed2)
 
-  return(list(nb_gene,distance,gene))
+  nbGene <- nrow(genomeRedFinal)
+	if(nbGene == 0){
+		distance <- NA
+		gene <- NA
+	} else {
+		distance <- paste0(genomeRedFinal$distance, collapse = ";")
+		gene <- paste0(genomeRedFinal$geneENS, collapse = ";")
+		# genomeMin <- genomeRedFinal[genomeRedFinal$distance == min(genomeRedFinal$distance),] ## RADA
+		# if(nrow(genomeMin) == 2){ ## RADA
+		# 	distance <- NA
+		# 	gene <- NA
+		# } else { ## RADA
+		# 	distance <- genomeMin$distance
+		# 	gene <- genomeMin$geneENS
+		# }
+	}
+  return(list(nbGene, distance, gene))
 }

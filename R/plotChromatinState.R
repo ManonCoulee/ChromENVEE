@@ -82,22 +82,24 @@ plotDistributionChromatinState = function(table, filename, colorTable,
 
 	col = getStateColor(colorTable = colorTable)
 
-	p = ggplot(table, aes(y = coverage, x = factor(sample_name))) +
+	p = ggplot(table, aes(y = coverage, x = factor(sample_name, levels = c("GSC","SCI","RS")))) +
 		geom_bar(aes(fill = factor(state),
-			alpha = factor(sample_name)),
+			alpha = factor(sample_name, levels = c("GSC","SCI","RS"))),
 			position = "dodge",stat = "identity") +
 		facet_grid(.~factor(state), switch = "x") +
 		scale_alpha_manual(values = seq(0.5,1, (0.5/(length(unique(table$sample_name))-1)))) +
 		scale_fill_manual(values = col$stateName) +
 		xlab(xlab) + ylab(ylab) +
-		labs(fill = "chomatin state", alpha = "cell type") +
+		ylim(0,85) +
+		labs(fill = "chomatin state", alpha = "") +
 		themePlot() +
-		theme(strip.text.x = element_text(size=35, angle = 90, hjust = 1),
+		theme(strip.text.x = element_text(size=30, angle = 90, hjust = 1),
+			strip.text.y = element_text(size=30, angle = 0, hjust = 1),
 			axis.text.y = element_text(size=35, angle = 90, hjust = 1),
 			legend.position="bottom",
-			legend.text = element_text(size=30, angle = 0),
-	    legend.title = element_text(size=30, angle = 0)) +
+			legend.text = element_text(size=50, angle = 0),
+	    legend.title = element_text(size=50, angle = 0)) +
 		guides(fill = "none")
 
-	ggsave(filename = filename,plot = p, width = 20, height = 12, device = 'png', dpi = 300)
+	ggsave(filename = filename,plot = p, width = 10, height = 8, device = 'png', dpi = 300)
 }

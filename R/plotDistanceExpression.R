@@ -22,51 +22,52 @@
 #'
 #' @return gene expression in function distance gene-enhancer
 #' @export
-plotDistanceExpression = function(dataTable,
+plotDistanceExpression <- function(enhancerTable,
 					xlab = "",
           ylab = "log(CPM)",
           colorTable,
           limit = 500000) {
 
-  col = getStateColor(colorTable = colorTable)
+  col <- getStateColor(colorTable = colorTable)
 
-  lim = getLengthVector(limit)
+  lim <- getLengthVector(limit)
 
-  information_table = getInformation(dataTable)
-  information_table$distance = as.numeric(information_table$distance)
-  information_table$expression = as.numeric(information_table$expression)
+  informationTable <- getInformation(enhancerTable)
+  informationTable$distance <- as.numeric(informationTable$distance)
+  informationTable$expression <- as.numeric(informationTable$expression)
 
-  for(l in names(lim)) {
-    pos = which(information_table$distance > as.numeric(l))
-    information_table[pos,"limit"] = lim[l]
+  for(limit in names(lim)) {
+    pos <- which(informationTable$distance > as.numeric(limit))
+    informationTable[pos,"limit"] <- lim[limit]
   }
 
-  if(is(dataTable, "list")) {
-    ylab = "mean(CPM)"
-    list_mean = lapply(lim, function(x) {
-      tt = information_table[information_table$limit == x,]
-      df = aggregate(tt$expression,list(tt$sample_name), mean)
-      df$grp = x
-      colnames(df) = c("sample_name","expression","grp")
-      return(df)
+  if(is(enhancerTable, "list")) {
+    ylab <- "mean(CPM)"
+    listMean <- lapply(lim, function(limit) {
+      limitTable <- informationTable[informationTable$limit == limit,]
+      grpExpressionTable <- aggregate(limitTable$expression, list(limitTable$sampleName), mean)
+      grpExpressionTable$grp <- limit
+      colnames(grpExpressionTable) <- c("sampleName","expression","grp")
+      return(grpExpressionTable)
     })
-    mean = do.call(rbind,list_mean)
+    meanTable <- do.call(rbind,listMean)
 
-    p = ggplot(mean,aes(x = factor(grp, levels = lim), y = expression,
-      color = sample_name,
-      group = sample_name, linetype = sample_name)) +
+    plot <- ggplot(meanTable, aes(x = factor(grp, levels = lim), y = expression,
+      color = sampleName,
+      group = sampleName, linetype = sampleName)) +
       geom_point(size = 3) +
       geom_line(size = 2) +
       scale_color_manual(values = col$stateName) +
-      scale_linetype_manual(values = rep(c("solid","dashed"),length(unique(mean$sample_name))/2)) +
+      scale_linetype_manual(values = rep(c("solid", "dashed"),
+				round(length(unique(meanTable$sampleName))/2))) +
       xlab(xlab) + ylab(ylab) +
       themePlot() +
       theme(axis.text.x = element_text(),
         axis.text.y = element_text(),
         legend.position = "none")
   } else {
-    p = ggplot(information_table,aes(x = factor(limit, levels = lim), y = log(expression+0.01))) +
-      geom_boxplot(aes(fill = chromatin_state),width = 0.1) +
+    plot <- ggplot(informationTable, aes(x = factor(limit, levels = lim), y = log(expression + 0.01))) +
+      geom_boxplot(aes(fill = chromatinState), width = 0.1) +
       scale_fill_manual(values = col$stateNumber) +
       xlab(xlab) + ylab(ylab) +
       themePlot() +
@@ -75,5 +76,5 @@ plotDistanceExpression = function(dataTable,
         legend.position = "none")
   }
 
-  return(p)
+  return(plot)
 }

@@ -1,57 +1,78 @@
 #' Function to return information (expression and distance) for each enhancer
 #'
 #' @title getInformation
-#' @param dataTable GRanges object or list of GRanges output of enhancerExpression
+#' @param enhancerTable GRanges object or list of GRanges output of enhancerExpression
 #'
 #' @import ggplot2
 #' @importFrom methods is
 #'
 #' @return distance, expression, gene name information
 #' @export
-getInformation = function(dataTable) {
-  if(is(dataTable,"list")) {
-    df = lapply(dataTable,function(x) {
-      if(!is(x,"GRanges")) {
-        stop("'dataTable' must be a list of GRanges object")
+getInformation <- function(enhancerTable) {
+  if(is(enhancerTable, "list")) {
+    enhancerInformationTable <- lapply(enhancerTable, function(enhancerTableFile) {
+      if(!is(enhancerTableFile, "GRanges")) {
+        stop("'enhancerTable' must be a list of GRanges object")
       }
-      if(length(x$sample_name) == 0) {
-        stop("GRanges object need a 'sample_name' column")
+      if(length(enhancerTableFile$sampleName) == 0) {
+        stop("GRanges object need a 'sampleName' column")
       }
-      gene_name = unlist(strsplit(unlist(x$gene_list),";"))
-      expression = unlist(strsplit(unlist(x$gene_expression),";"))
-      distance = unlist(strsplit(unlist(x$distance),";"))
-      df = data.frame(gene_name,expression,distance)
-      df$sample_name = unique(x$sample_name)
-      group = unique(x$chromatin_state)
-      df$chromatin_state =  unlist(lapply(group, function(state) {
-        count = sum(x[x$chromatin_state == state]$gene_association)
-        rep(state,count)
-      }))
-      df = df[df$expression != "NA",]
-      df$expression = as.numeric(df$expression)
+      enhancerTableFile <- enhancerTableFile[enhancerTableFile$geneAssociation != 0,]
+      geneName <- unlist(strsplit(unlist(enhancerTableFile$geneList), ";"))
+      expression <- unlist(strsplit(unlist(enhancerTableFile$geneExpression), ";"))
+      distance <- unlist(strsplit(unlist(enhancerTableFile$distance), ";"))
 
-      return(df)
+      # geneName <- enhancerTableFile$geneList ##RADA
+      # expression <- enhancerTableFile$geneExpression ##RADA
+      # distance <- enhancerTableFile$distance ##RADA
+      chromatinState <- enhancerTableFile$chromatinState
+
+      dataFrame <- data.frame(geneName, expression, distance)
+      dataFrame <- dataFrame[dataFrame$geneName != "NA", ]
+      dataFrame$sampleName <- unique(enhancerTableFile$sampleName)
+      group <- unique(enhancerTableFile$chromatinState)
+      dataFrame$chromatinState <- unlist(lapply(group, function(state) {
+        count <- sum(enhancerTableFile[enhancerTableFile$chromatinState == state]$geneAssociation)
+        # count <- length(enhancerTableFile[enhancerTableFile$chromatinState == state]) ##RADA
+        rep(state, count)
+      }))
+      dataFrame <- dataFrame[dataFrame$expression != "NA", ]
+      dataFrame$expression <- as.numeric(dataFrame$expression)
+      dataFrame$distance <- as.numeric(dataFrame$distance)
+
+      return(dataFrame)
     })
 
-    data_frame = do.call(rbind,df)
-    return(data_frame)
+    enhancerInformationTableMerge <- do.call(rbind, enhancerInformationTable)
+    return(enhancerInformationTableMerge)
 
-  } else if(is(dataTable, "GRanges")) {
-    if(length(dataTable$sample_name) == 0) {
-      stop("GRanges object need a 'sample_name' column")
+  } else if(is(enhancerTable, "GRanges")) {
+    if(length(enhancerTable$sampleName) == 0) {
+      stop("GRanges object need a 'sampleName' column")
     }
-    gene_name = unlist(strsplit(unlist(dataTable$gene_list),";"))
-    expression = unlist(strsplit(unlist(dataTable$gene_expression),";"))
-    distance = unlist(strsplit(unlist(dataTable$distance),";"))
-    data_frame = data.frame(gene_name,expression,distance)
-    group = unique(dataTable$chromatin_state)
-    data_frame$chromatin_state =  unlist(lapply(group, function(state) {
-      count = sum(dataTable[dataTable$chromatin_state == state]$gene_association)
-      rep(state,count)
+
+    enhancerTable <- enhancerTable[enhancerTable$geneAssociation != 0,]
+    geneName <- unlist(strsplit(unlist(enhancerTable$geneList), ";"))
+    expression <- unlist(strsplit(unlist(enhancerTable$geneExpression), ";"))
+    distance <- unlist(strsplit(unlist(enhancerTable$distance), ";"))
+
+    # geneName <- enhancerTable$geneList ##RADA
+    # expression <- enhancerTable$geneExpression ##RADA
+    # distance <- enhancerTable$distance ##RADA
+
+    dataFrame <- data.frame(geneName, expression, distance)
+    group <- unique(enhancerTable$chromatinState)
+    dataFrame$chromatinState <- unlist(lapply(group, function(state) {
+      count <- sum(enhancerTable[enhancerTable$chromatinState == state]$geneAssociation)
+      # count <- length(enhancerTable[enhancerTable$chromatinState == state]) ##RADA
+      rep(state, count)
     }))
-    data_frame = data_frame[data_frame$expression != "NA",]
-    return(data_frame)
+    dataFrame <- dataFrame[dataFrame$expression != "NA", ]
+    dataFrame$distance <- as.numeric(dataFrame$distance)
+    dataFrame$expression <- as.numeric(dataFrame$expression)
+
+    return(dataFrame)
   } else {
-    stop("'dataTable' must be a GRanges object or a list of GRanges object")
+    stop("'enhancerTable' must be a GRanges object or a list of GRanges object")
   }
 }

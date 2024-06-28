@@ -6,20 +6,22 @@
 #' @import stringr
 #'
 #' @return a vector of limit
-getLengthVector = function(lim) {
+getLengthVector <- function(lim) {
 
-  lim = lim/2
-  limit = seq(0,lim,length.out = 6)
+  lim <- lim/2
+  limitVector <- seq(0, lim, length.out = 6)
 
-  limit_label = unlist(lapply(seq_len(length(limit)), function(l) {
-    lab = paste0(str_replace(as.character(as.integer(limit[l])),"000$","kb"),"-",
-      str_replace(as.character(as.integer(limit[l+1])),"000$","kb"))
-    if((l+1) > length(limit)) {
-      lab = paste0(">",str_replace(as.character(limit[l]),"000$","kb"))
+  limitLabel <- unlist(lapply(seq_len(length(limitVector)), function(limValue) {
+
+    label <- paste0(str_replace(as.character(as.integer(limitVector[limValue])), "000$", "kb"), "-",
+      str_replace(as.character(as.integer(limitVector[limValue + 1])), "000$", "kb"))
+
+    if((limValue + 1) > length(limitVector)) {
+      label <- paste0(">",str_replace(as.character(limitVector[limValue]), "000$", "kb"))
     }
-    return(lab)
+    return(label)
   }))
 
-  names(limit_label) =  limit
-  return(limit_label)
+  names(limitLabel) <- limitVector
+  return(limitLabel)
 }
